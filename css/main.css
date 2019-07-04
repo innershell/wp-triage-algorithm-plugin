@@ -1,0 +1,36 @@
+.chained-quiz-action {
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+
+.chained-sidebox
+{
+	border:1px solid black;
+	padding:10px;
+	margin-bottom: 20px;
+}
+
+#chained-sidebar
+{
+	float:left;
+	width:25%;
+}
+
+#chained-related, #chained-ad
+{
+	background-color: #BBEEDD;
+}
+
+.chained-form label {
+	width: 150px;
+	display: block;
+	float: left;
+}
+
+textarea.chained-quiz-frontend {
+	width: 100%;
+}
+
+.one-line {
+	display: inline-block;
+}

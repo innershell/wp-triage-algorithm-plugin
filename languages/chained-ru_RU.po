@@ -1,0 +1,971 @@
+# Copyright (C) 2018 Chained Quiz
+# This file is distributed under the same license as the Chained Quiz package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Chained Quiz 1.0.0\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/chained-quiz\n"
+"POT-Creation-Date: 2018-01-19 10:49:11+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2018-02-13 02:46+0500\n"
+"Last-Translator: Airat Halitov <airat.halitov@gmail.com>\n"
+"Language-Team: Airat Halitov <airat.halitov@gmail.com>\n"
+"Language: ru_RU\n"
+"X-Generator: Poedit 1.8.7.1\n"
+
+#: controllers/completed.php:183 views/completed.html.php:66
+msgid "Record ID"
+msgstr "ID записи"
+
+#: controllers/completed.php:183
+msgid "User name or IP"
+msgstr "Имя пользователя или IP"
+
+#: controllers/completed.php:184
+msgid "Date / time"
+msgstr "Дата / время"
+
+#: controllers/completed.php:184 models/quiz.php:220
+#: views/completed.html.php:67 views/completed.html.php:85
+msgid "Points"
+msgstr "Баллы"
+
+#: controllers/completed.php:184 views/completed.html.php:67
+msgid "Result"
+msgstr "Результат"
+
+#: controllers/completed.php:186
+msgid "Details"
+msgstr "Детали"
+
+#: controllers/completed.php:199
+msgid "(%d points)"
+msgstr "(%d баллов)"
+
+#: controllers/quizzes.php:33
+msgid ""
+"Congratulations, you completed the <span>quiz!</span>\n"
+"<h2>{{result-title}}</h2>\n"
+"{{result-text}}\n"
+"\n"
+"You achieved {{points}} points from {{questions}} questions."
+msgstr ""
+"Поздравляем, вы успешно завершили <span>тест!</span>\n"
+"<h2>{{result-title}}</h2>\n"
+"{{result-text}}\n"
+"\n"
+"Вы заработали {{points}} баллов, ответив на {{questions}} вопросов."
+
+#: controllers/quizzes.php:110
+msgid "Quiz not found"
+msgstr "Тест не найден"
+
+#: controllers/quizzes.php:124
+msgid "This quiz has no questions."
+msgstr "Тест не содержит вопросов."
+
+#: controllers/results.php:19
+msgid "The result was not added"
+msgstr "Результат не был добавлен"
+
+#: controllers/results.php:29
+msgid "The result was not saved"
+msgstr "Результат не был сохранен"
+
+#: controllers/results.php:38
+msgid "The result was not deleted"
+msgstr "Результат не был удален"
+
+#: controllers/shortcodes.php:7
+msgid "No quiz to load"
+msgstr "Нет тестов для отображения"
+
+#: models/basic.php:133
+msgid "WordPress"
+msgstr "WordPress"
+
+#: models/basic.php:135
+msgid "User results on {{quiz-name}}"
+msgstr "Результаты пользователя на {{quiz-name}}"
+
+#: models/basic.php:136
+msgid "Your results on {{quiz-name}}"
+msgstr "Ваши результаты на {{quiz-name}}"
+
+#. Plugin Name of the plugin/theme
+#: models/basic.php:147
+msgid "Chained Quiz"
+msgstr "Chained Quiz"
+
+#: models/basic.php:149
+msgid "Quizzes"
+msgstr "Тесты"
+
+#: models/basic.php:151
+msgid "Settings"
+msgstr "Настройки"
+
+#: models/basic.php:153
+msgid "Social Sharing"
+msgstr "Расшаривание в соцсетях"
+
+#: models/basic.php:156
+msgid "Chained Quiz Results"
+msgstr "Результаты теста"
+
+#: models/basic.php:158
+msgid "Chained Quiz Questions"
+msgstr "Вопросы теста"
+
+#: models/basic.php:160
+msgid "Users Completed Quiz"
+msgstr "Пользователь завершил тест"
+
+#: models/basic.php:183
+msgid "Please answer the question"
+msgstr "Пожалуйста, ответьте на вопрос"
+
+#: models/question.php:23 models/question.php:41 models/question.php:54
+#: models/quiz.php:22 models/quiz.php:51 models/result.php:19
+#: models/result.php:39 models/result.php:50
+msgid "DB Error"
+msgstr "DB Error"
+
+#: models/quiz.php:163
+msgid "Username: %s <br> User email: %s"
+msgstr "Username: %s <br> Email пользователя: %s"
+
+#: models/quiz.php:166
+msgid "User IP: %s"
+msgstr "IP пользователя: %s"
+
+#: models/quiz.php:167
+msgid "User email: %s"
+msgstr "Email пользователя: %s"
+
+#: models/quiz.php:218 views/completed.html.php:84 views/questions.html.php:14
+msgid "Question"
+msgstr "Вопрос"
+
+#: models/quiz.php:219 views/completed.html.php:84
+msgid "Answer"
+msgstr "Ответ"
+
+#: models/quiz.php:219
+msgid "Correct answer?"
+msgstr "Правильный ответ?"
+
+#: models/quiz.php:229 models/quiz.php:234 models/quiz.php:245
+msgid "Yes"
+msgstr "Да"
+
+#: models/quiz.php:229 models/quiz.php:234 models/quiz.php:245
+msgid "No"
+msgstr "Нет"
+
+#: models/quiz.php:270
+msgid "%s (Copy)"
+msgstr "%s (копировать)"
+
+#: views/chained-quizzes.html.php:2
+msgid "Chained Quizzes"
+msgstr "Вариативные тесты"
+
+#: views/chained-quizzes.html.php:6
+msgid "Create new chained quiz"
+msgstr "Добавить новый тест"
+
+#: views/chained-quizzes.html.php:10
+msgid "Quiz title"
+msgstr "Название теста"
+
+#: views/chained-quizzes.html.php:10
+msgid "Quiz Shortcode"
+msgstr "Шорткод теста"
+
+#: views/chained-quizzes.html.php:10
+msgid "Questions"
+msgstr "Вопросы"
+
+#: views/chained-quizzes.html.php:11
+msgid "Results"
+msgstr "Результаты"
+
+#: views/chained-quizzes.html.php:11
+msgid "Submitted by"
+msgstr "Ответы от"
+
+#: views/chained-quizzes.html.php:11
+msgid "Edit/Delete"
+msgstr "Редактировать/Удалить"
+
+#: views/chained-quizzes.html.php:17 views/chained-quizzes.html.php:18
+msgid "Manage"
+msgstr "Управление"
+
+#: views/chained-quizzes.html.php:20
+msgid "%d users"
+msgstr "%d человек(а)"
+
+#: views/chained-quizzes.html.php:21
+msgid "No users"
+msgstr "Нет пользователей"
+
+#: views/chained-quizzes.html.php:23 views/questions.html.php:26
+msgid "Edit"
+msgstr "Редактировать"
+
+#: views/chained-quizzes.html.php:24
+msgid "This will make a duplicate of the whole quiz."
+msgstr "Это сделает копию целого теста."
+
+#: views/chained-quizzes.html.php:24
+msgid "Copy"
+msgstr "Копировать"
+
+#: views/chained-quizzes.html.php:25 views/completed.html.php:68
+#: views/completed.html.php:79 views/questions.html.php:26
+msgid "Delete"
+msgstr "Удалить"
+
+#: views/chained-quizzes.html.php:28
+msgid ""
+"Note: if a quiz title is not hyperlinked this means you have not published "
+"its shortcode yet. You must place the shortcode in a post or page in order "
+"to make the quiz accessible to the public."
+msgstr ""
+"Примечание: если название теста не является гиперссылкой, это означает, что "
+"вы еще не опубликовали свой шорткод. Вы должны поместить шорткод на странице "
+"или записи, чтобы сделать тест общедоступным."
+
+#: views/chained-quizzes.html.php:31
+msgid "There are no quizzes yet."
+msgstr "Пока нет ни одного теста."
+
+#: views/chained-quizzes.html.php:42 views/completed.html.php:128
+#: views/questions.html.php:44 views/results.html.php:57
+msgid "Are you sure?"
+msgstr "Вы уверены?"
+
+#: views/choice.html.php:1
+msgid "Points:"
+msgstr "Баллы:"
+
+#: views/choice.html.php:1
+msgid "Correct answer"
+msgstr "Правильный ответ"
+
+#: views/choice.html.php:1
+msgid "When selected go to:"
+msgstr "Когда выбран, перейти к:"
+
+#: views/choice.html.php:2
+msgid "Next question"
+msgstr "Следующий вопрос"
+
+#: views/choice.html.php:3
+msgid "Finalize quiz"
+msgstr "Завершить тест"
+
+#: views/choice.html.php:5
+msgid "- Select question -"
+msgstr "- Выберите вопрос -"
+
+#: views/choice.html.php:12
+msgid "Delete this choice"
+msgstr "Удалить этот выбор"
+
+#: views/completed.html.php:2
+msgid "Users who submitted quiz \"%s\""
+msgstr "Пользователи, которые прошли тест \"%s\""
+
+#: views/completed.html.php:5 views/question.html.php:6
+#: views/questions.html.php:6 views/quiz.html.php:6 views/results.html.php:6
+#: views/sharing-options.html.php:4
+msgid "Back to quizzes"
+msgstr "Назад к тестам"
+
+#: views/completed.html.php:5
+msgid "Manage questions"
+msgstr "Управление вопросами"
+
+#: views/completed.html.php:6 views/question.html.php:7
+#: views/questions.html.php:7
+msgid "Manage Results"
+msgstr "Управление результатами"
+
+#: views/completed.html.php:7 views/question.html.php:8
+#: views/questions.html.php:8 views/results.html.php:8
+msgid "Edit This Quiz"
+msgstr "Редактировать этот тест"
+
+#: views/completed.html.php:10
+msgid "Please rate us 5 Stars!"
+msgstr "Пожалуйста, оставьте нам отзыв на 5 звезд!"
+
+#: views/completed.html.php:13
+msgid "Filter/search these records"
+msgstr "Фильтр/поиск по записям"
+
+#: views/completed.html.php:14
+msgid "Export CSV"
+msgstr "Экспорт в CSV"
+
+#: views/completed.html.php:15
+msgid "Export with details"
+msgstr "Экспорт с подробностями"
+
+#: views/completed.html.php:16
+msgid ""
+"Export files are currently delimited by \"%s\". You can change the delimiter "
+"at <a href=\"%s\">Chained Quiz Settings</a> page."
+msgstr ""
+"Экспортируемые файлы в настоящее имеют разделитель \"%s\". Вы можете "
+"изменить разделитель на странице <a href=\"%s\">настроек тестов</a>."
+
+#: views/completed.html.php:23
+msgid "Username"
+msgstr "Username"
+
+#: views/completed.html.php:24 views/completed.html.php:30
+#: views/completed.html.php:36 views/completed.html.php:42
+msgid "Equals"
+msgstr "Равен"
+
+#: views/completed.html.php:25 views/completed.html.php:31
+#: views/completed.html.php:37
+msgid "Starts with"
+msgstr "Начинается с"
+
+#: views/completed.html.php:26 views/completed.html.php:32
+#: views/completed.html.php:38
+msgid "Ends with"
+msgstr "Оканчивается на"
+
+#: views/completed.html.php:27 views/completed.html.php:33
+#: views/completed.html.php:39
+msgid "Contains"
+msgstr "Содержит"
+
+#: views/completed.html.php:29
+msgid "Email"
+msgstr "Email"
+
+#: views/completed.html.php:35
+msgid "IP Address"
+msgstr "IP Адрес"
+
+#: views/completed.html.php:41
+msgid "Date Taken"
+msgstr "Дата создания"
+
+#: views/completed.html.php:43
+msgid "Is before"
+msgstr "До"
+
+#: views/completed.html.php:44
+msgid "Is after"
+msgstr "После"
+
+#: views/completed.html.php:46
+msgid "Points received"
+msgstr "Баллов получено"
+
+#: views/completed.html.php:47
+msgid "Equal"
+msgstr "Ровно"
+
+#: views/completed.html.php:48
+msgid "Are less than"
+msgstr "Меньше"
+
+#: views/completed.html.php:49
+msgid "Are more than"
+msgstr "Больше"
+
+#: views/completed.html.php:52
+msgid "Result equals:"
+msgstr "Результат:"
+
+#: views/completed.html.php:53
+msgid "- Any result -"
+msgstr "- Любой результат -"
+
+#: views/completed.html.php:59
+msgid "Search/Filter"
+msgstr "Поиск/Фильтр"
+
+#: views/completed.html.php:60
+msgid "Clear Filters"
+msgstr "Очистить фильтр"
+
+#: views/completed.html.php:66
+msgid "User name, email or IP"
+msgstr "Username, email или IP"
+
+#: views/completed.html.php:66
+msgid "Date/time"
+msgstr "Дата/время"
+
+#: views/completed.html.php:76
+msgid "Source: %s"
+msgstr "Источник: %s"
+
+#: views/completed.html.php:78
+msgid "View details"
+msgstr "Подробности"
+
+#: views/completed.html.php:98
+msgid "previous page"
+msgstr "предыдущая страница"
+
+#: views/completed.html.php:100
+msgid "next page"
+msgstr "следующая страница"
+
+#: views/completed.html.php:103
+msgid "Show me a button to cleanup all submitted data on this quiz."
+msgstr "Показать мне кнопку для очистки всех ответов на этот тест."
+
+#: views/completed.html.php:106
+msgid "These operations cannot be undone!"
+msgstr "Эта операция не может быть отменена!"
+
+#: views/completed.html.php:107
+msgid "Cleanup all data"
+msgstr "Очистить все данные"
+
+#: views/completed.html.php:116
+msgid "No one has submitted this quiz yet."
+msgstr "Пока нет ответов на данный тест."
+
+#: views/display-quiz.html.php:3
+msgid "You need to be registered and logged in to take this quiz."
+msgstr ""
+"Вы должны быть зарегистрированы или авторизованы, чтобы пройти этот тест."
+
+#: views/display-quiz.html.php:4
+msgid "Log in"
+msgstr "Войдите"
+
+#: views/display-quiz.html.php:6
+msgid "or"
+msgstr "или"
+
+#: views/display-quiz.html.php:6
+msgid "Register"
+msgstr "зарегистрируйтесь"
+
+#: views/display-quiz.html.php:19
+msgid "Sorry, you can take this quiz only %d times."
+msgstr "Извините, но вы можете пройти этот тест только %d раз."
+
+#: views/display-quiz.html.php:30
+msgid "Your email address:"
+msgstr "Ваш email адрес."
+
+#: views/display-quiz.html.php:42
+msgid "Go Ahead"
+msgstr "Далее"
+
+#: views/options.html.php:2
+msgid "General Options"
+msgstr "Основные настройки"
+
+#: views/options.html.php:8
+msgid "Roles"
+msgstr "Роли"
+
+#: views/options.html.php:10
+msgid "Roles that can manage quizzes"
+msgstr "Роли, которые могут управлять тестами"
+
+#: views/options.html.php:12
+msgid ""
+"By default only Administrator and Super admin can manage the quizzes. You "
+"can enable other roles here."
+msgstr ""
+"По умолчанию администратор и суперадмин могут управлять тестами. Здесь вы "
+"можете включить другие роли."
+
+#: views/options.html.php:18
+msgid "Only administrator or superadmin can change this!"
+msgstr "Только администратор или суперадмин могут изменить это!"
+
+#: views/options.html.php:21
+msgid "Email options"
+msgstr "Параметры Email"
+
+#: views/options.html.php:23
+msgid "Sender and subjects of the automated emails"
+msgstr "Отправитель и темы автоматических писем"
+
+#: views/options.html.php:25
+msgid "Sender name:"
+msgstr "Имя отправителя:"
+
+#: views/options.html.php:26
+msgid "Sender email:"
+msgstr "Email отправителя:"
+
+#: views/options.html.php:27
+msgid "Subject of email sent to admin:"
+msgstr "Тема письма для администратора:"
+
+#: views/options.html.php:28
+msgid "Subject of email sent to quiz taker:"
+msgstr "Тема письма для участника теста:"
+
+#: views/options.html.php:31
+msgid "User interface options"
+msgstr "Настройки пользовательского интерфейса"
+
+#: views/options.html.php:33
+msgid ""
+"Automatically hide the \"Go ahead\" button when possible (typically on "
+"\"single answer\" questions)."
+msgstr ""
+"Автоматически скрывать кнопку \"Далее\", когда это возможно (обычно на "
+"вопросах с одним ответом)."
+
+#: views/options.html.php:36
+msgid "CSV Exports"
+msgstr "Экспорт в CSV"
+
+#: views/options.html.php:38
+msgid "Field separator:"
+msgstr "Разделитель полей:"
+
+#: views/options.html.php:39
+msgid "Comma"
+msgstr "Запятая"
+
+#: views/options.html.php:40
+msgid "TAB"
+msgstr "Табуляция"
+
+#: views/options.html.php:42
+msgid "Add quotes around text fields (recommended)"
+msgstr "Добавить кавычки вокруг текстовых полей (рекомендуется)"
+
+#: views/options.html.php:45
+msgid "Save Options"
+msgstr "Сохранить настройки"
+
+#: views/question.html.php:2
+msgid "Add/Edit Question in \"%s\""
+msgstr "Добавить/редактировать вопрос в \"%s\""
+
+#: views/question.html.php:6
+msgid "Back to questions"
+msgstr "Назад к вопросам"
+
+#: views/question.html.php:12
+msgid "Question title"
+msgstr "Название вопроса"
+
+#: views/question.html.php:13
+msgid "Question contents"
+msgstr "Содержание вопроса"
+
+#: views/question.html.php:14
+msgid "Question type:"
+msgstr "Тип вопроса:"
+
+#: views/question.html.php:15
+msgid "Radio buttons (one possible answer)"
+msgstr "Радио кнопка (один возможный вариант)"
+
+#: views/question.html.php:16
+msgid "Checkboxes (multiple possible answers)"
+msgstr "Чекбокс (несколько возможных вариантов)"
+
+#: views/question.html.php:17
+msgid "Text box (open-end, essay question)"
+msgstr "Текстовое поле (открытый вопрос, эссе)"
+
+#: views/question.html.php:20
+msgid "Automatically continue to the next question when a choice is selected"
+msgstr "Автоматически переходить к следующему вопросу при выборе варианта"
+
+#: views/question.html.php:22
+msgid "Choices/Answers for this question"
+msgstr "Варианты/ответы для этого вопроса"
+
+#: views/question.html.php:24
+msgid "Add more rows"
+msgstr "Добавить еще варианты"
+
+#: views/question.html.php:36
+msgid "Save question and answers"
+msgstr "Сохранить вопрос и ответы"
+
+#: views/question.html.php:66
+msgid "Please enter question title"
+msgstr "Пожалуйста, введите название вопроса"
+
+#: views/questions.html.php:2
+msgid "Manage Questions in %s"
+msgstr "Управление вопросами в %s"
+
+#: views/questions.html.php:11
+msgid "Click here to add new question"
+msgstr "Добавить новый вопрос"
+
+#: views/questions.html.php:14
+msgid "ID"
+msgstr "ID"
+
+#: views/questions.html.php:14
+msgid "Type"
+msgstr "Тип"
+
+#: views/questions.html.php:15
+msgid "Edit / Delete"
+msgstr "Редактировать / Удалить"
+
+#: views/questions.html.php:20
+msgid "Move Up"
+msgstr "Переместить выше"
+
+#: views/questions.html.php:23
+msgid "Move Down"
+msgstr "Переместить ниже"
+
+#: views/quiz.html.php:2
+msgid "Add/Edit Chained Quiz"
+msgstr "Добавить редактировать тест"
+
+#: views/quiz.html.php:8 views/results.html.php:7
+msgid "Manage Questions"
+msgstr "Управление вопросами"
+
+#: views/quiz.html.php:9
+msgid "Manage Results / Outcomes"
+msgstr "Управление результатами"
+
+#: views/quiz.html.php:13
+msgid "Quiz Title"
+msgstr "Название теста"
+
+#: views/quiz.html.php:15
+msgid "Final Output"
+msgstr "Финальный вывод"
+
+#: views/quiz.html.php:17
+msgid ""
+"This is the content that is shown to the user after they complete the quiz. "
+"The following variables can be used:"
+msgstr ""
+"Это содержимое, которое отображается пользователю после завершения теста. "
+"Можно использовать следующие переменные:"
+
+#: views/quiz.html.php:20
+msgid "- The result (grade) title"
+msgstr "- Заголовок результата (оценки)"
+
+#: views/quiz.html.php:21
+msgid "- The result (grade) text/description"
+msgstr "- Текст/описание результата (оценки)"
+
+#: views/quiz.html.php:22
+msgid "- Points collected"
+msgstr "- Полученные баллы"
+
+#: views/quiz.html.php:23
+msgid "- The number of total questions answered"
+msgstr "- Общее количество отвеченных вопросов"
+
+#: views/quiz.html.php:24
+msgid ""
+"- A table with the questions, answers given by the user, correct / wrong "
+"info and points collected."
+msgstr ""
+"- Таблица с вопросами, ответами пользователя, информацией о правильности "
+"вариантов и полученными баллами."
+
+#: views/quiz.html.php:25
+msgid "- The number of correctly answered questions"
+msgstr "- Количество правильно отвеченных вопросов"
+
+#: views/quiz.html.php:28
+msgid "Require user login to take this quiz."
+msgstr "Требовать регистрацию пользователя для этого теста."
+
+#: views/quiz.html.php:30
+msgid "Limit quiz attempts to %s. (Enter 0 for unlimited attempts.)"
+msgstr ""
+"Ограничить попытки прохождения теста до %s. (Введите 0 для неограниченных "
+"попыток.)"
+
+#: views/quiz.html.php:34
+msgid ""
+"Send me email when user completes this quiz. It will be delivered to the "
+"email address from your main WP Settings page."
+msgstr ""
+"Пришлите мне письмо, когда пользователь завершит этот тест. Он будет "
+"доставлен на адрес электронной почты из главных настроек WordPress."
+
+#: views/quiz.html.php:35
+msgid ""
+"Send email to user with their result. If the user is not logged in visitor "
+"an optional \"Enter email\" field will automatically appear above the quiz."
+msgstr ""
+"Отправьте электронное письмо пользователю с результатами. Если пользователь "
+"не зарегистрирован, над тестом автоматически появится поле \"Введите email\"."
+
+#: views/quiz.html.php:36
+msgid ""
+"Save source URL when submitting the quiz (useful if you have published the "
+"quiz in multiple places on your site)."
+msgstr ""
+"Сохраните исходный URL-адрес при отправке теста (полезно, если вы "
+"опубликовали тест в нескольких местах на своем сайте)."
+
+#: views/quiz.html.php:39
+msgid ""
+"Automatically publish this quiz in new post once I hit the \"Save\" button. "
+"(The new post will be auto-generated with the quiz title used for post "
+"title.)"
+msgstr ""
+"Автоматически опубликовать этот тест в новом посте, как только я нажму "
+"кнопку \"Сохранить\". (Новый пост будет автоматически сгенерирован с "
+"названием теста, используемым для заголовка поста.)"
+
+#: views/quiz.html.php:42
+msgid "Save Quiz"
+msgstr "Сохранить тест"
+
+#: views/quiz.html.php:56
+msgid "Title is required"
+msgstr "Нужно название"
+
+#: views/results.html.php:2
+msgid "Manage Quiz Results/Outcomes"
+msgstr "Управление результатами теста"
+
+#: views/results.html.php:12 views/results.html.php:25
+msgid "Result title"
+msgstr "Заголовок результата"
+
+#: views/results.html.php:13 views/results.html.php:26
+msgid "Result text/description"
+msgstr "Текст/описание результата"
+
+#: views/results.html.php:14 views/results.html.php:27
+msgid "Min. points:"
+msgstr "Минимум баллов:"
+
+#: views/results.html.php:15 views/results.html.php:28
+msgid "Max. points:"
+msgstr "Максимум баллов:"
+
+#: views/results.html.php:16 views/results.html.php:29
+msgid "Optional redirect URL"
+msgstr "Перенаправление на URL (необязательно)"
+
+#: views/results.html.php:17 views/results.html.php:30
+msgid ""
+"If you enter this, the quiz will redirect to the URL instead of showing the "
+"\"Final Output\"."
+msgstr ""
+"Если вы введете это, тест будет перенаправлять на этот URL вместо того, "
+"чтобы показывать \"Финальный вывод\"."
+
+#: views/results.html.php:18
+msgid "Add Result"
+msgstr "Добавить результат"
+
+#: views/results.html.php:31
+msgid "Save Result"
+msgstr "Сохранить результат"
+
+#: views/results.html.php:32
+msgid "Delete Result"
+msgstr "Удалить результат"
+
+#: views/results.html.php:48
+msgid "Please enter title"
+msgstr "Пожалуйста, введите заголовок"
+
+#: views/sharing-options.html.php:2
+msgid "Chained Quiz Social Sharing"
+msgstr "Расшаривание тестов в соцсетях"
+
+#: views/sharing-options.html.php:6
+msgid ""
+"You can use the shortcode %s to display Facebook share button on the \"Final "
+"screen\" on your quiz."
+msgstr ""
+"Вы можете использовать шорткод %s для отображения кнопки поделиться в "
+"Facebook на \"Финальном экране\" вашего теста."
+
+#: views/sharing-options.html.php:7
+msgid ""
+"The social media buttons are provided by <a href=\"%s\" target=\"_blank"
+"\">Arbenting</a>. Feel free to replace them with other icons."
+msgstr ""
+"Кнопки социальных сетей предоставляются  <a href=\"%s\" target=\"_blank"
+"\">Arbenting</a>. Не стесняйтесь заменять их другими значками."
+
+#: views/sharing-options.html.php:10
+msgid "Facebook and LinkedIn Sharing"
+msgstr "Расшаривание в Facebook и LInkedIn"
+
+#: views/sharing-options.html.php:12
+msgid "Your Facebook App ID:"
+msgstr "Ваш Facebook App ID:"
+
+#: views/sharing-options.html.php:12
+msgid "Get one here"
+msgstr "Получите один здесь"
+
+#: views/sharing-options.html.php:13
+msgid "If you leave it empty, no Facebook share button will be generated."
+msgstr ""
+"Если вы оставите его пустым, кнопка поделиться в Facebook не будет создана."
+
+#: views/sharing-options.html.php:15
+msgid "Show LinkedIn button"
+msgstr "Показывать кнопку LinkedIn"
+
+#: views/sharing-options.html.php:17
+msgid "Title:"
+msgstr "Заголовок:"
+
+#: views/sharing-options.html.php:18
+msgid "Text:"
+msgstr "Текст:"
+
+#: views/sharing-options.html.php:19
+msgid ""
+"You can use the variables {{{quiz-name}}}, {{{url}}}, {{{result-title}}} and "
+"{{{result-description}}}."
+msgstr ""
+"Вы можете использовать переменные {{{quiz-name}}}, {{{url}}}, {{{result-"
+"title}}} и {{{result-description}}}."
+
+#: views/sharing-options.html.php:21
+msgid ""
+"If you leave title and text empty, result title and result description will "
+"be used respectively."
+msgstr ""
+"Если вы оставите заголовок и текст пустым, будет использоваться заголовок и "
+"описание страницы результата."
+
+#: views/sharing-options.html.php:23
+msgid ""
+"IMPORTANT: Facebook needs to be able to access your site to retrieve the "
+"social sharing data. If the site is on localhost or behind a htaccess login "
+"box sharing will not work properly."
+msgstr ""
+"ВАЖНО: Facebook должен иметь доступ к вашему сайту для получения данных для "
+"расшаривания. Если сайт находится на локальном хосте или закрыт файлом "
+"htaccess, расшаривание не будет работать должным образом."
+
+#: views/sharing-options.html.php:25
+msgid "Twitter Sharing Options:"
+msgstr "Настройки расшаривния в twitter:"
+
+#: views/sharing-options.html.php:27
+msgid ""
+"If you leave \"Tweet text\" empty the tweet text will be extracted from the "
+"result description. If it is empty, the result title will be used."
+msgstr ""
+"Если вы оставите поле \"текст\" твита пустым, текст для твита будет извлечен "
+"из описания страницы результата. Если он пуст, будет использоваться "
+"заголовок страницы результата."
+
+#: views/sharing-options.html.php:29
+msgid "Show Tweet button"
+msgstr "Показывать кнопку твита"
+
+#: views/sharing-options.html.php:32
+msgid "Show count"
+msgstr "Показывать счетчик"
+
+#: views/sharing-options.html.php:33
+msgid "Via @"
+msgstr "С помощью @"
+
+#: views/sharing-options.html.php:34
+msgid "Hashtag #"
+msgstr "Хештег #"
+
+#: views/sharing-options.html.php:35
+msgid "Tweet text (No more than 140 chars):"
+msgstr "Текст твита (не больше 140 символов):"
+
+#: views/sharing-options.html.php:36
+msgid ""
+"You can use the variables {{{quiz-name}}}, {{{result-title}}} and {{{result-"
+"description}}}."
+msgstr ""
+"Вы можете использовать переменные {{{quiz-name}}}, {{{result-title}}} и "
+"{{{result-description}}}."
+
+#: views/sharing-options.html.php:39
+msgid "Save All Settings"
+msgstr "Сохранить все настройки"
+
+#: views/sidebar.html.php:6
+msgid ""
+"<b>WatuPRO</b> is general purpose quiz, survey and exam plugin with rich "
+"reporting features and free integration with many popular plugins and "
+"services."
+msgstr ""
+"<b>WatuPRO</b> - это общие тесты, анкетирование и плагин для экзаменов с "
+"богатыми возможностями отчетов и бесплатной интеграцией со многими "
+"популярными плагинами и службами."
+
+#: views/sidebar.html.php:8
+msgid "Just go ahead and"
+msgstr "Просто"
+
+#: views/sidebar.html.php:8
+msgid "take the tour"
+msgstr "посмотрите тур"
+
+#: views/sidebar.html.php:8
+msgid "or check the"
+msgstr "или протестируйте"
+
+#: views/sidebar.html.php:8
+msgid "online demo."
+msgstr "онлайн демо."
+
+#: views/sidebar.html.php:10
+msgid ""
+"Purchasing WatuPRO comes with <strong>60 days refund policy</strong>, one "
+"year <strong>free upgrades</strong> and one year <strong>free support</"
+"strong>."
+msgstr ""
+"Покупка WatuPRO идет вместе с <strong>60-дневной возможностью возврата</"
+"strong>, одним годом <strong>бесплатных обновлений</strong> и одним годом "
+"<strong>бесплатной поддержки</strong>."
+
+#: views/sidebar.html.php:15
+msgid "Need Support?"
+msgstr "Нужна помощь?"
+
+#: views/sidebar.html.php:17
+msgid "Please ask your question in the"
+msgstr "Пожалуйста, задайте свой вопрос на"
+
+#: views/sidebar.html.php:17
+msgid "support forum at Wordpress."
+msgstr "форуме поддержки WordPress"
+
+#: views/sidebar.html.php:19
+msgid ""
+"Use the forum only for issues concerning the free Chained Quiz plugin. If "
+"you have a pre-sales question about Watu PRO please contact us"
+msgstr ""
+"Используйте форум только для вопросов, касающихся бесплатного плагина "
+"Chained Quiz. Если у вас есть предпродажный вопрос о Watu PRO, свяжитесь с "
+"нами"
+
+#: views/sidebar.html.php:19
+msgid "through our site."
+msgstr "через наш сайт."

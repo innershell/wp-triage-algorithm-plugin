@@ -1,0 +1,6 @@
+SELECT * 
+FROM CHAINED_CHOICES
+WHERE id IN ('375','376') 
+AND goto <> 'next' 
+ORDER BY id 
+LIMIT 1
