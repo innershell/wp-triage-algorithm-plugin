@@ -274,15 +274,16 @@ class ChainedQuizCompleted {
 
 	// Captures feedback for a triage algorithm post-submission.
 	static function feedback($comment) {
-		$user_email = 'melvin@windwake.io';
+		$admin_email = chained_admin_email();
+		$sender_email = chained_sender_email();
 		$subject = 'Triage Algorithm Feedback';
 		$message = $comment;
 		$headers  = 'MIME-Version: 1.0' . "\r\n";
 		$headers .= 'Content-type: text/html; charset=utf-8' . "\r\n";
-		$headers .= 'From: ' . $user_email . "\r\n";
+		$headers .= 'From: ' . $sender_email . "\r\n";
 		$attachments = null;
 
-		wp_mail($user_email, $subject, $message, $headers, $attachments);
+		wp_mail($admin_email, $subject, $message, $headers, $attachments);
 		echo json_encode(array("abc"=>'Email succesful.'));
 	}
 }

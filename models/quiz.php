@@ -194,23 +194,25 @@ class ChainedQuizQuiz {
    
    	// send email to user and admin if required
    	function send_emails($quiz, $output, $attach_path) {
-		global $user_ID;
-		$attachments = array ($attach_path);
-		
+		// Exit if there are no e-mails to send.
 		if(empty($quiz->email_admin) and empty($quiz->email_user)) return true;
+		
+		global $user_ID;
+		$attachments = array ($attach_path);		
 		$admin_email = chained_admin_email();
+		$sender_email = chained_sender_email();
 		
 		$headers  = 'MIME-Version: 1.0' . "\r\n";
-			$headers .= 'Content-type: text/html; charset=utf-8' . "\r\n";
-			$headers .= 'From: '.$admin_email . "\r\n";
-			
-			$admin_output = $user_output = $output;
-			
-			if(strstr($output, '{{{split}}}')) {
-				$parts = explode('{{{split}}}', $output);
-				$user_output = trim($parts[0]);
-				$admin_output = trim($parts[1]);
-			}
+		$headers .= 'Content-type: text/html; charset=utf-8' . "\r\n";
+		$headers .= 'From: '. $sender_email . "\r\n";
+		
+		$admin_output = $user_output = $output;
+		
+		if(strstr($output, '{{{split}}}')) {
+			$parts = explode('{{{split}}}', $output);
+			$user_output = trim($parts[0]);
+			$admin_output = trim($parts[1]);
+		}
 		
 		if(!empty($quiz->email_admin)) {   		
 			$subject = stripslashes(get_option('chained_admin_subject'));

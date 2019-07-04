@@ -141,20 +141,15 @@ class ChainedQuizQuestion {
 		
 			switch($question->qtype) {
 				case 'text':
-
+					$type = $question->qtype;
 					foreach($choices as $choice) {
 						$output .= "
 							<div class='chained-quiz-choice'>
 								<input type='hidden' name='answers[]' value='".$choice->id."'>
-								<textarea class='chained-quiz-frontend' required='required' name='answer_texts[]' placeholder='".$choice->choice."' rows='3' cols='40'></textarea>
+								<textarea class='chained-quiz-frontend chained-quiz-$type' required='required' name='answer_texts[]' placeholder='".$choice->choice."' rows='3' cols='40'></textarea>
 							</div>";
 					}
 					
-
-/* 					$output .= "<div class='chained-quiz-choice'>
-						<input type='hidden' name='answer' value='".$choices[0]->id."'>
-						<textarea class='chained-quiz-frontend' required='required' name='answer_text' rows='5' cols='80'></textarea>
-					</div>"; */
 				return $output;
 				break;
 				case 'radio':

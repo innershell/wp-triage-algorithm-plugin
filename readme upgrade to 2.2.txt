@@ -8,4 +8,4 @@ Delete OUTPUT files from source folder.
 
 Update the version # in the options table (if plugin files uploaded backend)
 
-Submissions page shortcode should restrict by algorithm id.
+Setup algorithm admin emails.

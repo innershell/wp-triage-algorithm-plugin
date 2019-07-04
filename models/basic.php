@@ -2,10 +2,13 @@
 if( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 // main model containing general config and UI functions
 class ChainedQuiz {
-   static function install($update = false) {
+
+	// Function that is called when the plugin is activated.
+   	static function install($update = false) {
 		global $wpdb;	
 		$wpdb -> show_errors();
 		
+		// If new activation, run the initiatlize some variables first.
 		if(!$update) self::init();
 		
 		// CHAINED_QUIZZES
@@ -13,7 +16,14 @@ class ChainedQuiz {
 			$sql = "CREATE TABLE `" . CHAINED_QUIZZES . "` (
 					`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
 					`title` VARCHAR(255) NOT NULL DEFAULT '',
-					`output` TEXT				  
+					`output` TEXT,
+					`email_admin` TINYINT UNSIGNED NOT NULL DEFAULT 0,
+					`email_user` TINYINT UNSIGNED NOT NULL DEFAULT 0,
+					`require_login` TINYINT UNSIGNED NOT NULL DEFAULT 0,
+					`times_to_take` INT UNSIGNED NOT NULL DEFAULT 0,
+					`save_source_url` TINYINT UNSIGNED NOT NULL DEFAULT 0,
+					`set_email_output` TINYINT UNSIGNED NOT NULL DEFAULT 0,
+					`email_output` TEXT
 				) DEFAULT CHARSET=utf8;";
 			
 			$wpdb->query($sql);
@@ -28,7 +38,11 @@ class ChainedQuiz {
 					`question` TEXT,
 					`qtype` VARCHAR(20) NOT NULL DEFAULT '',
 					`soap_type` VARCHAR(1) DEFAULT '',
-					`rank` INT UNSIGNED NOT NULL DEFAULT 0			  
+					`rank` INT UNSIGNED NOT NULL DEFAULT 0,
+					`autocontinue` TINYINT UNSIGNED NOT NULL DEFAULT 0,
+					`sort_order` INT UNSIGNED NOT NULL DEFAULT 0,
+					`accept_comments` TINYINT UNSIGNED NOT NULL DEFAULT 0,
+					`accept_comments_label` VARCHAR(255) NOT NULL DEFAULT ''
 				) DEFAULT CHARSET=utf8;";
 			
 			$wpdb->query($sql);
@@ -60,7 +74,8 @@ class ChainedQuiz {
 					`points_bottom` DECIMAL(8,2) NOT NULL DEFAULT '0.00',
 					`points_top` DECIMAL(8,2) NOT NULL DEFAULT '0.00',
 					`title` VARCHAR(255) NOT NULL DEFAULT '',
-					`description` TEXT 
+					`description` TEXT,
+					`redirect_url` VARCHAR(255) NOT NULL DEFAULT ''
 				) DEFAULT CHARSET=utf8;";
 			
 			$wpdb->query($sql);
@@ -76,7 +91,10 @@ class ChainedQuiz {
 					`datetime` DATETIME,
 					`ip` VARCHAR(20) NOT NULL DEFAULT '',
 					`user_id` INT UNSIGNED NOT NULL DEFAULT 0,
-					`snapshot` TEXT
+					`snapshot` TEXT,
+					`not_empty` TINYINT NOT NULL DEFAULT 0,
+					`source_url` VARCHAR(255) NOT NULL DEFAULT '',
+					`email` VARCHAR(255) NOT NULL DEFAULT ''
 				) DEFAULT CHARSET=utf8;";
 			
 			$wpdb->query($sql);
@@ -91,7 +109,8 @@ class ChainedQuiz {
 					`question_id` INT UNSIGNED NOT NULL DEFAULT 0,
 					`answer` TEXT,
 					`answer_text` TEXT,
-					`points` DECIMAL(8,2) NOT NULL DEFAULT '0.00'				  
+					`points` DECIMAL(8,2) NOT NULL DEFAULT '0.00',
+					`comments` TEXT
 				) DEFAULT CHARSET=utf8;";
 			
 			$wpdb->query($sql);
@@ -100,58 +119,66 @@ class ChainedQuiz {
 		/**
 		 * Alter the old tables to include new columns from newer plugin versions.
 		 */
-		chainedquiz_add_db_fields(array(
-			array("name" => 'autocontinue', 'type' => 'TINYINT UNSIGNED NOT NULL DEFAULT 0'),
-			array("name" => 'sort_order', 'type' => 'INT UNSIGNED NOT NULL DEFAULT 0'),
-			array("name" => 'accept_comments', 'type' => 'TINYINT UNSIGNED NOT NULL DEFAULT 0'),
-			array("name" => 'accept_comments_label', 'type' => "VARCHAR(255) NOT NULL DEFAULT ''"),
-		), CHAINED_QUESTIONS);
+		// chainedquiz_add_db_fields(array(
+		// 	array("name" => 'autocontinue', 'type' => 'TINYINT UNSIGNED NOT NULL DEFAULT 0'),
+		// 	array("name" => 'sort_order', 'type' => 'INT UNSIGNED NOT NULL DEFAULT 0'),
+		// 	array("name" => 'accept_comments', 'type' => 'TINYINT UNSIGNED NOT NULL DEFAULT 0'),
+		// 	array("name" => 'accept_comments_label', 'type' => "VARCHAR(255) NOT NULL DEFAULT ''"),
+		// ), CHAINED_QUESTIONS);
 		
-		chainedquiz_add_db_fields(array(
-			array("name" => 'redirect_url', 'type' => "VARCHAR(255) NOT NULL DEFAULT ''"),
-		), CHAINED_RESULTS);
+		// chainedquiz_add_db_fields(array(
+		// 	array("name" => 'redirect_url', 'type' => "VARCHAR(255) NOT NULL DEFAULT ''"),
+		// ), CHAINED_RESULTS);
 		
-		chainedquiz_add_db_fields(array(
-			array("name" => 'comments', 'type' => "TEXT"),
-		), CHAINED_USER_ANSWERS);
+		// chainedquiz_add_db_fields(array(
+		// 	array("name" => 'comments', 'type' => "TEXT"),
+		// ), CHAINED_USER_ANSWERS);
 		
-		chainedquiz_add_db_fields(array(
-			array("name" => 'email_admin', 'type' => "TINYINT UNSIGNED NOT NULL DEFAULT 0"),
-			array("name" => 'email_user', 'type' => "TINYINT UNSIGNED NOT NULL DEFAULT 0"),
-			array("name" => 'require_login', 'type' => "TINYINT UNSIGNED NOT NULL DEFAULT 0"),
-			array("name" => 'times_to_take', 'type' => "INT UNSIGNED NOT NULL DEFAULT 0"),
-			array("name" => 'save_source_url', 'type' => "TINYINT UNSIGNED NOT NULL DEFAULT 0"),
-			array("name" => 'set_email_output', 'type' => "TINYINT UNSIGNED NOT NULL DEFAULT 0"),
-			array("name" => 'email_output', 'type' => "TEXT"),
-		), CHAINED_QUIZZES);
+		// chainedquiz_add_db_fields(array(
+		// 	array("name" => 'email_admin', 'type' => "TINYINT UNSIGNED NOT NULL DEFAULT 0"),
+		// 	array("name" => 'email_user', 'type' => "TINYINT UNSIGNED NOT NULL DEFAULT 0"),
+		// 	array("name" => 'require_login', 'type' => "TINYINT UNSIGNED NOT NULL DEFAULT 0"),
+		// 	array("name" => 'times_to_take', 'type' => "INT UNSIGNED NOT NULL DEFAULT 0"),
+		// 	array("name" => 'save_source_url', 'type' => "TINYINT UNSIGNED NOT NULL DEFAULT 0"),
+		// 	array("name" => 'set_email_output', 'type' => "TINYINT UNSIGNED NOT NULL DEFAULT 0"),
+		// 	array("name" => 'email_output', 'type' => "TEXT"),
+		// ), CHAINED_QUIZZES);
 		
-		chainedquiz_add_db_fields(array(
-			array("name" => 'not_empty', 'type' => "TINYINT NOT NULL DEFAULT 0"), /*When initially creating a record, it is empty. If it remains so we have to delete it.*/
-			array("name" => 'source_url', 'type' => "VARCHAR(255) NOT NULL DEFAULT ''"), /* Page where the quiz is published */ 
-			array("name" => 'email', 'type' => "VARCHAR(255) NOT NULL DEFAULT ''"), /* email of non-logged in users when required */
-		), CHAINED_COMPLETED);
+		// chainedquiz_add_db_fields(array(
+		// 	array("name" => 'not_empty', 'type' => "TINYINT NOT NULL DEFAULT 0"), /*When initially creating a record, it is empty. If it remains so we have to delete it.*/
+		// 	array("name" => 'source_url', 'type' => "VARCHAR(255) NOT NULL DEFAULT ''"), /* Page where the quiz is published */ 
+		// 	array("name" => 'email', 'type' => "VARCHAR(255) NOT NULL DEFAULT ''"), /* email of non-logged in users when required */
+		// ), CHAINED_COMPLETED);
 		
 		// fix sort order once for old quizzes (in version 0.7.5)
-		if(get_option('chained_fixed_sort_order') != 1) {
-			ChainedQuizQuestions :: fix_sort_order_global();
-			update_option('chained_fixed_sort_order', 1);
-		}	
+		// if(get_option('chained_fixed_sort_order') != 1) {
+		// 	ChainedQuizQuestions :: fix_sort_order_global();
+		// 	update_option('chained_fixed_sort_order', 1);
+		// }
 		
 		// update not_empty = 1 for all completed records prior to version 0.8.7 and DB version 0.66
-		$version = get_option('chainedquiz_version');
-		if($version < 0.67) {
-			$wpdb->query("UPDATE ".CHAINED_COMPLETED." SET not_empty=1");
-		}
+		// $version = get_option('chained_version');
+		// if($version < 0.67) {
+		// 	$wpdb->query("UPDATE ".CHAINED_COMPLETED." SET not_empty=1");
+		// }
 		
 		// setup the default options (when not yet saved ever)
 		if(get_option('chained_sender_name') == '') {
-			update_option('chained_sender_name', __('WordPress', 'chained'));
+			update_option('chained_sender_name', __('WordPress Admin', 'chained'));
 			update_option('chained_sender_email', get_option('admin_email'));
 			update_option('chained_admin_subject', __('User results on {{quiz-name}}', 'chained'));
-			update_option('chained_user_subject', __('Your results on {{quiz-name}}', 'chained'));		
-		}	  
-		
-		update_option('chainedquiz_version', "2.0.1");
+			update_option('chained_user_subject', __('Your results on {{quiz-name}}', 'chained'));
+		}
+
+		$current_version = get_option('chained_version');
+
+		/** PERFORM VERSION-SPECIFIC UPGRADES HERE **/
+		if ($current_version < '2.2') {
+			update_option('chained_delete_data', 'no');
+		}
+
+		// Set the current plugin version number.
+		update_option('chained_version', "2.2");
 		// exit;
 	}
    
@@ -183,7 +210,7 @@ class ChainedQuiz {
 				'chained-common',
 				CHAINED_URL.'js/common.js',
 				false,
-				'2.0.1',
+				'2.2',
 				false
 		);
 		wp_enqueue_script("chained-common");
@@ -205,7 +232,6 @@ class ChainedQuiz {
 		define( 'CHAINED_RESULTS', $wpdb->prefix. "chained_results");
 		define( 'CHAINED_COMPLETED', $wpdb->prefix. "chained_completed");
 		define( 'CHAINED_USER_ANSWERS', $wpdb->prefix. "chained_user_answers");
-		
 		define( 'CHAINED_VERSION', get_option('chained_version'));
 				
 		// shortcodes
@@ -214,10 +240,10 @@ class ChainedQuiz {
 		add_shortcode('chained-share', array("ChainedSharing", "display"));		
 		
 		// once daily delete empty records older than 1 day
-		if(get_option('chainedquiz_cleanup') != date("Y-m-d") and defined('CHAINED_COMPLETED')) {
-			$wpdb->query("DELETE FROM ".CHAINED_COMPLETED." WHERE not_empty=0 AND datetime < '".current_time('mysql')."' - INTERVAL 24 HOUR");
-			update_option('chainedquiz_cleanup', date("Y-m-d"));
-		}
+		// if(get_option('chainedquiz_cleanup') != date("Y-m-d") and defined('CHAINED_COMPLETED')) {
+		// 	$wpdb->query("DELETE FROM ".CHAINED_COMPLETED." WHERE not_empty=0 AND datetime < '".current_time('mysql')."' - INTERVAL 24 HOUR");
+		// 	update_option('chainedquiz_cleanup', date("Y-m-d"));
+		// }
 		
 		add_action('template_redirect', array('ChainedSharing', 'social_share_snippet'));
 		
@@ -227,8 +253,11 @@ class ChainedQuiz {
 			update_option('chained_csv_quotes', '1');
 		}
 				
-		$version = get_option('chainedquiz_version');
-		if($version < '0.8') self::install(true);
+		// $version = get_option('chained_version');
+		// if($version < '0.8') self::install(true);
+
+		// Go ahead and activate the plugin now by running the install script.
+		self::install(true);
 	}
 			
 	// manage general options
@@ -240,8 +269,9 @@ class ChainedQuiz {
 			// sender's email and email subjects
 			update_option('chained_sender_name', sanitize_text_field($_POST['sender_name']));
 			update_option('chained_sender_email', sanitize_email($_POST['sender_email']));
-			update_option('chained_admin_subject', sanitize_text_field($_POST['admin_subject']));
 			update_option('chained_user_subject', sanitize_text_field($_POST['user_subject']));						
+			update_option('chained_admin_subject', sanitize_text_field($_POST['admin_subject']));
+			update_option('chained_admin_emails', sanitize_text_field($_POST['admin_emails']));
 			update_option('chained_csv_delim', sanitize_text_field($_POST['csv_delim']));
 			$_POST['csv_quotes'] = empty($_POST['csv_quotes']) ? 0 : 1;
 			update_option('chained_csv_quotes', $_POST['csv_quotes']);

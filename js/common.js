@@ -21,7 +21,19 @@ chainedQuiz.goon = function(quizID, url) {
 	}
 
 	// is textarea filled?
-	if((qType == 'text') && jQuery('#chained-quiz-form-' + quizID + ' textarea[name=answer_text]').val() == '') {
+
+	/* 	THIS WAS THE ORIGINAL JAVASCRIPT CODE TO VALIDATE EMPTY TEXT FIELDS. */
+	/* if((qType == 'text') && jQuery('#chained-quiz-form-' + quizID + ' textarea[name=answer_texts]').val() == '') {
+		alert(chained_i18n.please_answer);
+		jQuery('#chained-quiz-action-' + quizID).removeAttr('disabled');
+		return false;
+	} */
+
+ 	var noText = false;
+	jQuery('#chained-quiz-form-' + quizID + ' textarea').each(function() {
+		if (this.value == '') noText = true; // If there is ANY blank text field, reject.
+	});
+	if(noText && qType == 'text') {
 		alert(chained_i18n.please_answer);
 		jQuery('#chained-quiz-action-' + quizID).removeAttr('disabled');
 		return false;

@@ -77,11 +77,19 @@ if(!function_exists('kiboko_get_mime_type')) {
 	}
 }
 
-// get admin email. This overwrites the global setting with the watupro's setting.
+// Get admin email. If not setup, use WordPress admin email.
 function chained_admin_email() {
-	$admin_email = stripslashes(get_option('chained_sender_name')) . ' <' . get_option('chained_sender_email') . '>';
-	
+	$admin_email = stripslashes(get_option('chained_admin_emails'));
+	if ($admin_email == '') {
+		$admin_email = 'WordPress Admin <' . stripslashes(get_option('admin_email')) . '>';
+	}
 	return $admin_email;
+}
+
+// Get sender email. If not setup, use WordPress admin email.
+function chained_sender_email() {
+	$sender_email = stripslashes(get_option('chained_sender_name')) . ' <' . get_option('chained_sender_email') . '>';
+	return $sender_email;
 }
 
 function chained_strip_tags($content) {

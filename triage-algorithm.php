@@ -4,7 +4,7 @@ Plugin Name: Triage Algorithm
 Plugin URI: http://windwake.io
 Description: Create a triage algorithm where questions are asked and answers translated into clinical decision support information.
 Author: WindWake Healthcare Technologies LLC
-Version: 2.0.1
+Version: 2.2
 Author URI: http://windwake.io
 License: GPLv2 or later
 Text domain: chained

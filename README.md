@@ -1,43 +1,55 @@
 # Triage Algorithm
-    Contributors: Melvin Tan, Taylor Martin
-    Tags: triage, algorithm, decision support, quiz, exam, test, questionnaire, survey
-    Requires at least: 3.3
-    Tested up to: 5.0
+    Contributors: innershell
+    Tags: triage, form, forms, custom form, form builder, survey, survey builder, questionnaire, questionnaire builder, quiz, quiz builder, exam, exam builder, test, test builder, planner, planning, screening
+    Requires at least: 5.0
+    Tested up to: 5.1.1
+    Requires PHP: 7.2
     Stable tag: trunk
-    License: GPL2
+    License: GPL2 or later
 
 Create a triage algorithm that pre-screen a patient and generate a physician SOAP note for clinical decision support.
 
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 # Description
-This is an unique conditional logic plugin that lets you create set a questions whose answers generate a physician SOAP note.
+Design algorithms to screen and triage patients with chronic diseases at a medical facility. Questions are presented to the patient to gather information for their visit. The collected information are analyzed by the algorithm and presented to a clinician in the form of a medical assessment and/or treatment plan.
 
 **To publish a triage algorithm, place its shortcode in a post or page.**
 
 # Features
-#### Create unlimited number of triage algorithms
-This plugin has no limitations on the number of triage algorithms you can have.
+#### Create algorithms to ask questions
+- An unlimited number of algorithms and questions are supported.
 
-#### Question types support: single-choice, multiple-choice, text
-The plugin will generate respectively a group of radio buttons, checkboxes, or a text area. 
+#### Present questions in multiple formats
+- Generate user input forms by presenting single choice (radio buttons), multiple choice (checkboxes), single free text (textarea), or multiple free text (textarea) answers.
 
-#### Define what to do when specific answer is chosen
-You can define to go to next question, go to a specific selected question, or finish the algorithm. 
+#### Decision tree modifies the algorithm in real-time
+- Define how the algorithm reacts based on intput to the question. Different paths are selected based on input received.
 
-#### Export user's answers to a CSV file - with or without details
-The CSV file can be used to analyze user results in Excel, import it in a database and so on.
+#### Analyze answers for clinical decision support
+- This is where the real magic happens. The algorithm processes answers for presentation to medical professionals in a clinical language and format. Provide the medical professional with an assessment of the patient and treatment plan for the patient.
+
+#### Display dashboard of algorithm submissions
+- Present all submissions in a summary dashboard for presenter to review and provide feedback.
+
+#### Export submission data to a CSV file
+- Extract raw data into an external file for a variety of offline uses.
+
+# Installation
+1. Upload the plugin zip file to WordPress in the 'Plugins' section.
+..* Alternatively, unzip and upload the entire 'triage-algorithm' folder to the '/wp-content/plugins/' directory.
+2. Activate the plugin.
+3. Go to "Triage Algorithm" settings to manage the plugin and setup algorithms.
+4. Place the shortcode(s) in a post or page to publish the features.
+5. View the post or page to see the triage algorithm in action.
+
+**Attention Multi-Site (WP Network) Users!** 
+- The plugin is perfectly compatible with multi-site installations but it should be activated as **blog admin** and NOT as superadmin.
+
+# Upgrading
+1. Backup your data.
+2. Deactivate the plugin.
+3. Delete the plugin (Note: Your data will NOT be deleted);
+4. Follow the installation steps above to install the new plugin.
+5. Make sure to activate the pluging.
 
 # Getting Started
 Once activated the plugin go to Triage Algorithm -> Algorithms in your WP dashboard and create your first algorithm. After entering the algorithm title, description and other settings you will be redirected to create the algorithm results / outcomes.
@@ -48,29 +60,35 @@ After you create your results you will be redirected to creating the actual ques
 
 Don't forget that the algorithm must be **published** before it becomes accessible. Publishing happens when you manually place the shortcode of the algorithm in a post or page or select the option "Automatically publish" when you save it.
 
-**Attention Multi-Site (WP Network) Users!** 
-The plugin is perfectly compatible with multi-site installations but it should be activated as **blog admin** and NOT as superadmin.
-
-# Installation
-1. Unzip the contents and upload the entire `triage-algorithm` directory to the `/wp-content/plugins/` directory
-2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Go to "Triage Algorithm" in your menu and manage the plugin
-4. To publish an algorithm place its shortcode in a post or page
-
 # Frequently Asked Questions
 None yet.
 
 # Screenshots
-1. The create / edit algorithm form lets you give a title and specify the dynamic end output
-2. Here is how the different choices can be connected to different outcomes (plus assigning points at the same time)
-3. And of course you can define different results depending on the results collected in the quiz 
+1. Creating a triage algorithm question.
+2. How the triage algorithm is displayed.
+3. The SOAP note processed by the triage algorithm for clinical decision support.
+4. The submissions dashboard to capture feedback for machine learning.
 
 # Changelog
-## Version 2.0.1
-- Bug fixes.
+## 2.0.2 (Bug Fix)
+- Emails to Admin when submissions received not working.
+- Text fields not required allowing patients to submit blank answers.
+- Fixed plugin activation error.
+- Fixed plugin cannot be upgraded by deleting/uploading new ZIP file.
 
-## Version 2.0
-- Added Dashboard functionality.
+## 2.0.1 (Bug Fix)
+- Submissions dashboard had no clickable link to open SOAP note when user did not provide a Study ID.
+- SOAP note not saved properly. Submissions dashboard did not display SOAP note.
+- Submissions dashboard cannot filter results for specific triage algorithms.
+- Submissions (WordPress admin mode) did not display text answers. Displayed answer ID instead.
 
-## Version 1.0
-- First public release of a triage algorithm.
+## 2.0 (Dashboard)
+- Dashboard to review triage algorithm submissions.
+- Use shortcodes to publish the submissions dashboard.
+
+## 1.0 (Triage Algorithm)
+- Create triage algorithms with unlimited questions and answers.
+- Use shortcodes to publish algorithms.
+- Present algorithm questionnaires and save results.
+- Generate SOAP note for clinical decision support.
+- E-mail or fax SOAP notes to an external destination.
