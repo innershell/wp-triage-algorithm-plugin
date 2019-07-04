@@ -49,9 +49,14 @@ textarea.chained-quiz-frontend {
 	background-color: #FFFFFF;
 } */
 
+.soap-note-canvas {
+	background-color: #cce6ff;
+}
+
 div.soap-note {
-	border: 1px solid;
-	border-color: #B3B3B3;
+	border: 3px dashed;
+	border-color: #ff0000;
+	background-color: #ffffff;
 	padding: 10px;
-	box-shadow: 5px 5px 10px #888888;
+	box-shadow: 5px 5px 10px #0D0D0D;
 }

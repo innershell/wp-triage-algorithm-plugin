@@ -151,7 +151,7 @@ class ChainedQuiz {
 			update_option('chained_user_subject', __('Your results on {{quiz-name}}', 'chained'));		
 		}	  
 		
-		update_option('chainedquiz_version', "0.8");
+		update_option('chainedquiz_version', "2.0.1");
 		// exit;
 	}
    
@@ -159,21 +159,14 @@ class ChainedQuiz {
    static function menu() {
    	$chained_caps = current_user_can('manage_options') ? 'manage_options' : 'chained_manage';
    	
-   	add_menu_page(__('Triage Algorithm', 'chained'), __('Triage Algorithm', 'chained'), $chained_caps, "chained_quizzes", 
-   		array('ChainedQuizQuizzes', "manage"));
-   	add_submenu_page('chained_quizzes', __('Quizzes', 'chained'), __('Quizzes', 'chained'), $chained_caps, 
-   		'chained_quizzes', array('ChainedQuizQuizzes', "manage"));					
-   	add_submenu_page('chained_quizzes', __('Settings', 'chained'), __('Settings', 'chained'), 'manage_options', 
-   		'chainedquiz_options', array('ChainedQuiz','options'));				
-   	add_submenu_page('chained_quizzes', __('Social Sharing', 'chained'), __('Social Sharing', 'chained'), $chained_caps, 
-   		'chainedquiz_social_sharing', array('ChainedSharing','options'));				
+   	add_menu_page(__('Triage Algorithm', 'chained'), __('Triage Algorithm', 'chained'), $chained_caps, "chained_quizzes", array('ChainedQuizQuizzes', "manage"));
+   	add_submenu_page('chained_quizzes', __('Algorithms', 'chained'), __('Algorithms', 'chained'), $chained_caps, 'chained_quizzes', array('ChainedQuizQuizzes', "manage"));					
+   	add_submenu_page('chained_quizzes', __('Settings', 'chained'), __('Settings', 'chained'), 'manage_options', 'chainedquiz_options', array('ChainedQuiz','options'));				
+   	add_submenu_page('chained_quizzes', __('Social Sharing', 'chained'), __('Social Sharing', 'chained'), $chained_caps, 'chainedquiz_social_sharing', array('ChainedSharing','options'));				
    		
-   	add_submenu_page(NULL, __('Chained Quiz Results', 'chained'), __('Chained Quiz Results', 'chained'), $chained_caps, 
-   		'chainedquiz_results', array('ChainedQuizResults','manage'));	
-   	add_submenu_page(NULL, __('Chained Quiz Questions', 'chained'), __('Chained Quiz Questions', 'chained'), $chained_caps, 
-   		'chainedquiz_questions', array('ChainedQuizQuestions','manage'));	
-   	add_submenu_page(NULL, __('Users Completed Quiz', 'chained'), __('Users Completed Quiz', 'chained'), $chained_caps, 
-   		'chainedquiz_list', array('ChainedQuizCompleted','manage'));		
+   	add_submenu_page(NULL, __('Chained Quiz Results', 'chained'), __('Chained Quiz Results', 'chained'), $chained_caps, 'chainedquiz_results', array('ChainedQuizResults','manage'));	
+   	add_submenu_page(NULL, __('Chained Quiz Questions', 'chained'), __('Chained Quiz Questions', 'chained'), $chained_caps, 'chainedquiz_questions', array('ChainedQuizQuestions','manage'));	
+   	add_submenu_page(NULL, __('Users Completed Quiz', 'chained'), __('Users Completed Quiz', 'chained'), $chained_caps, 'chainedquiz_list', array('ChainedQuizCompleted','manage'));		
    	
 	}
 	
@@ -190,7 +183,7 @@ class ChainedQuiz {
 				'chained-common',
 				CHAINED_URL.'js/common.js',
 				false,
-				'2.0.0',
+				'2.0.1',
 				false
 		);
 		wp_enqueue_script("chained-common");
@@ -217,7 +210,7 @@ class ChainedQuiz {
 				
 		// shortcodes
 		add_shortcode('triage-algorithm', array("TriageShortcodes", "algorithmShortcodeHandler"));
-		add_shortcode('triage-responses', array("TriageShortcodes", "responsesShortcodeHandler"));
+		add_shortcode('triage-submissions', array("TriageShortcodes", "responsesShortcodeHandler"));
 		add_shortcode('chained-share', array("ChainedSharing", "display"));		
 		
 		// once daily delete empty records older than 1 day

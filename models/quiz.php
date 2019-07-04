@@ -91,6 +91,7 @@ class ChainedQuizQuiz {
 		$result = $_result->calculate($quiz, $points);
 		
 		// get final screen and replace vars
+		$snapshot = ''; // The SOAP note data to be saved in the submission record snapshot.
 		$output = stripslashes($quiz->output);
 		$email_output = $quiz->set_email_output ? stripslashes($quiz->email_output) : $output;
 		
@@ -100,11 +101,16 @@ class ChainedQuizQuiz {
 		$output = str_replace('{{questions}}', $_POST['total_questions'], $output);
 		
 		if(strstr($output, '{{answers-table}}')) {
-			$output = str_replace('{{answers-table}}', $this->answers_table($completion_id), $output);  
+			$snapshot = $this->answers_table($completion_id);
+			$output = str_replace('{{answers-table}}', $snapshot, $output);
+		}
+
+		if ($snapshot == '') {
+			$snapshot = $this->soap_note($completion_id);
 		}
 
 		if(strstr($output, '{{soap-note}}')) {
-			$output = str_replace('{{soap-note}}', $this->soap_note($completion_id), $output);  
+			$output = str_replace('{{soap-note}}', $snapshot, $output);
 		}
 		
 		$email_output = str_replace('{{result-title}}', @$result->title, $email_output);
@@ -160,21 +166,21 @@ class ChainedQuizQuiz {
 		
 		// now insert in completed
 		if(!empty($_SESSION['chained_completion_id'])) {
-		$wpdb->query( $wpdb->prepare("UPDATE ".CHAINED_COMPLETED." SET
-			quiz_id = %d, points = %f, result_id = %d, datetime = NOW(), ip = %s, user_id = %d, 
-			snapshot = %s, source_url=%s, email=%s WHERE id=%d",
-			$quiz->id, $points, @$result->id, $_SERVER['REMOTE_ADDR'], $user_id, $output, 
-			$source_url, $user_email, intval($_SESSION['chained_completion_id'])));
-		$taking_id = $_SESSION['chained_completion_id'];	
-		unset($_SESSION['chained_completion_id']);	
-		}	 
-		else {
+			$wpdb->query( $wpdb->prepare("UPDATE ".CHAINED_COMPLETED." SET
+				quiz_id = %d, points = %f, result_id = %d, datetime = NOW(), ip = %s, user_id = %d, 
+				snapshot = %s, source_url=%s, email=%s WHERE id=%d",
+				$quiz->id, $points, @$result->id, $_SERVER['REMOTE_ADDR'], $user_id, $snapshot, 
+				$source_url, $user_email, intval($_SESSION['chained_completion_id'])));
+			$taking_id = $_SESSION['chained_completion_id'];	
+			unset($_SESSION['chained_completion_id']);	
+		}		
 		// normally this shouldn't happen, but just in case
-		$wpdb->query( $wpdb->prepare("INSERT INTO ".CHAINED_COMPLETED." SET
-			quiz_id = %d, points = %f, result_id = %d, datetime = NOW(), ip = %s, user_id = %d, snapshot = %s, 
-			source_url=%s, email=%s",
-			$quiz->id, $points, @$result->id, $_SERVER['REMOTE_ADDR'], $user_id, $output, $source_url, $user_email));		 	
-		$taking_id = $wpdb->insert_id;		
+		else {			
+			$wpdb->query( $wpdb->prepare("INSERT INTO ".CHAINED_COMPLETED." SET
+				quiz_id = %d, points = %f, result_id = %d, datetime = NOW(), ip = %s, user_id = %d, snapshot = %s, 
+				source_url=%s, email=%s",
+				$quiz->id, $points, @$result->id, $_SERVER['REMOTE_ADDR'], $user_id, $snapshot, $source_url, $user_email));		 	
+			$taking_id = $wpdb->insert_id;		
 		}
 		
 		// send API call for other plugins
@@ -332,7 +338,7 @@ class ChainedQuizQuiz {
 				} else if ($answer->soap_type == 'p') {
 					$output .= 'Plan';
 				} else {
-					$output .= 'Not a SOAP note';
+					$output .= 'None';
 				}
 			$output .= '</td>';			
 
@@ -368,9 +374,10 @@ class ChainedQuizQuiz {
 		$output .= '<table border="1" cellspacing="0" cellpadding="10">';
 
 		// NONE
+		$count = 0; // To count how many answers in this category so that 'None (N/A)' can be inserted, as necessary.
 		$output .= '<tr><th colspan="2">Orchestra Response</th></tr>
 					<tr><td colspan="2"><ul>';
-
+		
 		for ($i = 0; $i < count($answers); $i++) {
 			$user_answer = '';
 
@@ -402,13 +409,16 @@ class ChainedQuizQuiz {
 					}
 					
 					$user_answer .= '</li>';
+					$count++;
 				}
 			}
 			$output .= $user_answer;
 		}
+		$output .= $count == 0 ? 'None (N/A)' : '';
 		$output .= '</ul>';
 
 		// SUBJECTIVE
+		$count = 0; // To count how many answers in this category so that 'None (N/A)' can be inserted, as necessary.
 		$output .= '<tr><th colspan="2">S (Subjective)</th></tr>
 					<tr><td colspan="2"><ul>';
 		
@@ -443,13 +453,16 @@ class ChainedQuizQuiz {
 					}
 					
 					$user_answer .= '</li>';
+					$count++;
 				}
-			}
+			} 
 			$output .= $user_answer;
-		}			
+		}
+		$output .= $count == 0 ? 'None (N/A)' : '';
 		$output .= '</ul></td></tr>';
 
 		// OBJECTIVE
+		$count = 0; // To count how many answers in this category so that 'None (N/A)' can be inserted, as necessary.
 		$output .= '<tr><th colspan="2">O (Objective)</th></tr>
 			<tr><td colspan="2"><ul>';
 		
@@ -484,47 +497,28 @@ class ChainedQuizQuiz {
 						}
 						
 						$user_answer .= '</li>';
+						$count++;
 					}
-				}
+				} 
 				$output .= $user_answer;
 			}		
-		$output .= '</ul></td></tr>';
+			$output .= $count == 0 ? 'None (N/A)' : '';
+			$output .= '</ul></td></tr>';
 
 
 		// ASSESSMENT and PLAN Side-by-Side
+		$count = 0; // To count how many answers in this category so that 'None (N/A)' can be inserted, as necessary.
 		$output .= '<tr><th>A (Assessment)</th><th>P (Plan)</th></tr>';
+		$user_answer = '';
 		foreach ($answers as $answer) {
 			if (!empty($answer->assessment) && !empty($answer->plan)) {
-				$output .= '<tr><td width="50%">'.$answer->assessment.'</td><td width="50%">'.$answer->plan.'</td></tr>';
+				$user_answer .= '<tr><td width="50%">'.$answer->assessment.'</td><td width="50%">'.$answer->plan.'</td></tr>';
+				$count++;
 			}
 		}
 
+		$output .= $count == 0 ? '<tr><td width="50%">None (N/A)</td><td width="50%">None (N/A)</td></tr>' : $user_answer;
 		$output .= '</table>';
-
-/* 		// ASSESSMENT
-		$output .= '<th>A (Assessment)</th>
-			<tr><td><ol>';
-		
-		foreach ($answers as $answer) {
-			if (!empty($answer->assessment)) {
-				$output .= '<li>' . $answer->assessment . '</li>';
-			}			
-		}
-		
-		$output .= '</ol></td></tr>';
-
-
-		// PLAN
-		$output .= '<th>P (Plan)</th>
-			<tr><td><ol>';
-		
-		foreach ($answers as $answer) {
-			if (!empty($answer->plan)) {
-				$output .= '<li>' . $answer->plan . '</li>';	
-			}
-		}
-		
-		$output .= '</ol></td></tr></table>'; */
 		
 		return $output;	
 	} // end soap-note

@@ -1,5 +1,0 @@
-// These are the changes that need to be done when upgrading the plugin from 1.0.0 to 2.0.0.
-
-Change the [chained-quiz] shortcode to [triage-algorithm].
-
-Change the Study ID question to a 'none' SOAP TYPE.

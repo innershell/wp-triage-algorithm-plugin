@@ -78,8 +78,12 @@ None yet.
 
 == Changelog ==
 
-= Version 2.0.0 =
+= Version 2.0.1 =
+- Bug fix.
+
+= Version 2.0 =
 - Added Dashboard functionality.
 
-= Version 1.0.0 =
+= Version 1.0 =
 - First public release of a triage algorithm
+

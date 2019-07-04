@@ -122,7 +122,7 @@ class ChainedQuizCompleted {
 		// select all the given answers in these records
 		$rids = array(0);
 		foreach($records as $record) $rids[] = $record->id;		
-		$answers = $wpdb->get_results( "SELECT tA.answer as answer, tA.points as points, tQ.title as question,
+		$answers = $wpdb->get_results( "SELECT tA.answer as answer, tA.answer_text as answer_text, tA.points as points, tQ.title as question,
 			tA.completion_id as completion_id, tQ.qtype as qtype, tA.comments as comments 
 			FROM ".CHAINED_USER_ANSWERS." tA JOIN ".CHAINED_QUESTIONS." tQ
 			ON tQ.id = tA.question_id
@@ -147,7 +147,7 @@ class ChainedQuizCompleted {
 			$ids = explode(',', $answer->answer);
 			$answer_text = '';
 			
-			if($answer->qtype == 'text') $answer_text = esc_html(stripslashes($answer->answer));
+			if($answer->qtype == 'text') $answer_text = esc_html(stripslashes($answer->answer_text));
 			else { 
 				foreach($ids as $id) {
 					foreach($choices as $choice) {
@@ -242,8 +242,8 @@ class ChainedQuizCompleted {
 		include(CHAINED_PATH."/views/completed.html.php");
 	} // end manage
 
-	// Generate the triage algorithm responses dashboard/table.
-	static function view_responses() {
+	// Generate the triage algorithm submitted responses as a dashboard/table.
+	static function view_submissions($algorithm_ids) {
 		global $wpdb;
 
 		$results = $wpdb->get_results(
@@ -252,14 +252,15 @@ class ChainedQuizCompleted {
 			JOIN ".CHAINED_COMPLETED." tCOM
 			JOIN ".CHAINED_QUESTIONS." tQUES
 			JOIN ".CHAINED_USER_ANSWERS." tUA
-			WHERE tQUIZ.id = tCOM.quiz_id 
+			WHERE tQUIZ.id IN  ($algorithm_ids)
+			AND tQUIZ.id = tCOM.quiz_id 
 			AND tQUIZ.id = tQUES.quiz_id
 			AND tQUES.id = tUA.question_id
 			AND tCOM.id = tUA.completion_id
 			AND tQUES.sort_order = 1
 			ORDER BY tCOM.datetime DESC");
 
-		include(CHAINED_PATH."/views/responses.html.php");
+		include(CHAINED_PATH."/views/submissions.html.php");
 	}
 	
 	// defines whether to sort by ASC or DESC

@@ -63,29 +63,31 @@
 		
 		
 		<table class="widefat">
-			<tr><th><a href="admin.php?page=chainedquiz_list&quiz_id=<?php echo $quiz->id?>&ob=tC.id&dir=<?php echo self :: define_dir('tC.id', $ob, $dir);?>&<?php echo $filters_url;?>"><?php _e('Record ID','chained')?></a></th><th><?php _e('User name, email or IP','chained')?></th><th><a href="admin.php?page=chainedquiz_list&quiz_id=<?php echo $quiz->id?>&ob=datetime&dir=<?php echo self :: define_dir('datetime', $ob, $dir);?>&<?php echo $filters_url;?>"><?php _e('Date/time','chained')?></a></th>
-			<th><a href="admin.php?page=chainedquiz_list&quiz_id=<?php echo $quiz->id?>&ob=points&dir=<?php echo self :: define_dir('points', $ob, $dir);?>&<?php echo $filters_url;?>"><?php _e('Points','chained')?></a></th><th><a href="admin.php?page=chainedquiz_list&quiz_id=<?php echo $quiz->id?>&ob=result_title&dir=<?php echo self :: define_dir('result_title', $ob, $dir);?>&<?php echo $filters_url;?>"><?php _e('Result','chained')?></a></th>
-			<th><?php _e('Delete', 'chained')?></th></tr>
+			<tr>
+				<th><a href="admin.php?page=chainedquiz_list&quiz_id=<?php echo $quiz->id?>&ob=tC.id&dir=<?php echo self :: define_dir('tC.id', $ob, $dir);?>&<?php echo $filters_url;?>"><?php _e('Record ID','chained')?></a></th>
+				<th><?php _e('User name, email or IP','chained')?></th>
+				<th><a href="admin.php?page=chainedquiz_list&quiz_id=<?php echo $quiz->id?>&ob=datetime&dir=<?php echo self :: define_dir('datetime', $ob, $dir);?>&<?php echo $filters_url;?>"><?php _e('Date/time','chained')?></a></th>
+				<th><a href="admin.php?page=chainedquiz_list&quiz_id=<?php echo $quiz->id?>&ob=result_title&dir=<?php echo self :: define_dir('result_title', $ob, $dir);?>&<?php echo $filters_url;?>"><?php _e('Result','chained')?></a></th>
+				<th><?php _e('Delete', 'chained')?></th></tr>
 			<?php foreach($records as $record):
 				$class = ('alternate' == @$class) ? '' : 'alternate';?>
 				<tr class="<?php echo $class?>">				
-				<td><?php echo $record->id?></td>
-				<td><?php echo empty($record->user_id) ? $record->ip : $record->user_nicename;
-				if(!empty($record->email)) echo '<br>'.$record->email;?></td>
-				<td><?php echo date_i18n($dateformat.' '.$timeformat, strtotime($record->datetime));
-				if(!empty($record->source_url)): printf('<br>'.__('Source: %s', 'chained'), $record->source_url); endif; ?></td>
-				<td><?php echo $record->points?></td><td><?php echo stripslashes($record->result_title);
-				if(sizeof($record->details)):?><p><a href="#" onclick="jQuery('#recordDetails<?php echo $record->id?>').toggle();return false;"><?php _e('View details', 'chained');?></a></p><?php endif;?></td>
-				<td><a href="#" onclick="chainedQuizDelete(<?php echo $record->id?>);return false;"><?php _e('Delete', 'chained')?></a></td></tr>
+					<td><?php echo $record->id?></td>
+					<td><?php echo empty($record->user_id) ? $record->ip : $record->user_nicename; if(!empty($record->email)) echo '<br>'.$record->email;?></td>
+					<td><?php echo date_i18n($dateformat.' '.$timeformat, strtotime($record->datetime)); if(!empty($record->source_url)): printf('<br>'.__('Source: %s', 'chained'), $record->source_url); endif; ?></td>
+					<td><?php echo stripslashes($record->result_title); if(sizeof($record->details)):?><p><a href="#" onclick="jQuery('#recordDetails<?php echo $record->id?>').toggle();return false;"><?php _e('View details', 'chained');?></a></p><?php endif;?></td>
+					<td><a href="#" onclick="chainedQuizDelete(<?php echo $record->id?>);return false;"><?php _e('Delete', 'chained')?></a></td>
+				</tr>
 				
 				<?php if(count($record->details)):?>
 					<tr class="<?php echo $class?>" id="recordDetails<?php echo $record->id?>" style="display:none;">
 						<td colspan="6">
-							<table  width="100%"><tr><th><?php _e('Question', 'chained')?></th><th><?php _e('Answer', 'chained')?></th>
-								<th><?php _e('Points', 'chained')?></th></tr>
-							<?php foreach($record->details as $detail):?>
-								<tr style="background:#EEE;"><td><?php echo stripslashes($detail->question)?></td><td><?php echo stripslashes($detail->answer_text);?></td>
-									<td><?php echo $detail->points?></td></tr>
+							<table  width="100%"><tr>
+								<th><?php _e('Question', 'chained')?></th>
+								<th><?php _e('Answer', 'chained')?></th>
+							<?php foreach($record->details as $detail):?><tr style="background:#EEE;">
+								<td><?php echo stripslashes($detail->question)?></td>
+								<td><?php echo stripslashes($detail->answer_text);?></td>
 							<?php endforeach;?>	
 							</table>						
 						</td>	

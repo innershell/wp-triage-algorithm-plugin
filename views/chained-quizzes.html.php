@@ -13,7 +13,7 @@
 			$class = ('alternate' == @$class) ? '' : 'alternate';?>
 			<tr class="<?php echo $class?>"><td><?php if(!empty($quiz->post)) echo "<a href='".get_permalink($quiz->post->ID)."' target='_blank'>"; 
 				echo stripslashes($quiz->title);
-				if(!empty($quiz->post)) echo "</a>";?></td><td><input type="text" size="18" value="[chained-quiz <?php echo $quiz->id?>]" readonly onclick="this.select();"></td>
+				if(!empty($quiz->post)) echo "</a>";?></td><td><input type="text" size="18" value="[triage-algorithm <?php echo $quiz->id?>]" readonly onclick="this.select();"></td>
 			<td><a href="admin.php?page=chainedquiz_questions&quiz_id=<?php echo $quiz->id?>"><?php _e('Manage', 'chained')?></a></td>
 			<td><a href="admin.php?page=chainedquiz_results&quiz_id=<?php echo $quiz->id?>"><?php _e('Manage', 'chained')?></a></td>
 			<td><?php if($quiz->submissions):?>

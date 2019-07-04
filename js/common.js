@@ -85,12 +85,13 @@ chainedQuiz.initializeQuestion = function(quizID) {
 
 chainedQuiz.disagree = function(completionID, url) {
 	// Prompt the user for feedback commment and encode the strings to a valid URL.
-	var comment = encodeURI(prompt("What feedback do you have with the SOAP note?", ""));
+	var comment = prompt("What feedback do you have with the SOAP note?", "");
+	var encoded_comment = encodeURI(comment);
 	if (comment != null) {
 		// Prepare the URL parameters to POST.
 		data = 'action=chainedquiz_ajax';
 		data += '&chainedquiz_action=feedback';
-		data += '&comment=' + comment;
+		data += '&comment=' + encoded_comment;
 
 		// Submit the feedback to the server-side PHP.
 		jQuery.post(url, data);

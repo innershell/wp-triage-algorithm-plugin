@@ -12,10 +12,16 @@ class TriageShortcodes {
 		return $content;
 	} // end algorithm()
 
-	// Shortcode handler/receiver for [triage-dashboard].
+	// Shortcode handler/receiver for [triage-submissions].
 	static function responsesShortcodeHandler($atts) {
+
+		$args = shortcode_atts( array(
+			'algorithm' => '0'
+		), $atts );
+
+		$algorithm_id = @$atts[0];
 		ob_start();
-		ChainedQuizCompleted :: view_responses();
+		ChainedQuizCompleted :: view_submissions($args['algorithm']);
 		$content = ob_get_clean();
 		return $content;
 	} // end dashboard()
