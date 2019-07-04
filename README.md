@@ -48,7 +48,7 @@ After you create your results you will be redirected to creating the actual ques
 
 Don't forget that the algorithm must be **published** before it becomes accessible. Publishing happens when you manually place the shortcode of the algorithm in a post or page or select the option "Automatically publish" when you save it.
 
-**Attention Multi-Site (WP Network) Users**!
+**Attention Multi-Site (WP Network) Users!** 
 The plugin is perfectly compatible with multi-site installations but it should be activated as **blog admin** and NOT as superadmin.
 
 # Installation
