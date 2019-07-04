@@ -14,7 +14,7 @@ chainedQuiz.goon = function(quizID, url) {
 		if(this.checked) anyChecked = true; 	
 	});
 	
-	if(!anyChecked && qType != 'text') {
+	if(!anyChecked && qType != 'text' && qType != 'date') {
 		alert(chained_i18n.please_answer);
 		jQuery('#chained-quiz-action-' + quizID).removeAttr('disabled');
 		return false;
@@ -45,38 +45,36 @@ chainedQuiz.goon = function(quizID, url) {
 	data += '&chainedquiz_action=answer';
 	this.questions_answered++;
 	data += '&total_questions=' + this.questions_answered;
-	
-	// console.log(data);
 	jQuery.post(url, data, function(msg) {
-		  parts = msg.split("|CHAINEDQUIZ|");
-		  points = parseFloat(parts[0]);
-		  if(isNaN(points)) points = 0;
-		  chainedQuiz.points += points;		  
+		parts = msg.split("|CHAINEDQUIZ|");
+		points = parseFloat(parts[0]);
+		if(isNaN(points)) points = 0;
+		chainedQuiz.points += points;		  
+
+		if(jQuery('body').scrollTop() > 250) {				
+			jQuery('html, body').animate({
+				scrollTop: jQuery('#chained-quiz-wrap-'+quizID).offset().top -100
+			}, 500);
+		}
+
+		jQuery('#chained-quiz-action-' + quizID).removeAttr('disabled');
+		
+		// redirect?
+		if(parts[1].indexOf('[CHAINED_REDIRECT]') != -1) {
+			var sparts = parts[1].split('[CHAINED_REDIRECT]');
+			window.location=sparts[1];
+		}
+		else {
+			// load next question or the final screen
+			jQuery('#chained-quiz-div-'+quizID).html(parts[1]);	
 			
-			if(jQuery('body').scrollTop() > 250) {				
-				jQuery('html, body').animate({
-			   		scrollTop: jQuery('#chained-quiz-wrap-'+quizID).offset().top -100
-			   }, 500);   
-			}		  
-			
-		  jQuery('#chained-quiz-action-' + quizID).removeAttr('disabled');
-		  
-		  // redirect?
-		  if(parts[1].indexOf('[CHAINED_REDIRECT]') != -1) {
-		  	  var sparts = parts[1].split('[CHAINED_REDIRECT]');
-		  	  window.location=sparts[1];
-		  }
-		  else {
-		  		// load next question or the final screen
-		  	  jQuery('#chained-quiz-div-'+quizID).html(parts[1]);	
-		  	  
-			  // hide/show "go ahead" button depending on comment in the HTML code
-			  if(parts[1].indexOf('<!--hide_go_ahead-->') != -1) jQuery('#chained-quiz-action-' + quizID).hide();
-			  else jQuery('#chained-quiz-action-' + quizID).show();			  	  
-		  	  	  
-		     jQuery('#chained-quiz-form-' + quizID + ' input[name=points]').val(chainedQuiz.points);
-		     chainedQuiz.initializeQuestion(quizID);
-		  }
+			// hide/show "go ahead" button depending on comment in the HTML code
+			if(parts[1].indexOf('<!--hide_go_ahead-->') != -1) jQuery('#chained-quiz-action-' + quizID).hide();
+			else jQuery('#chained-quiz-action-' + quizID).show();			  	  
+				
+			jQuery('#chained-quiz-form-' + quizID + ' input[name=points]').val(chainedQuiz.points);
+			chainedQuiz.initializeQuestion(quizID);
+		}
 	});
 }
 

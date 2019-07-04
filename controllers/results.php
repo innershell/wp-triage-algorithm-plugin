@@ -22,7 +22,11 @@ class ChainedQuizResults {
  		
  		if(!empty($_POST['save']) and check_admin_referer('chained_result')) {
  			try {
- 				$_POST['description'] = $_POST['description'.intval($_POST['id'])];
+				$_POST['description'] = $_POST['description'.intval($_POST['id'])];
+				$_POST['subjective'] = $_POST['subjective'.intval($_POST['id'])];
+				$_POST['objective'] = $_POST['objective'.intval($_POST['id'])];
+				$_POST['assessment'] = $_POST['assessment'.intval($_POST['id'])];
+				$_POST['plan'] = $_POST['plan'.intval($_POST['id'])];
  				$_result->save($_POST, $_POST['id']);
  			}
  			catch(Exception $e) {

@@ -53,7 +53,7 @@
 				<!-- (deprecating this injection code) <li>{{answers-table}} <?php _e('- A table with the questions, answers given by the user, correct / wrong info and points collected.', 'chained')?></li> -->				
 				<!-- (let's leave this for the next version) li>{{correct}} <?php _e('- The number of correctly answered questions', 'chained')?></li> -->
 			</ul>			
-			<p><?php echo wp_editor(stripslashes($output), 'output')?></p>		
+			<p><?php echo wp_editor(stripslashes($output), 'output', ["textarea_rows" => 10])?></p>		
 		
 			
 			<!-- (the original email output code)
@@ -77,8 +77,8 @@
 			<p><?php _e('The data to be generated and saved for e-mail, provider, and dashboards. You can use the same Injection Codes as in the Final Screen box.', 'chained')?></p>
 
 			<div id="chainedEmailSettings" style="display:block">
-				<div id="chainedEmailOutputs" style="display:<?php echo empty($quiz->set_email_output) ? 'none' : 'email';?>">
-					<?php echo wp_editor(stripslashes($quiz->email_output), 'email_output')?><br />
+				<div id="chainedEmailOutputs" style="display:email">
+					<?php echo wp_editor(stripslashes($quiz->email_output), 'email_output', ["textarea_rows" => 10])?><br />
 					<p><input type="checkbox" name="set_email_output" value="1" <?php if(!empty($quiz->set_email_output)) echo 'checked'?>> 
 					<?php _e('Uncheck to use Finish Screen output instead.', 'chained');?></p>
 					<p><?php _e('Use the {{{split}}} tag to make the email contents different for Admins and Users. The content before the {{{split}}} tag will be sent to the user and the content after the {{{split}}} tag - to the admin.','chained');?></p>

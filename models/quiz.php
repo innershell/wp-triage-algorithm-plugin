@@ -1,6 +1,11 @@
 <?php
 if( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 class ChainedQuizQuiz {
+
+
+	/**************************************************************************
+	 * FUNCTION: Add a new quiz.
+	 **************************************************************************/
 	function add($vars) {
 		global $wpdb;
 		
@@ -9,9 +14,9 @@ class ChainedQuizQuiz {
 		$save_source_url = empty($vars['save_source_url']) ? 0 : 1;
 		$vars['title'] = sanitize_text_field($vars['title']);
 		$email_admin = empty($vars['email_admin']) ? 0 : 1;
-      $email_user = empty($vars['email_user']) ? 0 : 1;
-      $set_email_output = empty($vars['set_email_output']) ? 0 : 1;
-      $email_output = chained_strip_tags($vars['email_output']);
+		$email_user = empty($vars['email_user']) ? 0 : 1;
+		$set_email_output = empty($vars['set_email_output']) ? 0 : 1;
+		$email_output = chained_strip_tags($vars['email_output']);
 		
 		if(!current_user_can('unfiltered_html')) {
 			$vars['output'] = strip_tags($vars['output']);
@@ -29,8 +34,12 @@ class ChainedQuizQuiz {
 		if(!empty($vars['auto_publish'])) $this->auto_publish($quiz_id, $vars);		
 		
 		return $quiz_id;	
-	} // end add
-	
+	}
+
+
+	/**************************************************************************
+	 * FUNCTION: Save changes to a quiz.
+	 **************************************************************************/
 	function save($vars, $id) {
 		global $wpdb;
 		
@@ -61,7 +70,11 @@ class ChainedQuizQuiz {
 		if(!empty($vars['auto_publish'])) $this->auto_publish($id, $vars);
 		return true;	
 	}
-	
+
+
+	/**************************************************************************
+	 * FUNCTION: Delete a quiz.
+	 **************************************************************************/
 	function delete($id) {
 		global $wpdb;
 		
@@ -80,6 +93,10 @@ class ChainedQuizQuiz {
 		$wpdb->query($wpdb->prepare("DELETE FROM ".CHAINED_QUIZZES." WHERE id=%d", $id));
 	}
 
+
+	/**************************************************************************
+	 * FUNCTION: Finalize a quiz.
+	 **************************************************************************/
 	function finalize($quiz, $points) {		
 	    global $wpdb, $user_ID;
 	    
@@ -87,19 +104,12 @@ class ChainedQuizQuiz {
 	    $completion_id = intval(@$_SESSION['chained_completion_id']);
 	
 		$_result = new ChainedQuizResult();
-		// calculate result
-		$result = $_result->calculate($output, $points);
+		$result = $_result->calculate($quiz, $points);
 		
 		// get final screen and replace vars
 		$snapshot = ''; // The SOAP note data to be saved in the submission record snapshot.
 		$output = stripslashes($quiz->output);
 		$email_output = $quiz->set_email_output ? stripslashes($quiz->email_output) : $output;
-		
-		/** THIS MAY BE REMOVED BECAUSE THE EMAIL OUTPUT IS USED FOR SNAPSHOT INSTEAD */
-		$output = str_replace('{{result-title}}', @$result->title, $output);
-		$output = str_replace('{{result-text}}', stripslashes(@$result->description), $output);
-		$output = str_replace('{{points}}', $points, $output);
-		$output = str_replace('{{questions}}', $_POST['total_questions'], $output);
 		
 		// Find the first occurrence of the shortcode and replace with the HTML answers table.
 		if(strstr($output, '{{answers-table}}')) {
@@ -107,35 +117,41 @@ class ChainedQuizQuiz {
 			$output = str_replace('{{answers-table}}', $snapshot, $output);
 		}
 
-		// If there is now HTML answers table, then substitute it for the soap note instead.
+		// If there is no HTML answers table, then substitute it for the soap note instead.
 		if ($snapshot == '') {
-			$snapshot = $this->soap_note($completion_id);
+			$snapshot = $this->soap_note($completion_id, $result);
 		}
 
-		// Find the first occurrence of the shortcode and replace with the HTML SOAP note.
+		// Find the first occurrence of the shortcode and replace with the SOAP note.
 		if(strstr($output, '{{soap-note}}')) {
 			$output = str_replace('{{soap-note}}', $snapshot, $output);
 		}
-		
-		$email_output = str_replace('{{result-title}}', @$result->title, $email_output);
-		$email_output = str_replace('{{result-text}}', stripslashes(@$result->description), $email_output);
-		$email_output = str_replace('{{points}}', $points, $email_output);
-		$email_output = str_replace('{{questions}}', $_POST['total_questions'], $email_output);
+
+		$output = str_replace('{{result-title}}', @$result->title, $output);
+		$output = str_replace('{{result-text}}', stripslashes(@$result->description), $output);
+		$output = str_replace('{{points}}', $points, $output);
+		$output = str_replace('{{questions}}', $_POST['total_questions'], $output);
+
 		
 		// Find the first occurrence of the shortcode and replace with the HTML answers table.
 		if(strstr($email_output, '{{answers-table}}')) {
 			$email_output = str_replace('{{answers-table}}', $this->answers_table($completion_id), $email_output);
 		}
 		
-		// If there is now HTML answers table, then substitute it for the soap note instead.
+		// If there is no HTML answers table, then substitute it for the SOAP note instead.
 		if ($snapshot == '') {
-			$snapshot = $this->soap_note($completion_id);
+			$snapshot = $this->soap_note($completion_id, $result);
 		}
 
-		// Find the first occurrence of the shortcode and replace with the HTML SOAP note.
+		// Find the first occurrence of the shortcode and replace with the SOAP note.
 		if(strstr($email_output, '{{soap-note}}')) {
-			$email_output = str_replace('{{soap-note}}', $this->soap_note($completion_id), $email_output);
+			$email_output = str_replace('{{soap-note}}', $this->soap_note($completion_id, $result), $email_output);
 		}
+
+		$email_output = str_replace('{{result-title}}', @$result->title, $email_output);
+		$email_output = str_replace('{{result-text}}', stripslashes(@$result->description), $email_output);
+		$email_output = str_replace('{{points}}', $points, $email_output);
+		$email_output = str_replace('{{questions}}', $_POST['total_questions'], $email_output);
 		
 		// Email attachment
 		/** TODO: Fetch the email method from config. */
@@ -153,8 +169,7 @@ class ChainedQuizQuiz {
 			$this->send_emails($quiz, "SOAP note for diabetes triage.", $file); // Sends email to either the performing USER or ADMIN.
 		} else {
 			$this->send_emails($quiz, $email_output, null); // Sends email to either the performing USER or ADMIN.
-		}
-		
+		}		
 		
 		$GLOBALS['chained_completion_id'] = $completion_id;
 		$GLOBALS['chained_result_id'] = @$result->id;
@@ -201,9 +216,12 @@ class ChainedQuizQuiz {
 		if(!empty($result->redirect_url)) $output = "[CHAINED_REDIRECT]".$result->redirect_url;
 		
 		return $output;
-   	} // end finalize
-   
-   	// send email to user and admin if required
+   	}
+
+
+	/**************************************************************************
+	 * FUNCTION: Send emails to user and admin.
+	 **************************************************************************/
    	function send_emails($quiz, $output, $attach_path) {
 		// Exit if there are no e-mails to send.
 		if(empty($quiz->email_admin) and empty($quiz->email_user)) return true;
@@ -265,8 +283,12 @@ class ChainedQuizQuiz {
 				
 				wp_mail($user_email, $subject, $message, $headers, $attachments);
 		}
-	} // end send_emails()
-	
+	}
+
+
+	/**************************************************************************
+	 * FUNCTION: Auto-publish the results as a post.
+	 **************************************************************************/
 	function auto_publish($quiz_id, $vars) {
 		global $wpdb;
 	
@@ -275,7 +297,10 @@ class ChainedQuizQuiz {
 		wp_insert_post($post);
 	}
 	
-	// creates a table from questions and answers along with correct / wrong answer and points collected
+
+	/**************************************************************************
+	 * FUNCTION: Create a table of questions and answers along with correct/wrong answer and points.
+	 **************************************************************************/
 	function answers_table($completion_id) {
 		global $wpdb;
 		
@@ -365,12 +390,13 @@ class ChainedQuizQuiz {
 		$output .= '</table>';
 		
 		return $output;	
-	} // end answers_table
+	}
 
-	/**
-	 * FUNCTION: SOAP_NOTE builds a standardized medical note using the user's answers and question config.
-	 */
-	function soap_note($completion_id) {
+
+	/**************************************************************************
+	 * FUNCTION: Builds a SOAP note using the user's answers and question config.
+	 **************************************************************************/
+	function soap_note($completion_id, $result) {
 		global $wpdb;		
 		$_question = new ChainedQuizQuestion();
 		$debug_mode = get_option('chained_debug_mode');
@@ -399,10 +425,9 @@ class ChainedQuizQuiz {
 			if ($answers[$i]->soap_type == 'n') {
 				if (!empty($answers[$i]->answer)) {
 
-					// For text questions, the note is a prepared answer using text substitution from the user's input.
-					// For non-text questions, the note uses the provider note value setup by admin in the config.
-					//    ** If the admin didn't setup a provider note, then it just shows the user's raw answers.
-					if ($answers[$i]->qtype == 'text') {
+					// For text and date questions, the note is a prepared answer using text substitution from the user's input.
+					// ** If the admin didn't setup a provider note, then it just shows the user's raw answers.
+					if ($answers[$i]->qtype == 'text' || $answers[$i]->qtype == 'date') {
 						$user_answer .= '<li>';
 						$current_question_id = $answers[$i]->question_id;
 						while($answers[$i]->question_id == $current_question_id) {
@@ -412,8 +437,8 @@ class ChainedQuizQuiz {
 						}
 						$user_answer .= ".</li>";
 						$i--;
-					} 
-					// Warning that no a provider note was not setup by the admin for this radio/checkbox answer.
+					}
+					// Warning that a provider note was not setup by the admin for this radio/checkbox answer.
 					elseif (empty($answers[$i]->provider_note) && $debug_mode == "on") {
 						$user_answer .= '<li>[DEBUG] PROVIDER_NOTE EMPTY: ' . stripslashes($answers[$i]->question) . '/' . stripslashes($answers[$i]->choice) . '</li>';
 					} 
@@ -426,6 +451,12 @@ class ChainedQuizQuiz {
 				}
 			}
 			$output .= $user_answer;
+		}
+
+		// Add the description for the Algorithm Result.
+		if ($result->description) {
+			$output .= '<li>' . $result->description . '</li>';
+			$count++;
 		}
 		$output .= $count == 0 ? 'None (N/A)' : '';
 		$output .= '</ul>';
@@ -443,9 +474,8 @@ class ChainedQuizQuiz {
 				if (!empty($answers[$i]->answer)) {
 
 					// For text questions, the note is a prepared answer using text substitution from the user's input.
-					// For non-text questions, the note uses the provider note value setup by admin in the config.
-					//    ** If the admin didn't setup a provider note, then it just shows the user's raw answers.
-					if ($answers[$i]->qtype == 'text') {
+					// ** If the admin didn't setup a provider note, then it just shows the user's raw answers.
+					if ($answers[$i]->qtype == 'text' || $answers[$i]->qtype == 'date') {
 						$user_answer .= '<li>';
 						$current_question_id = $answers[$i]->question_id;
 						while($answers[$i]->question_id == $current_question_id) {
@@ -455,7 +485,7 @@ class ChainedQuizQuiz {
 						}
 						$user_answer .= ".</li>";
 						$i--;
-					} 
+					}
 					// Warning that no a provider note was not setup by the admin for this radio/checkbox answer.
 					elseif (empty($answers[$i]->provider_note) && $debug_mode == "on") {
 						$user_answer .= '<li>[DEBUG] PROVIDER_NOTE EMPTY: ' . stripslashes($answers[$i]->question) . '/' . stripslashes($answers[$i]->choice) . '</li>';
@@ -470,6 +500,12 @@ class ChainedQuizQuiz {
 			} 
 			$output .= $user_answer;
 		}
+
+		// Add the subjective note for the Algorithm Result.
+		if ($result->subjective) {
+			$output .= '<li>' . $result->subjective . '</li>';
+			$count++;
+		}
 		$output .= $count == 0 ? 'None (N/A)' : '';
 		$output .= '</ul></td></tr>';
 
@@ -478,43 +514,49 @@ class ChainedQuizQuiz {
 		$output .= '<tr><th colspan="2">O (Objective)</th></tr>
 			<tr><td colspan="2"><ul>';
 		
-			for ($i = 0; $i < count($answers); $i++) {
-				$user_answer = '';
-	
-				// Display the provider note.
-				if ($answers[$i]->soap_type == 'o') {
-					if (!empty($answers[$i]->answer)) {
-	
-						// For text questions, the note is a prepared answer using text substitution from the user's input.
-						// For non-text questions, the note uses the provider note value setup by admin in the config.
-						//    ** If the admin didn't setup a provider note, then it just shows the user's raw answers.
-						if ($answers[$i]->qtype == 'text') {
-							$user_answer .= '<li>';
-							$current_question_id = $answers[$i]->question_id;
-							while($answers[$i]->question_id == $current_question_id) {
-								if (strlen($user_answer) > 0) $user_answer .= ' ';
-								$user_answer .= stripslashes($answers[$i]->provider_note) . ' <strong>' . stripslashes($answers[$i]->answer_text) . '</strong>';
-								$i++;
-							}
-							$user_answer .= ".</li>";
-							$i--;
-						} 
-						// Warning that no a provider note was not setup by the admin for this radio/checkbox answer.
-						elseif (empty($answers[$i]->provider_note) && $debug_mode == "on") {
-							$user_answer .= '<li>[DEBUG] PROVIDER_NOTE EMPTY: ' . stripslashes($answers[$i]->choice) . '</li>';
-						} 
-						// The user's answer is displayed using the provider note for the answer.
-						elseif (empty($answers[$i]->provider_note)) {
-							$user_answer .= '<li>' . $answers[$i]->provider_note . '</li>';;
+		for ($i = 0; $i < count($answers); $i++) {
+			$user_answer = '';
+
+			// Display the provider note.
+			if ($answers[$i]->soap_type == 'o') {
+				if (!empty($answers[$i]->answer)) {
+
+					// For text questions, the note is a prepared answer using text substitution from the user's input.
+					// For non-text questions, the note uses the provider note value setup by admin in the config.
+					//    ** If the admin didn't setup a provider note, then it just shows the user's raw answers.
+					if ($answers[$i]->qtype == 'text') {
+						$user_answer .= '<li>';
+						$current_question_id = $answers[$i]->question_id;
+						while($answers[$i]->question_id == $current_question_id) {
+							if (strlen($user_answer) > 0) $user_answer .= ' ';
+							$user_answer .= stripslashes($answers[$i]->provider_note) . ' <strong>' . stripslashes($answers[$i]->answer_text) . '</strong>';
+							$i++;
 						}
-						
-						$count++;
+						$user_answer .= ".</li>";
+						$i--;
+					} 
+					// Warning that no a provider note was not setup by the admin for this radio/checkbox answer.
+					elseif (empty($answers[$i]->provider_note) && $debug_mode == "on") {
+						$user_answer .= '<li>[DEBUG] PROVIDER_NOTE EMPTY: ' . stripslashes($answers[$i]->choice) . '</li>';
+					} 
+					// The user's answer is displayed using the provider note for the answer.
+					elseif (empty($answers[$i]->provider_note)) {
+						$user_answer .= '<li>' . $answers[$i]->provider_note . '</li>';;
 					}
-				} 
-				$output .= $user_answer;
-			}		
-			$output .= $count == 0 ? 'None (N/A)' : '';
-			$output .= '</ul></td></tr>';
+					
+					$count++;
+				}
+			} 
+			$output .= $user_answer;
+		}
+
+		// Add the objective note for the Algorithm Result.
+		if ($result->objective) {
+			$output .= '<li>' . $result->objective . '</li>';
+			$count++;
+		}
+		$output .= $count == 0 ? 'None (N/A)' : '';
+		$output .= '</ul></td></tr>';
 
 
 		// ASSESSMENT and PLAN Side-by-Side
@@ -528,14 +570,22 @@ class ChainedQuizQuiz {
 			}
 		}
 
+		// Add the assessment and plan for the Algorithm Result.
+		if ($result->assessment || $result->plan) {
+			$user_answer .= '<tr><td width="50%">'.$result->assessment.'</td><td width="50%">'.$result->plan.'</td></tr>';
+			$count++;
+		}
+
 		$output .= $count == 0 ? '<tr><td width="50%">None (N/A)</td><td width="50%">None (N/A)</td></tr>' : $user_answer;
 		$output .= '</table>';
 		
 		return $output;	
-	} // end soap-note
+	}
 
 	
-	// copy / duplicate quiz
+	/**************************************************************************
+	 * FUNCTION: Copy/duplicate an entire quis.
+	 **************************************************************************/
 	static function copy($id) {
 	   global $wpdb;
       $id = intval($id);
@@ -582,5 +632,5 @@ class ChainedQuizQuiz {
    	         $new_id, $choice->question_id, $choice->choice, $choice->provider_note, $choice->assessment, $choice->plan, $choice->points, $choice->is_correct, $choice->goto));
 	      } // end foreach choice
 	   }
-	} // end copy()
+	}
 }

@@ -60,3 +60,11 @@ div.soap-note {
 	padding: 10px;
 	box-shadow: 5px 5px 10px #0D0D0D;
 }
+
+.page-title {
+	font-size: 32px;
+}
+
+.warning-text {
+	color: red;
+}

@@ -2,21 +2,21 @@
 	<!-- Answer -->
 	<div>
 		<div class="one-line">
-			<?php _e('Answer (for patient presentation):', 'chained')?><br>
+			<?php _e('Patient Answer:', 'chained')?><br>
 			<textarea rows="3" cols="40" name="<?php echo empty($choice->id)?'answers[]':'answer'.$choice->id?>"><?php echo stripslashes(@$choice->choice)?></textarea>
 		</div>
 		<div class="one-line">
-			<?php _e('Provider Note (for provider SOAP note):', 'chained')?><br>
+			<?php _e('Provider SOAP Note:', 'chained')?><br>
 			<textarea rows="3" cols="40" name="<?php echo empty($choice->id)?'provider_notes[]':'provider_note'.$choice->id?>"><?php echo stripslashes(@$choice->provider_note)?></textarea>
 		</div>
 	</div>
 	<div>
 		<div class="one-line">
-			<?php _e('WindWake Assessment:', 'chained')?><br>
+			<?php _e('Assessment:', 'chained')?><br>
 			<textarea rows="2" cols="40" name="<?php echo empty($choice->id)?'assessments[]':'assessment'.$choice->id?>"><?php echo stripslashes(@$choice->assessment)?></textarea>
 		</div>
 		<div class="one-line">
-			<?php _e('WindWake Plan:', 'chained')?><br>
+			<?php _e('Plan:', 'chained')?><br>
 			<textarea rows="2" cols="40" name="<?php echo empty($choice->id)?'plans[]':'plan'.$choice->id?>"><?php echo stripslashes(@$choice->plan)?></textarea>
 		</div>
 	</div>	
@@ -44,10 +44,6 @@
 			<?php endif;?>
 		</select><br>
 	</div>
-
-	
-	<!-- Answer Assessment or Plan -->
-
 
 	<!-- Delete Answer -->
 	<?php if(!empty($choice->id)):?>

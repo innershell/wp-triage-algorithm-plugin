@@ -8,7 +8,7 @@ class ChainedQuiz {
 		global $wpdb;	
 		$wpdb -> show_errors();
 		
-		// If new activation, run the initiatlize some variables first.
+		// If new activation, initialize some variables first.
 		if(!$update) self::init();
 		
 		// CHAINED_QUIZZES
@@ -116,8 +116,8 @@ class ChainedQuiz {
 			$wpdb->query($sql);
 		} 
 		
-		// setup the default options (when not yet saved ever)
-		if(get_option('chained_sender_name') == '') {
+		// Setup the default options (when not yet saved ever)
+		if (get_option('chained_sender_name') == '') {
 			update_option('chained_sender_name', __('WordPress Admin', 'chained'));
 			update_option('chained_sender_email', get_option('admin_email'));
 			update_option('chained_admin_subject', __('User results on {{quiz-name}}', 'chained'));
@@ -125,16 +125,22 @@ class ChainedQuiz {
 		}
 
 		$current_version = get_option('chained_version');
+		error_log("Current 'chained_version' = ".$current_version);
 
 		/** PERFORM VERSION-SPECIFIC UPGRADES HERE **/
 		if ($current_version < '2.2') {
 			update_option('chained_delete_data', 'no');
-		} else if ($current_version < '4.0') {
+		} elseif ($current_version < '4.0') {
 			update_option('chained_debug_mode', 'off');
+		} elseif ($current_version < '5.0') {
+			$wpdb->query("ALTER TABLE ".CHAINED_RESULTS." ADD COLUMN subjective TEXT AFTER description;");
+			$wpdb->query("ALTER TABLE ".CHAINED_RESULTS." ADD COLUMN objective TEXT AFTER subjective;");
+			$wpdb->query("ALTER TABLE ".CHAINED_RESULTS." ADD COLUMN assessment TEXT AFTER objective;");
+			$wpdb->query("ALTER TABLE ".CHAINED_RESULTS." ADD COLUMN plan TEXT AFTER assessment;");
 		}
 
 		// Set the current plugin version number.
-		update_option('chained_version', '4.0');
+		update_option('chained_version', '5.0');
 		// exit;
 	}
    
@@ -144,8 +150,9 @@ class ChainedQuiz {
 		
 		add_menu_page(__('Triage Algorithm', 'chained'), __('Triage Algorithm', 'chained'), $chained_caps, "chained_quizzes", array('ChainedQuizQuizzes', "manage"));
 		add_submenu_page('chained_quizzes', __('Algorithms', 'chained'), __('Algorithms', 'chained'), $chained_caps, 'chained_quizzes', array('ChainedQuizQuizzes', "manage"));					
-		add_submenu_page('chained_quizzes', __('Settings', 'chained'), __('Settings', 'chained'), 'manage_options', 'chainedquiz_options', array('ChainedQuiz','options'));				
+		add_submenu_page('chained_quizzes', __('Settings', 'chained'), __('Settings', 'chained'), 'manage_options', 'chainedquiz_options', array('ChainedQuiz','options'));
 		add_submenu_page('chained_quizzes', __('Social Sharing', 'chained'), __('Social Sharing', 'chained'), $chained_caps, 'chainedquiz_social_sharing', array('ChainedSharing','options'));				
+		add_submenu_page('chained_quizzes', __('Help', 'chained'), __('Help', 'chained'), $chained_caps, 'chainedquiz_help', array('ChainedQuiz','help'));
 			
 		add_submenu_page(NULL, __('Chained Quiz Results', 'chained'), __('Chained Quiz Results', 'chained'), $chained_caps, 'chainedquiz_results', array('ChainedQuizResults','manage'));	
 		add_submenu_page(NULL, __('Chained Quiz Questions', 'chained'), __('Chained Quiz Questions', 'chained'), $chained_caps, 'chainedquiz_questions', array('ChainedQuizQuestions','manage'));	
@@ -165,7 +172,7 @@ class ChainedQuiz {
 				'chained-common',
 				CHAINED_URL.'js/common.js',
 				false,
-				'4.0',
+				'5.0',
 				false
 		);
 		wp_enqueue_script("chained-common");
@@ -180,37 +187,28 @@ class ChainedQuiz {
 		load_plugin_textdomain( 'chained', false, CHAINED_RELATIVE_PATH."/languages/" );
 		if (!session_id()) @session_start();
 		
-		// define table names 
+		// Define table names as named constants.
 		define( 'CHAINED_QUIZZES', $wpdb->prefix. "chained_quizzes");
 		define( 'CHAINED_QUESTIONS', $wpdb->prefix. "chained_questions");
 		define( 'CHAINED_CHOICES', $wpdb->prefix. "chained_choices");
 		define( 'CHAINED_RESULTS', $wpdb->prefix. "chained_results");
 		define( 'CHAINED_COMPLETED', $wpdb->prefix. "chained_completed");
 		define( 'CHAINED_USER_ANSWERS', $wpdb->prefix. "chained_user_answers");
-		define( 'CHAINED_VERSION', get_option('chained_version'));
+		//define( 'CHAINED_VERSION', get_option('chained_version'));
 				
-		// shortcodes
+		// Register shortcodes offered by this plugin.
 		add_shortcode('triage-algorithm', array("TriageShortcodes", "algorithmShortcodeHandler"));
 		add_shortcode('triage-submissions', array("TriageShortcodes", "responsesShortcodeHandler"));
 		add_shortcode('chained-share', array("ChainedSharing", "display"));		
 		
-		// once daily delete empty records older than 1 day
-		// if(get_option('chainedquiz_cleanup') != date("Y-m-d") and defined('CHAINED_COMPLETED')) {
-		// 	$wpdb->query("DELETE FROM ".CHAINED_COMPLETED." WHERE not_empty=0 AND datetime < '".current_time('mysql')."' - INTERVAL 24 HOUR");
-		// 	update_option('chainedquiz_cleanup', date("Y-m-d"));
-		// }
-		
 		add_action('template_redirect', array('ChainedSharing', 'social_share_snippet'));
 		
 		// default CSV separator if not set
-		if(get_option('chained_csv_delim') == '') {
+		if (get_option('chained_csv_delim') == '') {
 			update_option('chained_csv_delim', ',');
 			update_option('chained_csv_quotes', '1');
 		}
 				
-		// $version = get_option('chained_version');
-		// if($version < '0.8') self::install(true);
-
 		// Go ahead and activate the plugin now by running the install script.
 		self::install(true);
 	}
@@ -264,6 +262,6 @@ class ChainedQuiz {
 	}	
 	
 	static function help() {
-		require(CHAINED_PATH."/views/help.php");
+		require(CHAINED_PATH."/views/help.html.php");
 	}	
 }

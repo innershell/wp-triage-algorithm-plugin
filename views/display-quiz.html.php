@@ -58,7 +58,17 @@ if(!empty($quiz->require_login) and !empty($quiz->times_to_take)) {
 <?php if(!empty($first_load)):?>
 </div>
 <script type="text/javascript" >
-jQuery(function(){
-	chainedQuiz.initializeQuestion(<?php echo $quiz->id?>);	
-});
+	jQuery(function(){
+		chainedQuiz.initializeQuestion(<?php echo $quiz->id?>);	
+	});
+
+	// Deselects all checkboxes except for the one that was clicked.
+	function deselectAllCheckboxes(choiceID) {
+		jQuery('input:checkbox[value!=' + choiceID + ']').prop('checked',false);
+	}
+
+	// Deselects all checkboxes except for the one that was clicked.
+	function deselectNoneCheckbox(choiceID) {
+		jQuery('input:checkbox[value=' + choiceID + ']').prop('checked',false);
+	}	
 </script><?php endif;?>

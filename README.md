@@ -70,6 +70,11 @@ None yet.
 4. The submissions dashboard to capture feedback for machine learning.
 
 # Changelog
+## 5.0 (Checkbox Improvements)
+- Scores can have different SOAP note sections.
+- Added Date questions that display a calendar date picker.
+- Follow-up questions to multiple checkbox answers selected.
+
 ## 4.0 (Points)
 - Algorithms can generate a score (i.e., points).
 - Sort algorithms listing by title.

@@ -1,6 +1,11 @@
 <?php
 if( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 class ChainedQuizQuestion {
+
+
+	/**************************************************************************
+	 * FUNCTION: Add a new question.
+	 **************************************************************************/
 	function add($vars) {
 		global $wpdb;
 		
@@ -25,13 +30,17 @@ class ChainedQuizQuestion {
 			
 		if($result === false) throw new Exception(__('DB Error', 'chained'));
 		return $wpdb->insert_id;	
-	} // end add
-	
+	}
+
+
+	/**************************************************************************
+	 * FUNCTION: Save changes to a question.
+	 **************************************************************************/
 	function save($vars, $id) {
 		global $wpdb;
 		
 		$vars['title'] = sanitize_text_field($vars['title']);
-		if(!in_array($vars['qtype'], array('radio', 'checkbox', 'field', 'text'))) $vars['qtype'] = 'none';
+		if(!in_array($vars['qtype'], array('radio', 'checkbox', 'field', 'text', 'date'))) $vars['qtype'] = 'none';
 		if(!current_user_can('unfiltered_html')) {
 			$vars['question'] = strip_tags($vars['question']);
 		}
@@ -49,6 +58,10 @@ class ChainedQuizQuestion {
 		return true;	
 	}
 	
+
+	/**************************************************************************
+	 * FUNCTION: Deletes a question by ID.
+	 **************************************************************************/
 	function delete($id) {
 		global $wpdb;
 	
@@ -62,7 +75,10 @@ class ChainedQuizQuestion {
 		return true;	
 	}
 	
-	// saves the choices on a question
+
+	/**************************************************************************
+	 * FUNCTION: Saves the choices on a question.
+	 **************************************************************************/	
 	function save_choices($vars, $id) {
 		global $wpdb;
 		
@@ -120,9 +136,12 @@ class ChainedQuizQuestion {
 			
 			$i++;
 		}
-	} // end save_choices
+	}
 
-	// displays the question contents
+
+	/**************************************************************************
+	 * FUNCTION: Displays the question contents.
+	 **************************************************************************/
 	function display_question($question) {
 		// for now only add stripslashes and autop, we'll soon add a filter like in Watupro
 		$content = stripslashes($question->question);
@@ -131,7 +150,10 @@ class ChainedQuizQuestion {
 		return $content;
 	}
 
-	// displays the possible choices on a question
+
+	/**************************************************************************
+	 * FUNCTION: Display all the possible choices on a question.
+	 **************************************************************************/	
 	function display_choices($question, $choices) {
 		$autocontinue = $output = '';
 		if($question->qtype == 'radio' and $question->autocontinue) {
@@ -148,27 +170,50 @@ class ChainedQuizQuestion {
 								<input type='hidden' name='answers[]' value='".$choice->id."'>
 								<textarea class='chained-quiz-frontend chained-quiz-$type' required='required' name='answer_texts[]' placeholder='".$choice->choice."' rows='3' cols='40'></textarea>
 							</div>";
-					}
-					
-				return $output;
-				break;
+					}					
+					return $output;
+					break;
+				case 'date':
+					$type = $question->qtype;
+					foreach($choices as $choice) {
+						$output .= "
+							<div class='chained-quiz-choice'>
+								<input type='hidden' name='answers[]' value='".$choice->id."'>
+								<input class='chained-quiz-frontend chained-quiz-$type' type='$type' name='answer_texts[]' placeholder='".$choice->choice."'>
+							</div>";
+					}					
+					return $output;
+					break;
 				case 'radio':
 				case 'checkbox':
 					$type = $question->qtype;
-					$name = ($question->qtype == 'radio') ? "answer": "answers[]";				
+					$name = ($question->qtype == 'radio') ? "answer": "answers[]";
+					$noneID = null;
+
+					// Find the 'None' answer choice and cleanup data at the same time while we are already inspecting each element.
+					for ($i=0; $i<count($choices); $i++) {
+						$choices[$i]->choice = do_shortcode(stripslashes($choices[$i]->choice));
+						if ($choices[$i]->choice == 'None') $noneID = $choices[$i]->id;
+					}
 					
 					foreach($choices as $choice) {
-						$choice_text = stripslashes($choice->choice);
-						$choice_text = do_shortcode($choice_text);
-						
-						$output .= "<div class='chained-quiz-choice'><label class='chained-quiz-label'><input class='chained-quiz-frontend chained-quiz-$type' type='$type' name='$name' value='".$choice->id."' $autocontinue> $choice_text</label></div>";
+						$output .= "<div class='chained-quiz-choice'><label class='chained-quiz-label'>";						
+
+						if ($choice->id == $noneID) {
+							$output .= "<input class='chained-quiz-frontend chained-quiz-$type' type='$type' name='$name' value='".$choice->id."' onclick='deselectAllCheckboxes(".$noneID.");' $autocontinue> $choice->choice</label></div>";
+						} else {
+							$output .= "<input class='chained-quiz-frontend chained-quiz-$type' type='$type' name='$name' value='".$choice->id."' onclick='deselectNoneCheckbox(".$noneID.");' $autocontinue> $choice->choice</label></div>";
+						}
 					}
 					return $output;
 					break;
 			}
-	} // end display_choices
+	}
   
-	// calculate the points of a given answer
+
+	/**************************************************************************
+	 * FUNCTION: Calculate the points of a given answer.
+	 **************************************************************************/
 	function calculate_points($question, $answer) {
 		global $wpdb;
 		
@@ -190,148 +235,105 @@ class ChainedQuizQuestion {
 			}
 		return $points;	
 	}
-  
-	// gets the next question in a quiz, depending on the given answer
-	// $question = SELECT * FROM CHAINED_QUESTIONS WHERE id=%d
-	// $answer = The CHOICE_ID of text/radio or array of CHOICE_IDs if checkbox.
+
+
+	/**************************************************************************
+	 * FUNCTION: Get the next configured question in the Algorithm.
+	 * 
+	 * NOTES:
+	 * $question = SELECT * FROM CHAINED_QUESTIONS WHERE id=%d
+	 * $answer = The CHOICE_ID of text/radio or array of CHOICE_IDs if checkbox.
+	 **************************************************************************/	
 	function next($question, $answer) {
- 		global $wpdb; 	
- 		
-		// select answer(s)
+		global $wpdb;
 		$goto = array();
 		$answer_ids = array(0);
 		
-		// Answer was from a checkbox, so build an array of answer IDs.
+		// For questions with multiple answers, build an array of answer IDs.
 		if(is_array($answer)) {
 			foreach($answer as $ans) {
-				 if(!empty($ans)) $answer_ids[] = $ans;
+				if(!empty($ans)) $answer_ids[] = $ans;
 			}
 		} 
 		else {
-			/* THIS COULD BE A BUG NOW 
-			if($question->qtype == 'text') {
-					$answer = $wpdb->get_var($wpdb->prepare("SELECT id FROM ".CHAINED_CHOICES."
-	  		  WHERE question_id=%d AND choice LIKE %s", $question->id, $answer));				
-			} */
-			
-			if(!empty($answer)) $answer_ids[] = $answer; // radio buttons and text areas
+			if(!empty($answer)) $answer_ids[] = $answer;
 		} 
 		
 		// Remove any answers that are non numeric.
-		$answer_ids = chained_int_array($answer_ids);  /* THIS WAS A BUG BEFORE WITH CHECKBOXES */
-		if(empty($answer_ids)) $answer_ids = array(0);
+		/* SHOULD NOT BE NEEDED ANYMORE BECAUSE TEXT ANSWERS ARE NUMERIC TOO. */
+		// $answer_ids = chained_int_array($answer_ids);  /* THIS WAS A BUG BEFORE WITH CHECKBOXES */
+		// if(empty($answer_ids)) $answer_ids = array(0);
+
 		
-		// Fetch the choices config for the answers selected by the user.
-		$choices = $wpdb->get_results($wpdb->prepare("SELECT * FROM ".CHAINED_CHOICES." 
-			WHERE question_id=%d AND id IN (".implode(",", $answer_ids).") ", $question->id));
-			
+		/** Build a questions queue to follow-up until all questions have been asked.
+		 *  1. Find follow-up questions and sort by order to be asked.
+		 *  2. Ask the first follow-up question in the list.
+		 *  3. Store the remaining questions in a queue to be asked later.
+		 * */
+
+		/** 
+		 * 1. First query is for the goto questions that have a numeric ID.
+		 * 2. Second query is for the goto questions that have a 'next' ID.
+		 * 3. Third query is for the goto questions that have a 'finalize' ID.		
+		 * */
+		$choices = $wpdb->get_results($wpdb->prepare(
+			"SELECT id AS goto, sort_order 
+			FROM ".CHAINED_QUESTIONS." WHERE id IN (
+				SELECT goto FROM ".CHAINED_CHOICES." 
+				WHERE question_id=%d 
+				AND id IN (".implode(",", $answer_ids).")
+			)
+			UNION
+			SELECT 'next', 'yyy' AS sort_order
+			FROM ".CHAINED_CHOICES." 
+			WHERE question_id=%d 
+			AND goto='next' 
+			AND id IN (".implode(",", $answer_ids).")
+			UNION
+			SELECT 'finalize', 'zzz' AS sort_order 
+			FROM ".CHAINED_CHOICES." 
+			WHERE question_id=%d 
+			AND goto='finalize'
+			AND id IN (".implode(",", $answer_ids).")"
+			, $question->id, $question->id, $question->id));
+
+		// Restore the goto queue from outstanding goto questions.
+		$goto = $_SESSION['chained_goto_queue'];
+
+		// Add new new goto questions to the queue.
 		foreach($choices as $choice) {
-			if(isset($goto[$choice->goto])) {
-				$goto[$choice->goto]++;
-			} else {
-				$goto[$choice->goto] = 1;
-			}
+			$goto[$choice->goto] = $choice->sort_order;
 		}
-	  
-		// now sort goto to figure out what's the top goto selection	
-		arsort($goto);				// Sort the array values (not keys) in reverse order.
-		$goto = array_flip($goto);	// Flips keys and values. If duplicate values, only the last value will be used as a key.
-		$key = array_shift($goto);	// Pops the first element value of the array.
+
+		// Now sort queue to figure out what's the next question and put the remaining questions into the session queue.
+		asort($goto);											// Sort the array values from smallest to largest sort_order.
+		$goto = array_flip($goto);								// [goto, sort_order] > [sort_order, goto].
+		error_log("Queue=[" . implode(",", $goto) . "]");		// Convert the array into CSV.
+		$key = array_shift($goto);								// Pop the first goto value.
+		$_SESSION['chained_goto_queue'] = array_flip($goto);	// [sort_order, goto] > [goto, sort_order].
 		
-		//let's treat textareas in different way. If answer is not found, let's not finalize the quiz but go to next
-		if($question->qtype == 'text' and empty($key)) $key = 'next';
+		/** 
+		 * THIS IS WHERE WE HANDLE WHAT TO GIVE AS THE NEXT QUESTION. 
+		 * */
+		// #1 - No more questions to ask or current the current answer ends the Algorithm.
+		if(empty($key) || $key == 'finalize') {
+			return false;
+		}
 		
-		// echo $key.'x'; 
-		if(empty($key) or $key == 'finalize') return false;
-		
+		// #2 - Select NEXT question in order after the current answer is selected.
 		if($key == 'next') {
-			// select next question by sort_order
-			$question = $wpdb->get_row($wpdb->prepare("SELECT * FROM ".CHAINED_QUESTIONS." 
-				WHERE quiz_id=%d AND sort_order > %d ORDER BY sort_order LIMIT 1", $question->quiz_id, $question->sort_order));
+			$question = $wpdb->get_row($wpdb->prepare("SELECT * FROM ".CHAINED_QUESTIONS." WHERE quiz_id=%d AND sort_order > %d ORDER BY sort_order LIMIT 1", $question->quiz_id, $question->sort_order));
 			return $question;	
 		}
 	
+		// #3 - Numeric keys means go to the direct question.
 		if(is_numeric($key)) {
-			$question = $wpdb->get_row($wpdb->prepare("SELECT * FROM ".CHAINED_QUESTIONS." 
-					WHERE quiz_id=%d AND id=%d LIMIT 1", $question->quiz_id, $key));
-				return $question;	
+			$question = $wpdb->get_row($wpdb->prepare("SELECT * FROM ".CHAINED_QUESTIONS." WHERE quiz_id=%d AND id=%d LIMIT 1", $question->quiz_id, $key));
+			return $question;
 		}
 		
 		// just in case
 		return false;		
-	} // end next()
-
-
-	// gets the next best question in a quiz, depending on the given answer
-	// $question = SELECT * FROM CHAINED_QUESTIONS WHERE id=%d
-	// $answer = The CHOICE_ID of text/radio or array of CHOICE_IDs if checkbox.
-	
-	
-	/**
-	 * BUSINESS RULES:
-	 * 1. If any of the chosen answer(s) has a 'goto' question_id (not 'next' or 'finalize'), return it. 
-	 *    The answers need to be sorted by the choice_id though because that is the order it is displayed to the user.
-	 * 2. Find all previous chosen answers whose goto has a question_id without a record in USER_ANSWER and return the one with the highest sort order.
-	 * 3. If the chosen answer(s) goto is next, 
-	 *    a. Find the last checkbox question answered. Use this to build the entire checkbox family tree.
-	 *    b. For each question in the tree, take the answer's goto and put on the tree and mark the question complete.
-	 *    c. While there are incomplete questions, repeat b until all questions have been inspected.
-	 *    d. The next question is the biggest in the tree PLUS one.
-	 */
-	function next0($question, $answer) {
-		global $wpdb;
-		
-		// Preparation: Create an array of user answers.
-		$answer_ids = array(0);
-		if(is_array($answer)) {										// This is for multi-select answers.
-			foreach($answer as $ans) {
-				 if(!empty($ans)) $answer_ids[] = $ans;
-			}
-		} else {													// This is for single-select answers.
-			if(!empty($answer)) $answer_ids[] = $answer;
-		}
-
-		/* BUSINESS RULE #1 */
-		// See if there is a goto question_id in any of the chosen answers.
-		// Todo, might want to restrict the CHAINED_CHOICES query by question_id as well.
-		if(!empty($answer_ids)) {
-			$choice = $wpdb->get_row("SELECT * FROM ".CHAINED_CHOICES." WHERE id IN (".implode(",", $answer_ids).") AND goto <> 'next' ORDER BY id LIMIT 1");
-			if ($wpdb->num_rows) $question = $wpdb->get_row($wpdb->prepare("SELECT * FROM ".CHAINED_QUESTIONS." WHERE id=%d", $choice->goto));
-			if ($wpdb->num_rows) return $question;
-		}
-
-		/* BUSINESS RULE #2 */
-		// Get all the answers for this quiz provided by this user session.
-		$ua_results = $wpdb->get_results($wpdb->prepare("SELECT question_id, answer FROM ".CHAINED_USER_ANSWERS," WHERE quiz_id=%d, completion_id=%d"), $question->quiz_id, intval($_SESSION['chained_completion_id']));
- 		$ua_array = array();
-		foreach($ua_results as $res) {
-			if (intval($res->$answer)) {
-				$ua_array[] = $res;
-			} else {
-				$ua_array = array_merge($ua_array, explode($res));
-			}
-		} 
-
-		// Get all the possible answers and goto for this quiz.
-		//$choice_results = $wpdb->get_results($wpdb->prepare("SELECT id, goto FROM ".CHAINED_CHOICES." WHERE quiz_id=%d AND goto NOT IN ('next','finalize') ORDER BY id DESC"), $question->quiz_id);
-/* 		$choices_array = array();
-		foreach ($choices_results as $res) {
-			$choices_array[] = $res->goto;
-		} */
-
-		// Filter down to choices which have only been answered/selected by the user previously.
-
-
-
-		// Get all the answers for this quiz which ARE in the answers table but the goto question_id is not in the answers tabe.
-		// for loop here to build an array.
-		
-
-
-		// intersect the two arrays.
-	   
-	   // just in case
-	   return false;		
-   } // end next()
+	}
 
 }

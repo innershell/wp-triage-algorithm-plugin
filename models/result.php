@@ -9,12 +9,17 @@ class ChainedQuizResult {
 		$vars['redirect_url'] = esc_url_raw($vars['redirect_url']);
 		if(!current_user_can('unfiltered_html')) {
 			$vars['description'] = strip_tags($vars['description']);
+			$vars['subjective'] = strip_tags($vars['subjective']);
+			$vars['objective'] = strip_tags($vars['objective']);
+			$vars['assessment'] = strip_tags($vars['assessment']);
+			$vars['plan'] = strip_tags($vars['plan']);
 		}
 		
 		$result = $wpdb->query($wpdb->prepare("INSERT INTO ".CHAINED_RESULTS." SET
-			quiz_id=%d, points_bottom=%f, points_top=%f, title=%s, description=%s, redirect_url=%s", 
+			quiz_id=%d, points_bottom=%f, points_top=%f, title=%s, description=%s, 
+			subjective=%s, objective=%s, assessment=%s, plan=%s, redirect_url=%s", 
 			$vars['quiz_id'], $vars['points_bottom'], $vars['points_top'], $vars['title'], 
-			$vars['description'], $vars['redirect_url']));
+			$vars['description'], $vars['subjective'], $vars['objective'], $vars['assessment'], $vars['plan'], $vars['redirect_url']));
 			
 		if($result === false) throw new Exception(__('DB Error', 'chained'));
 		return $wpdb->insert_id;	
@@ -29,11 +34,17 @@ class ChainedQuizResult {
 		$vars['redirect_url'] = esc_url_raw($vars['redirect_url']);
 		if(!current_user_can('unfiltered_html')) {
 			$vars['description'] = strip_tags($vars['description']);
+			$vars['subjective'] = strip_tags($vars['subjective']);
+			$vars['objective'] = strip_tags($vars['objective']);
+			$vars['assessment'] = strip_tags($vars['assessment']);
+			$vars['plan'] = strip_tags($vars['plan']);
 		}
 		
 		$result = $wpdb->query($wpdb->prepare("UPDATE ".CHAINED_RESULTS." SET
-		 points_bottom=%f, points_top=%f, title=%s, description=%s, redirect_url=%s WHERE id=%d", 
+		 points_bottom=%f, points_top=%f, title=%s, description=%s, subjective=%s, 
+		 objective=%s, assessment=%s, plan=%s, redirect_url=%s WHERE id=%d", 
 		$vars['points_bottom'], $vars['points_top'], $vars['title'], $vars['description'], 
+		$vars['subjective'], $vars['objective'], $vars['assessment'], $vars['plan'], 
 		$vars['redirect_url'], $id));
 			
 		if($result === false) throw new Exception(__('DB Error', 'chained'));
@@ -58,10 +69,13 @@ class ChainedQuizResult {
 		// select all results order by best
 		$results = $wpdb->get_results($wpdb->prepare("SELECT * FROM ".CHAINED_RESULTS." 
 			WHERE quiz_id = %d ORDER BY points_bottom DESC", $quiz->id));
+
 		foreach($results as $result) {
 			if(floatval($result->points_bottom) <= $points and $points <= floatval($result->points_top)) return $result;
-    }	
+    	}	
     
-    return null; // in case of nothing found
+		error_log("result.php:calculate() - Returning NULL.");
+		return null; // in case of nothing found
+		
 	}
 }

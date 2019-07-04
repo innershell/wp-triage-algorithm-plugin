@@ -26,6 +26,6 @@ if ($delete_data == 'yes') {
     delete_option('chained_ui');
     delete_option('chained_version');
     delete_option('chained_delete_data');
+    delete_option('chained_debug_mode');
     delete_option('chainedquiz_cleanup');
-
 }

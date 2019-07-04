@@ -145,23 +145,42 @@ class ChainedQuizQuizzes {
 		$question = $wpdb->get_row($wpdb->prepare("SELECT * FROM ".CHAINED_QUESTIONS." WHERE id=%d", intval($_POST['question_id'])));
 		
 		// prepare $answer var		
-		// $answer = ($question->qtype == 'checkbox') ? @$_POST['answers'] : @$_POST['answer'];
 		$answer = '';
 		$answer_text = '';
-		if ($question->qtype == 'text') {
+
+		switch($question->qtype) {
+			case 'text':
+				$answer = @$_POST['answers'];
+				$answer_text = @$_POST['answer_texts'];
+				break;
+			case 'date':
+				$answer = @$_POST['answers'];
+				$answer_text = @$_POST['answer_texts'];
+				break;
+			case 'checkbox':
+				$answer = @$_POST['answers'];
+				break;
+			case 'radio':
+				$answer = @$_POST['answer'];
+					break;
+		}
+
+
+
+/* 		if ($question->qtype == 'text') {
 			$answer = @$_POST['answers'];
 			$answer_text = @$_POST['answer_texts'];
 		} elseif ($question->qtype == 'checkbox') {
 			$answer = @$_POST['answers'];
 		} else {
 			$answer = @$_POST['answer'];
-		}
+		} */
 
 		// Check to make sure answer is provided.
 		if(empty($answer)) $answer = 0;
 		$answer = esc_sql($answer);
 
-		// Convert radio button answers into an array. Text and checkbox answers will arrive as an array.
+		// Convert multiple answers into an array. Text and checkbox answers will arrive as an array.
 		/** Might be able to avoid this code if radio buttons are named as an array in the form input. */
 		if(!is_array($answer)) $answer = array($answer);
 		if (!is_array($answer_text)) $answer_text = array($answer_text);
@@ -173,7 +192,7 @@ class ChainedQuizQuizzes {
 		// figure out next question
 		$next_question = $_question->next($question, $answer);
 
-		// NEW! Store the answer
+		// Store the answer
 		if(!empty($_SESSION['chained_completion_id'])) {
 			//$i = 0;
 			for ($i = 0; $i < count($answer); $i++) {
@@ -202,45 +221,6 @@ class ChainedQuizQuizzes {
 				//$i++;
 			}
 		}
-		
-/* 		// store the answer
-		if(!empty($_SESSION['chained_completion_id'])) {
-			if(is_array($answer)) {
-				$answer = implode(",", $answer);
-				//$answer = chained_int_array($answer);
-
-				// Get all the provider notes corresponding to the answers.
-				$provider_notes = $wpdb->get_results("SELECT provider_note FROM ".CHAINED_CHOICES." WHERE id in (".$answer.")");
-				$prepared_answer = "";
-				$i = 0;
-				foreach($provider_notes as $note) {
-					$prepared_answer .= $note->provider_note . " " . $answer_text[$i] . " ";
-					$i++;
-				}
-				$answer_text = $prepared_answer;
-			}
-			
-			$comments = empty($_POST['comments']) ? '' : sanitize_text_field($_POST['comments']);
-
-			// make sure to avoid duplicates and only update the answer if it already exists
-			$exists = $wpdb->get_var($wpdb->prepare("SELECT id FROM ".CHAINED_USER_ANSWERS."
-				WHERE quiz_id=%d AND completion_id=%d AND question_id=%d", 
-				$quiz->id, intval($_SESSION['chained_completion_id']), $question->id));			
-			
-			if($exists) {
-				$wpdb->query($wpdb->prepare("UPDATE ".CHAINED_USER_ANSWERS." SET
-					answer=%s, answer_text=%s, points=%f, comments=%s WHERE quiz_id=%d AND completion_id=%d AND question_id=%d", 
-					$answer, $answer_text, $points, $comments, $quiz->id, intval($_SESSION['chained_completion_id']), $question->id));			
-			}
-			else {				
-				$wpdb->query($wpdb->prepare("INSERT INTO ".CHAINED_USER_ANSWERS." SET
-					quiz_id=%d, completion_id=%d, question_id=%d, answer=%s, answer_text=%s, points=%f, comments=%s",
-					$quiz->id, intval($_SESSION['chained_completion_id']), $question->id, $answer, $answer_text, $points, $comments));				
-			}		
-			
-			// update the "completed" record as non empty
-			$wpdb->query($wpdb->prepare("UPDATE ".CHAINED_COMPLETED." SET not_empty=1 WHERE id=%d", intval($_SESSION['chained_completion_id'])));
-		} */
 		
 		if(!empty($next_question->id)) {
 			$question = $next_question;
