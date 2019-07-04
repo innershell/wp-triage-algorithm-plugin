@@ -40,10 +40,9 @@
 				<?php endif;?>
 
 
-			<h2><?php _e('Finish Screen', 'chained')?></h2>
-			<p><?php _e('The Finish Screen is displayed to the user after the last algorithm question was answered. The following ', 'chained')?>
-			<strong><?php _e('Injection Codes', 'chained')?></strong> <?php _e(' will dynamically insert text from the algorithm for the user to see.', 'chained')?></p>
-			
+			<h2><?php _e('Patient Output', 'chained')?></h2>
+			<p><?php _e('Screen displayed to the patient upon completion of the algorithm. The following ', 'chained')?>
+			<strong><?php _e('Injection Codes', 'chained')?></strong><?php _e(' will dynamically insert text from the algorithm for the user to see.', 'chained')?></p>
 			<ul>
 				<li>{{soap-note}}</li>				
 				<li>{{questions}} <?php _e('- Total # of questions answered.', 'chained')?></li>
@@ -52,29 +51,21 @@
 				<li>{{result-text}} <?php _e('- The result (grade) text/description', 'chained')?></li>				
 				<!-- (deprecating this injection code) <li>{{answers-table}} <?php _e('- A table with the questions, answers given by the user, correct / wrong info and points collected.', 'chained')?></li> -->				
 				<!-- (let's leave this for the next version) li>{{correct}} <?php _e('- The number of correctly answered questions', 'chained')?></li> -->
-			</ul>			
+			</ul>
 			<p><?php echo wp_editor(stripslashes($output), 'output', ["textarea_rows" => 10])?></p>		
-		
-			
-			<!-- (the original email output code)
-			<p><input type="checkbox" name="email_admin" value="1" <?php if(!empty($quiz->email_admin)) echo 'checked'?> onclick="if(this.checked || this.form.email_user.checked) {jQuery('#chainedEmailSettings').show()} else {jQuery('#chainedEmailSettings').hide()};"> <?php _e('Send me email when user completes this Algorithm. It will be delivered to the email address from your main WP Settings page.', 'chained');?></p>
-			<p><input type="checkbox" name="email_user" value="1" <?php if(!empty($quiz->email_user)) echo 'checked'?> onclick="if(this.checked || this.form.email_admin.checked) {jQuery('#chainedEmailSettings').show()} else {jQuery('#chainedEmailSettings').hide()};"> <?php _e('Send email to user with their result. If the user is not logged in visitor an optional "Enter email" field will automatically appear above the Algorithm.', 'chained');?></p>
-			
-			<div id="chainedEmailSettings" style="display:<?php echo (empty($quiz->email_admin) and empty($quiz->email_user)) ? 'none' : 'block'?>;">
-				<p><input type="checkbox" name="set_email_output" value="1" <?php if(!empty($quiz->set_email_output)) echo 'checked'?> onclick="this.checked ? jQuery('#chainedEmailOutputs').show() : jQuery('#chainedEmailOutputs').hide();"> 
-				<?php _e('Set email contents (if you skip this, the final screen output will be used for emails).', 'chained');?></p>
-				
-				<div id="chainedEmailOutputs" style="display:<?php echo empty($quiz->set_email_output) ? 'none' : 'email';?>">
-					<?php echo wp_editor(stripslashes($quiz->email_output), 'email_output')?>
-					<br />
-					<p><?php _e('You can use the same variables as in the Final Output box', 'chained');?><br>
-					<?php _e('By default this content is used for both the email sent to user, and the email sent to admin. You can however use the {{{split}}} tag to make the email contents different. The content before the {{{split}}} tag will be sent to the user and the content after the {{{split}}} tag - to the admin.','chained');?></p>
-				</div>
-			</div>
-			-->
 
-			<h2><?php _e('Finish Data', 'chained')?></h2>
-			<p><?php _e('The data to be generated and saved for e-mail, provider, and dashboards. You can use the same Injection Codes as in the Final Screen box.', 'chained')?></p>
+			<h2><?php _e('Provider Output', 'chained')?></h2>
+			<p><?php _e('Screen displayed to a clinical (e.g., provider) upon completion of the algorithm. The following ', 'chained')?>
+			<strong><?php _e('Injection Codes', 'chained')?></strong><?php _e(' will dynamically insert text from the algorithm for the user to see.', 'chained')?></p>
+			<ul>
+				<li>{{soap-note}}</li>				
+				<li>{{questions}} <?php _e('- Total # of questions answered.', 'chained')?></li>
+				<li>{{points}} <?php _e('- Points for all the answers.', 'chained')?></li>
+				<li>{{result-title}} <?php _e('- The result (grade) title', 'chained')?></li>
+				<li>{{result-text}} <?php _e('- The result (grade) text/description', 'chained')?></li>				
+				<!-- (deprecating this injection code) <li>{{answers-table}} <?php _e('- A table with the questions, answers given by the user, correct / wrong info and points collected.', 'chained')?></li> -->				
+				<!-- (let's leave this for the next version) li>{{correct}} <?php _e('- The number of correctly answered questions', 'chained')?></li> -->
+			</ul>
 
 			<div id="chainedEmailSettings" style="display:block">
 				<div id="chainedEmailOutputs" style="display:email">

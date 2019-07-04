@@ -55,7 +55,7 @@ class ChainedQuizQuizzes {
 	   $output = stripslashes($quiz->output); 
 	   
 	   // is this quiz currently published?
-		$is_published = $wpdb->get_var("SELECT ID FROM {$wpdb->posts} WHERE post_content LIKE '%[chained-quiz ".intval($_GET['id'])."]%' 
+		$is_published = $wpdb->get_var("SELECT ID FROM {$wpdb->posts} WHERE post_content LIKE '%[triage-algorithm ".intval($_GET['id'])."]%' 
 				AND post_status='publish' AND post_title!=''");	
 		include(CHAINED_PATH.'/views/quiz.html.php');
 	} // end edit_quiz
@@ -82,13 +82,13 @@ class ChainedQuizQuizzes {
 		
 		// now select all posts that have watu shortcode in them
 		$posts=$wpdb->get_results("SELECT * FROM {$wpdb->posts} 
-		WHERE post_content LIKE '%[chained-quiz %]%' AND post_title!=''
+		WHERE post_content LIKE '%[triage-algorithm %]%' AND post_title!=''
 		AND post_status='publish' ORDER BY post_date DESC");	
 		
 		// match posts to exams
 		foreach($quizzes as $cnt=>$quiz) {
 			foreach($posts as $post) {
-				if(strstr($post->post_content,"[chained-quiz ".$quiz->id."]")) {
+				if(strstr($post->post_content,"[triage-algorithm ".$quiz->id."]")) {
 					$quizzes[$cnt]->post=$post;			
 					break;
 				}

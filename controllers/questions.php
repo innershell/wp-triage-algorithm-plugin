@@ -108,6 +108,7 @@ class ChainedQuizQuestions {
 		
 		$quiz = $wpdb->get_row($wpdb->prepare("SELECT * FROM ".CHAINED_QUIZZES." WHERE id=%d", intval($_GET['quiz_id'])));
 		$questions = $wpdb->get_results($wpdb->prepare("SELECT * FROM ".CHAINED_QUESTIONS." WHERE quiz_id=%d ORDER BY sort_order, id", intval($_GET['quiz_id'])));
+		$choices = $wpdb->get_results($wpdb->prepare("SELECT * FROM ".CHAINED_CHOICES." WHERE quiz_id=%d ORDER BY id", intval($_GET['quiz_id'])));
 		$count = count($questions);
 		include(CHAINED_PATH."/views/questions.html.php");
 	} // end list_quizzes

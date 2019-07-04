@@ -70,6 +70,11 @@ None yet.
 4. The submissions dashboard to capture feedback for machine learning.
 
 # Changelog
+## 5.1 (Show Answers on Questions Page)
+- Show/hide answers in the questions listing page (admin only).
+- Hyperlink from the answer to the next question to ask.
+- Fixed bug where published algorithms are not being hyperlinked.
+
 ## 5.0 (Checkbox Improvements)
 - Scores can have different SOAP note sections.
 - Added Date questions that display a calendar date picker.

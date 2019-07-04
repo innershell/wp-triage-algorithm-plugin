@@ -185,9 +185,20 @@ class ChainedQuizQuestion {
 					return $output;
 					break;
 				case 'radio':
+					$type = $question->qtype;
+					$name = "answer";
+					
+					foreach($choices as $choice) {
+						$choice_text = stripslashes($choice->choice);
+						$choice_text = do_shortcode($choice_text);						
+						$output .= "<div class='chained-quiz-choice'><label class='chained-quiz-label'><input class='chained-quiz-frontend chained-quiz-$type' type='$type' name='$name' value='".$choice->id."' $autocontinue> $choice_text</label></div>";
+					}
+
+					return $output;
+					break;
 				case 'checkbox':
 					$type = $question->qtype;
-					$name = ($question->qtype == 'radio') ? "answer": "answers[]";
+					$name = "answers[]";
 					$noneID = null;
 
 					// Find the 'None' answer choice and cleanup data at the same time while we are already inspecting each element.

@@ -292,7 +292,7 @@ class ChainedQuizQuiz {
 	function auto_publish($quiz_id, $vars) {
 		global $wpdb;
 	
-		$post = array('post_content' => '[chained-quiz '.$quiz_id.']', 'post_name'=> sanitize_text_field($vars['title']), 
+		$post = array('post_content' => '[triage-algorithm '.$quiz_id.']', 'post_name'=> sanitize_text_field($vars['title']), 
 			'post_title'=>sanitize_text_field($vars['title']), 'post_status'=>'publish');
 		wp_insert_post($post);
 	}
