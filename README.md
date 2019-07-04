@@ -30,16 +30,16 @@ This is an unique conditional logic plugin that lets you create set a questions 
 
 Features
 ========
-**Create unlimited number of triage algorithms** 
+##### Create unlimited number of triage algorithms
 This plugin has no limitations on the number of triage algorithms you can have.
 
-**Question types support: single-choice, multiple-choice, text** 
+##### Question types support: single-choice, multiple-choice, text
 The plugin will generate respectively a group of radio buttons, checkboxes, or a text area. 
 
-**Define what to do when specific answer is chosen** 
+##### Define what to do when specific answer is chosen
 You can define to go to next question, go to a specific selected question, or finish the algorithm. 
 
-**Export user's answers to a CSV file - with or without details** 
+##### Export user's answers to a CSV file - with or without details
 The CSV file can be used to analyze user results in Excel, import it in a database and so on.
 
 Getting Started
