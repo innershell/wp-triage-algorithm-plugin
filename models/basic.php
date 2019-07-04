@@ -114,53 +114,7 @@ class ChainedQuiz {
 				) DEFAULT CHARSET=utf8;";
 			
 			$wpdb->query($sql);
-		} 	 
-		
-		/**
-		 * Alter the old tables to include new columns from newer plugin versions.
-		 */
-		// chainedquiz_add_db_fields(array(
-		// 	array("name" => 'autocontinue', 'type' => 'TINYINT UNSIGNED NOT NULL DEFAULT 0'),
-		// 	array("name" => 'sort_order', 'type' => 'INT UNSIGNED NOT NULL DEFAULT 0'),
-		// 	array("name" => 'accept_comments', 'type' => 'TINYINT UNSIGNED NOT NULL DEFAULT 0'),
-		// 	array("name" => 'accept_comments_label', 'type' => "VARCHAR(255) NOT NULL DEFAULT ''"),
-		// ), CHAINED_QUESTIONS);
-		
-		// chainedquiz_add_db_fields(array(
-		// 	array("name" => 'redirect_url', 'type' => "VARCHAR(255) NOT NULL DEFAULT ''"),
-		// ), CHAINED_RESULTS);
-		
-		// chainedquiz_add_db_fields(array(
-		// 	array("name" => 'comments', 'type' => "TEXT"),
-		// ), CHAINED_USER_ANSWERS);
-		
-		// chainedquiz_add_db_fields(array(
-		// 	array("name" => 'email_admin', 'type' => "TINYINT UNSIGNED NOT NULL DEFAULT 0"),
-		// 	array("name" => 'email_user', 'type' => "TINYINT UNSIGNED NOT NULL DEFAULT 0"),
-		// 	array("name" => 'require_login', 'type' => "TINYINT UNSIGNED NOT NULL DEFAULT 0"),
-		// 	array("name" => 'times_to_take', 'type' => "INT UNSIGNED NOT NULL DEFAULT 0"),
-		// 	array("name" => 'save_source_url', 'type' => "TINYINT UNSIGNED NOT NULL DEFAULT 0"),
-		// 	array("name" => 'set_email_output', 'type' => "TINYINT UNSIGNED NOT NULL DEFAULT 0"),
-		// 	array("name" => 'email_output', 'type' => "TEXT"),
-		// ), CHAINED_QUIZZES);
-		
-		// chainedquiz_add_db_fields(array(
-		// 	array("name" => 'not_empty', 'type' => "TINYINT NOT NULL DEFAULT 0"), /*When initially creating a record, it is empty. If it remains so we have to delete it.*/
-		// 	array("name" => 'source_url', 'type' => "VARCHAR(255) NOT NULL DEFAULT ''"), /* Page where the quiz is published */ 
-		// 	array("name" => 'email', 'type' => "VARCHAR(255) NOT NULL DEFAULT ''"), /* email of non-logged in users when required */
-		// ), CHAINED_COMPLETED);
-		
-		// fix sort order once for old quizzes (in version 0.7.5)
-		// if(get_option('chained_fixed_sort_order') != 1) {
-		// 	ChainedQuizQuestions :: fix_sort_order_global();
-		// 	update_option('chained_fixed_sort_order', 1);
-		// }
-		
-		// update not_empty = 1 for all completed records prior to version 0.8.7 and DB version 0.66
-		// $version = get_option('chained_version');
-		// if($version < 0.67) {
-		// 	$wpdb->query("UPDATE ".CHAINED_COMPLETED." SET not_empty=1");
-		// }
+		} 
 		
 		// setup the default options (when not yet saved ever)
 		if(get_option('chained_sender_name') == '') {
@@ -175,26 +129,27 @@ class ChainedQuiz {
 		/** PERFORM VERSION-SPECIFIC UPGRADES HERE **/
 		if ($current_version < '2.2') {
 			update_option('chained_delete_data', 'no');
+		} else if ($current_version < '4.0') {
+			update_option('chained_debug_mode', 'off');
 		}
 
 		// Set the current plugin version number.
-		update_option('chained_version', "3.0");
+		update_option('chained_version', '4.0');
 		// exit;
 	}
    
-   // main menu
-   static function menu() {
-   	$chained_caps = current_user_can('manage_options') ? 'manage_options' : 'chained_manage';
-   	
-   	add_menu_page(__('Triage Algorithm', 'chained'), __('Triage Algorithm', 'chained'), $chained_caps, "chained_quizzes", array('ChainedQuizQuizzes', "manage"));
-   	add_submenu_page('chained_quizzes', __('Algorithms', 'chained'), __('Algorithms', 'chained'), $chained_caps, 'chained_quizzes', array('ChainedQuizQuizzes', "manage"));					
-   	add_submenu_page('chained_quizzes', __('Settings', 'chained'), __('Settings', 'chained'), 'manage_options', 'chainedquiz_options', array('ChainedQuiz','options'));				
-   	add_submenu_page('chained_quizzes', __('Social Sharing', 'chained'), __('Social Sharing', 'chained'), $chained_caps, 'chainedquiz_social_sharing', array('ChainedSharing','options'));				
-   		
-   	add_submenu_page(NULL, __('Chained Quiz Results', 'chained'), __('Chained Quiz Results', 'chained'), $chained_caps, 'chainedquiz_results', array('ChainedQuizResults','manage'));	
-   	add_submenu_page(NULL, __('Chained Quiz Questions', 'chained'), __('Chained Quiz Questions', 'chained'), $chained_caps, 'chainedquiz_questions', array('ChainedQuizQuestions','manage'));	
-   	add_submenu_page(NULL, __('Users Completed Quiz', 'chained'), __('Users Completed Quiz', 'chained'), $chained_caps, 'chainedquiz_list', array('ChainedQuizCompleted','manage'));		
-   	
+	// main menu
+	static function menu() {
+		$chained_caps = current_user_can('manage_options') ? 'manage_options' : 'chained_manage';
+		
+		add_menu_page(__('Triage Algorithm', 'chained'), __('Triage Algorithm', 'chained'), $chained_caps, "chained_quizzes", array('ChainedQuizQuizzes', "manage"));
+		add_submenu_page('chained_quizzes', __('Algorithms', 'chained'), __('Algorithms', 'chained'), $chained_caps, 'chained_quizzes', array('ChainedQuizQuizzes', "manage"));					
+		add_submenu_page('chained_quizzes', __('Settings', 'chained'), __('Settings', 'chained'), 'manage_options', 'chainedquiz_options', array('ChainedQuiz','options'));				
+		add_submenu_page('chained_quizzes', __('Social Sharing', 'chained'), __('Social Sharing', 'chained'), $chained_caps, 'chainedquiz_social_sharing', array('ChainedSharing','options'));				
+			
+		add_submenu_page(NULL, __('Chained Quiz Results', 'chained'), __('Chained Quiz Results', 'chained'), $chained_caps, 'chainedquiz_results', array('ChainedQuizResults','manage'));	
+		add_submenu_page(NULL, __('Chained Quiz Questions', 'chained'), __('Chained Quiz Questions', 'chained'), $chained_caps, 'chainedquiz_questions', array('ChainedQuizQuestions','manage'));	
+		add_submenu_page(NULL, __('Users Completed Quiz', 'chained'), __('Users Completed Quiz', 'chained'), $chained_caps, 'chainedquiz_list', array('ChainedQuizCompleted','manage'));		
 	}
 	
 	// CSS and JS
@@ -210,7 +165,7 @@ class ChainedQuiz {
 				'chained-common',
 				CHAINED_URL.'js/common.js',
 				false,
-				'3.0',
+				'4.0',
 				false
 		);
 		wp_enqueue_script("chained-common");
@@ -266,7 +221,19 @@ class ChainedQuiz {
 		$roles = $wp_roles->roles;		
 		
 		if(!empty($_POST['ok']) and check_admin_referer('chained_options')) {
-			// sender's email and email subjects
+			// Roles
+			if(current_user_can('manage_options')) {
+				foreach($roles as $key=>$role) {
+					$r=get_role($key);
+					
+					if(@in_array($key, $_POST['manage_roles'])) {					
+						if(!$r->has_cap('chained_manage')) $r->add_cap('chained_manage');
+					}
+					else $r->remove_cap('chained_manage');
+				}
+			}
+			
+			// Email Options
 			update_option('chained_sender_name', sanitize_text_field($_POST['sender_name']));
 			update_option('chained_sender_email', sanitize_email($_POST['sender_email']));
 			update_option('chained_user_subject', sanitize_text_field($_POST['user_subject']));						
@@ -276,26 +243,23 @@ class ChainedQuiz {
 			$_POST['csv_quotes'] = empty($_POST['csv_quotes']) ? 0 : 1;
 			update_option('chained_csv_quotes', $_POST['csv_quotes']);
 			
-			// user interface options
+			// User Interface Options
 			$hide_go_ahead = empty($_POST['hide_go_ahead']) ? 0 : 1;
 			$ui = array('hide_go_ahead' => $hide_go_ahead);			
-			update_option('chained_ui', $ui);			
-			
-			if(current_user_can('manage_options')) {
-				foreach($roles as $key=>$role) {
-					$r=get_role($key);
-					
-					if(@in_array($key, $_POST['manage_roles'])) {					
-	    				if(!$r->has_cap('chained_manage')) $r->add_cap('chained_manage');
-					}
-					else $r->remove_cap('chained_manage');
-				}
-			}
+			update_option('chained_ui', $ui);
+
+			//CSV Exports
+			$ui = get_option('chained_ui');
+			$delim = get_option('chained_csv_delim');
+				
+			// Uninstall settings
+			/** PLACEHOLDER FOR FUTURE CODE */
+
+			// Debug Mode
+			update_option('chained_debug_mode', sanitize_text_field($_POST['debug_mode']));
 		}	
 		
-		$ui = get_option('chained_ui');
-		$delim = get_option('chained_csv_delim');
-		   	
+
 		require(CHAINED_PATH."/views/options.html.php");
 	}	
 	

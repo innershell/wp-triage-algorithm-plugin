@@ -4,7 +4,8 @@
 	<p><?php _e('Version: 2.0 introduces a Submissions Dashboard.', 'chained');?> </p>
 	<p><?php _e('Version: 2.1 fixed bugs.', 'chained');?> </p>
 	<p><?php _e('Version: 2.2 fixed bugs.', 'chained');?> </p>
-	<p><?php _e('Version: 3.0 introduces billing codes.', 'chained');?> </p>
+	<p><?php _e('Version: 3.0 introduces Billing Codes.', 'chained');?> </p>
+	<p><?php _e('Version: 4.0 introduces Algorithm Points.', 'chained');?> </p>
 </div>
 
 

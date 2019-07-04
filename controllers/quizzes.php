@@ -30,11 +30,8 @@ class ChainedQuizQuizzes {
 			}
 		}
 		
-		$output = __('Congratulations, you completed the <span>quiz!</span>
-<h2>{{result-title}}</h2>
-{{result-text}}
-
-You achieved {{points}} points from {{questions}} questions.', 'chained');
+		$output = __('Success: Algorithm Completed
+					{{soap-note}}', 'chained');
 		$is_published = false;
 		include(CHAINED_PATH.'/views/quiz.html.php');
 	} // end add_quiz
@@ -81,7 +78,7 @@ You achieved {{points}} points from {{questions}} questions.', 'chained');
 		// select quizzes
 		$quizzes = $wpdb->get_results("SELECT tQ.*, COUNT(tC.id) as submissions 
 			FROM ".CHAINED_QUIZZES." tQ LEFT JOIN ".CHAINED_COMPLETED." tC ON tC.quiz_id = tQ.id AND tC.not_empty=1
-			GROUP BY tQ.id ORDER BY tQ.id DESC");
+			GROUP BY tQ.id ORDER BY tQ.title ASC");
 		
 		// now select all posts that have watu shortcode in them
 		$posts=$wpdb->get_results("SELECT * FROM {$wpdb->posts} 

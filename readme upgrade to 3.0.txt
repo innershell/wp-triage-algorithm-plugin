@@ -1,8 +1,6 @@
-// These are the changes that need to be done when upgrading the plugin from 2.2 to 3.0.
+// These are the changes that need to be done when upgrading the plugin from 3.0 to 4.0.
 
-Backup the chained_quiz plugin tables.
-
-Backup the entire site.
+Set option for chained_debug_mode to No.
 
 Delete OUTPUT files from source folder.
 

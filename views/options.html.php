@@ -57,10 +57,17 @@
 
 			<h3 class="hndle"><span><?php _e('Uninstall Settings', 'chained') ?></span></h3>
 			<div class="inside">		
-				<p><?php _e('Delete all data and database when plugin uninstalled?.', 'chained')?></p>
+				<p><?php _e('Delete all data and remove database tables when plugin uninstalled?', 'chained')?></p>
 				<p><label><?php _e('Delete Database:', 'chained');?></label> <input type="text" name="delete_data" value="<?php echo stripslashes(get_option('chained_delete_data'));?>"></p>
 			</div>
 			
+			<h3 class="hndle"><span><?php _e('Debug Mode', 'chained') ?></span></h3>
+			<div class="inside">		
+				<p><?php _e('Debug mode adds extra warnings to the algorithms and outputs to detect problem areas.', 'chained')?></p>
+				<input type="radio" name="debug_mode" value="on" <?php if(get_option('chained_debug_mode') == "on") echo 'checked'?>>On<br>
+				<input type="radio" name="debug_mode" value="off" <?php if(get_option('chained_debug_mode') == "off") echo 'checked'?>>Off
+			</div>
+
 			<p><input type="submit" value="<?php _e('Save Options', 'chained')?>" name="ok"></p>
 		</div>
 		<?php wp_nonce_field('chained_options');?>

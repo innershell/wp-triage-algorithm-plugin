@@ -373,6 +373,7 @@ class ChainedQuizQuiz {
 	function soap_note($completion_id) {
 		global $wpdb;		
 		$_question = new ChainedQuizQuestion();
+		$debug_mode = get_option('chained_debug_mode');
 		$output = '';
 
 		$answers = $wpdb->get_results($wpdb->prepare("SELECT tUA.*, tC.choice as choice, tC.is_correct as choice_correct,
@@ -397,31 +398,30 @@ class ChainedQuizQuiz {
 			// Display the provider note.
 			if ($answers[$i]->soap_type == 'n') {
 				if (!empty($answers[$i]->answer)) {
-					$user_answer .= '<li>';
 
 					// For text questions, the note is a prepared answer using text substitution from the user's input.
 					// For non-text questions, the note uses the provider note value setup by admin in the config.
 					//    ** If the admin didn't setup a provider note, then it just shows the user's raw answers.
 					if ($answers[$i]->qtype == 'text') {
+						$user_answer .= '<li>';
 						$current_question_id = $answers[$i]->question_id;
 						while($answers[$i]->question_id == $current_question_id) {
 							if (strlen($user_answer) > 0) $user_answer .= ' ';
 							$user_answer .= stripslashes($answers[$i]->provider_note) . '<strong> ' . stripslashes($answers[$i]->answer_text) . '</strong>';
 							$i++;
 						}
-						$user_answer .= ".";
+						$user_answer .= ".</li>";
 						$i--;
 					} 
 					// Warning that no a provider note was not setup by the admin for this radio/checkbox answer.
-					elseif (empty($answers[$i]->provider_note)) {
-						$user_answer .= 'ALERT: PROVIDER_NOTE not setup for the following question/answer: ' . stripslashes($answers[$i]->question) . '/' . stripslashes($answers[$i]->choice);
+					elseif (empty($answers[$i]->provider_note) && $debug_mode == "on") {
+						$user_answer .= '<li>[DEBUG] PROVIDER_NOTE EMPTY: ' . stripslashes($answers[$i]->question) . '/' . stripslashes($answers[$i]->choice) . '</li>';
 					} 
 					// The user's answer is displayed using the provider note for the answer.
-					else {
-						$user_answer .= $answers[$i]->provider_note;
+					elseif (!empty($answers[$i]->provider_note)) {
+						$user_answer .= '<li>' . $answers[$i]->provider_note . '</li>';
 					}
 					
-					$user_answer .= '</li>';
 					$count++;
 				}
 			}
@@ -441,31 +441,30 @@ class ChainedQuizQuiz {
 			// Display the provider note.
 			if ($answers[$i]->soap_type == 's') {
 				if (!empty($answers[$i]->answer)) {
-					$user_answer .= '<li>';
 
 					// For text questions, the note is a prepared answer using text substitution from the user's input.
 					// For non-text questions, the note uses the provider note value setup by admin in the config.
 					//    ** If the admin didn't setup a provider note, then it just shows the user's raw answers.
 					if ($answers[$i]->qtype == 'text') {
+						$user_answer .= '<li>';
 						$current_question_id = $answers[$i]->question_id;
 						while($answers[$i]->question_id == $current_question_id) {
 							if (strlen($user_answer) > 0) $user_answer .= ' ';
 							$user_answer .= stripslashes($answers[$i]->provider_note) . '<strong> ' . stripslashes($answers[$i]->answer_text) . '</strong>';
 							$i++;
 						}
-						$user_answer .= ".";
+						$user_answer .= ".</li>";
 						$i--;
 					} 
 					// Warning that no a provider note was not setup by the admin for this radio/checkbox answer.
-					elseif (empty($answers[$i]->provider_note)) {
-						$user_answer .= 'ALERT: PROVIDER_NOTE not setup for the following question/answer: ' . stripslashes($answers[$i]->question) . '/' . stripslashes($answers[$i]->choice);
+					elseif (empty($answers[$i]->provider_note) && $debug_mode == "on") {
+						$user_answer .= '<li>[DEBUG] PROVIDER_NOTE EMPTY: ' . stripslashes($answers[$i]->question) . '/' . stripslashes($answers[$i]->choice) . '</li>';
 					} 
 					// The user's answer is displayed using the provider note for the answer.
-					else {
-						$user_answer .= $answers[$i]->provider_note;
+					elseif (!empty($answers[$i]->provider_note)) {
+						$user_answer .= '<li>' . $answers[$i]->provider_note . '</li>';
 					}
 					
-					$user_answer .= '</li>';
 					$count++;
 				}
 			} 
@@ -485,31 +484,30 @@ class ChainedQuizQuiz {
 				// Display the provider note.
 				if ($answers[$i]->soap_type == 'o') {
 					if (!empty($answers[$i]->answer)) {
-						$user_answer .= '<li>';
 	
 						// For text questions, the note is a prepared answer using text substitution from the user's input.
 						// For non-text questions, the note uses the provider note value setup by admin in the config.
 						//    ** If the admin didn't setup a provider note, then it just shows the user's raw answers.
 						if ($answers[$i]->qtype == 'text') {
+							$user_answer .= '<li>';
 							$current_question_id = $answers[$i]->question_id;
 							while($answers[$i]->question_id == $current_question_id) {
 								if (strlen($user_answer) > 0) $user_answer .= ' ';
 								$user_answer .= stripslashes($answers[$i]->provider_note) . ' <strong>' . stripslashes($answers[$i]->answer_text) . '</strong>';
 								$i++;
 							}
-							$user_answer .= ".";
+							$user_answer .= ".</li>";
 							$i--;
 						} 
 						// Warning that no a provider note was not setup by the admin for this radio/checkbox answer.
-						elseif (empty($answers[$i]->provider_note)) {
-							$user_answer .= 'ALERT: PROVIDER_NOTE not setup for the following answer: ' . stripslashes($answers[$i]->choice);
+						elseif (empty($answers[$i]->provider_note) && $debug_mode == "on") {
+							$user_answer .= '<li>[DEBUG] PROVIDER_NOTE EMPTY: ' . stripslashes($answers[$i]->choice) . '</li>';
 						} 
 						// The user's answer is displayed using the provider note for the answer.
-						else {
-							$user_answer .= $answers[$i]->provider_note;
+						elseif (empty($answers[$i]->provider_note)) {
+							$user_answer .= '<li>' . $answers[$i]->provider_note . '</li>';;
 						}
 						
-						$user_answer .= '</li>';
 						$count++;
 					}
 				} 
@@ -536,122 +534,6 @@ class ChainedQuizQuiz {
 		return $output;	
 	} // end soap-note
 
-
-	/**
-	 * FUNCTION: SOAP_NOTE builds a standardized medical note using the user's answers and question config.
-	 */
-	function soap_note_fax($completion_id) {
-		global $wpdb;		
-		$_question = new ChainedQuizQuestion();
-		$output = '';
-
-		$answers = $wpdb->get_results($wpdb->prepare("SELECT tUA.*, tC.choice as choice, tC.is_correct as choice_correct,
-		tC.provider_note as provider_note, tC.assessment as assessment, tC.plan as plan,
-		tQ.question as question, tQ.qtype as qtype, tQ.soap_type as soap_type
-		FROM ".CHAINED_USER_ANSWERS." tUA
-		JOIN ".CHAINED_QUESTIONS." tQ ON tQ.id = tUA.question_id
-		LEFT JOIN ".CHAINED_CHOICES." tC ON tC.id = tUA.answer
-		WHERE tUA.completion_id=%d ORDER BY tUA.ID", $completion_id));
-		
-		// SUBJECTIVE
-		$output .= 'S (SUBJECTIVE)<BR>';
-		
-		for ($i = 0; $i < count($answers); $i++) {
-			$user_answer = '';
-
-			// Display the provider note.
-			if ($answers[$i]->soap_type == 's') {
-				if (!empty($answers[$i]->answer)) {
-					$user_answer .= '(';
-
-					// For text questions, the note is a prepared answer using text substitution from the user's input.
-					// For non-text questions, the note uses the provider note value setup by admin in the config.
-					//    ** If the admin didn't setup a provider note, then it just shows the user's raw answers.
-					if ($answers[$i]->qtype == 'text') {
-						$current_question_id = $answers[$i]->question_id;
-						while($answers[$i]->question_id == $current_question_id) {
-							if (strlen($user_answer) > 0) $user_answer .= ' ';
-							$user_answer .= stripslashes($answers[$i]->provider_note) . ' <strong>' . stripslashes($answers[$i]->answer_text) . '</strong>';
-							$i++;
-						}
-						$user_answer .= ".";
-						$i--;
-					} 
-					// Warning that no a provider note was not setup by the admin for this radio/checkbox answer.
-					elseif (empty($answers[$i]->provider_note)) {
-						$user_answer .= 'ALERT: PROVIDER_NOTE not setup for the following question/answer: ' . stripslashes($answers[$i]->question) . '/' . stripslashes($answers[$i]->choice);
-					} 
-					// The user's answer is displayed using the provider note for the answer.
-					else {
-						$user_answer .= $answers[$i]->provider_note;
-					}
-					$user_answer .= ') ';
-				}
-			}
-			$output .= $user_answer;
-		}
-		$output .= '<BR><BR>';
-
-		// OBJECTIVE
-		$output .= 'O (OBJECTIVE)<BR>';
-		
-			for ($i = 0; $i < count($answers); $i++) {
-				$user_answer = '';
-	
-				// Display the provider note.
-				if ($answers[$i]->soap_type == 'o') {
-					if (!empty($answers[$i]->answer)) {
-						$user_answer .= '(';
-	
-						// For text questions, the note is a prepared answer using text substitution from the user's input.
-						// For non-text questions, the note uses the provider note value setup by admin in the config.
-						//    ** If the admin didn't setup a provider note, then it just shows the user's raw answers.
-						if ($answers[$i]->qtype == 'text') {
-							$current_question_id = $answers[$i]->question_id;
-							while($answers[$i]->question_id == $current_question_id) {
-								if (strlen($user_answer) > 0) $user_answer .= ' ';
-								$user_answer .= stripslashes($answers[$i]->provider_note) . ' <strong>' . stripslashes($answers[$i]->answer_text) . '</strong>';
-								$i++;
-							}
-							$user_answer .= ".";
-							$i--;
-						} 
-						// Warning that no a provider note was not setup by the admin for this radio/checkbox answer.
-						elseif (empty($answers[$i]->provider_note)) {
-							$user_answer .= 'ALERT: PROVIDER_NOTE not setup for the following answer: ' . stripslashes($answers[$i]->choice);
-						} 
-						// The user's answer is displayed using the provider note for the answer.
-						else {
-							$user_answer .= $answers[$i]->provider_note;
-						}
-						$user_answer .= ') ';
-					}
-				}
-				$output .= $user_answer;
-			}
-		$output .= '<BR><BR>';
-
-		// ASSESSMENT
-		$output .= 'A (ASSESSMENT)<BR>';
-		
-		foreach ($answers as $answer) {
-			if (!empty($answer->assessment)) {
-				$output .= '(' . $answer->assessment . ') ';
-			}			
-		}
-		$output .= '<BR><BR>';
-
-		// PLAN
-		$output .= 'P (PLAN)<BR>';
-		
-		foreach ($answers as $answer) {
-			if (!empty($answer->plan)) {
-				$output .= '(' . $answer->plan . ') ';	
-			}
-		}
-		
-		return $output;	
-	} // end soap_note_fax
 	
 	// copy / duplicate quiz
 	static function copy($id) {

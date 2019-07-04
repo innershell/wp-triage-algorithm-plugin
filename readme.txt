@@ -63,6 +63,11 @@ None yet.
 1. The submissions dashboard to capture feedback for machine learning.
 
 == Changelog ==
+= 4.0 (Points) =
+- Algorithms can generate a score (i.e., points).
+- Sort algorithms listing by title.
+- Debug mode to turn on extra helpful text to find algorithm setup problems
+
 = 3.0 (Algorithm Billing Codes) =
 - Each algorithm can be given a billing code by free text to the email output portion of the algorithm setup.
 
