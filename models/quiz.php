@@ -88,27 +88,31 @@ class ChainedQuizQuiz {
 	
 		$_result = new ChainedQuizResult();
 		// calculate result
-		$result = $_result->calculate($quiz, $points);
+		$result = $_result->calculate($output, $points);
 		
 		// get final screen and replace vars
 		$snapshot = ''; // The SOAP note data to be saved in the submission record snapshot.
 		$output = stripslashes($quiz->output);
 		$email_output = $quiz->set_email_output ? stripslashes($quiz->email_output) : $output;
 		
+		/** THIS MAY BE REMOVED BECAUSE THE EMAIL OUTPUT IS USED FOR SNAPSHOT INSTEAD */
 		$output = str_replace('{{result-title}}', @$result->title, $output);
 		$output = str_replace('{{result-text}}', stripslashes(@$result->description), $output);
 		$output = str_replace('{{points}}', $points, $output);
 		$output = str_replace('{{questions}}', $_POST['total_questions'], $output);
 		
+		// Find the first occurrence of the shortcode and replace with the HTML answers table.
 		if(strstr($output, '{{answers-table}}')) {
 			$snapshot = $this->answers_table($completion_id);
 			$output = str_replace('{{answers-table}}', $snapshot, $output);
 		}
 
+		// If there is now HTML answers table, then substitute it for the soap note instead.
 		if ($snapshot == '') {
 			$snapshot = $this->soap_note($completion_id);
 		}
 
+		// Find the first occurrence of the shortcode and replace with the HTML SOAP note.
 		if(strstr($output, '{{soap-note}}')) {
 			$output = str_replace('{{soap-note}}', $snapshot, $output);
 		}
@@ -118,10 +122,17 @@ class ChainedQuizQuiz {
 		$email_output = str_replace('{{points}}', $points, $email_output);
 		$email_output = str_replace('{{questions}}', $_POST['total_questions'], $email_output);
 		
+		// Find the first occurrence of the shortcode and replace with the HTML answers table.
 		if(strstr($email_output, '{{answers-table}}')) {
 			$email_output = str_replace('{{answers-table}}', $this->answers_table($completion_id), $email_output);
 		}
 		
+		// If there is now HTML answers table, then substitute it for the soap note instead.
+		if ($snapshot == '') {
+			$snapshot = $this->soap_note($completion_id);
+		}
+
+		// Find the first occurrence of the shortcode and replace with the HTML SOAP note.
 		if(strstr($email_output, '{{soap-note}}')) {
 			$email_output = str_replace('{{soap-note}}', $this->soap_note($completion_id), $email_output);
 		}
@@ -169,7 +180,7 @@ class ChainedQuizQuiz {
 			$wpdb->query( $wpdb->prepare("UPDATE ".CHAINED_COMPLETED." SET
 				quiz_id = %d, points = %f, result_id = %d, datetime = NOW(), ip = %s, user_id = %d, 
 				snapshot = %s, source_url=%s, email=%s WHERE id=%d",
-				$quiz->id, $points, @$result->id, $_SERVER['REMOTE_ADDR'], $user_id, $snapshot, 
+				$quiz->id, $points, @$result->id, $_SERVER['REMOTE_ADDR'], $user_id, $email_output, 
 				$source_url, $user_email, intval($_SESSION['chained_completion_id'])));
 			$taking_id = $_SESSION['chained_completion_id'];	
 			unset($_SESSION['chained_completion_id']);	
@@ -179,7 +190,7 @@ class ChainedQuizQuiz {
 			$wpdb->query( $wpdb->prepare("INSERT INTO ".CHAINED_COMPLETED." SET
 				quiz_id = %d, points = %f, result_id = %d, datetime = NOW(), ip = %s, user_id = %d, snapshot = %s, 
 				source_url=%s, email=%s",
-				$quiz->id, $points, @$result->id, $_SERVER['REMOTE_ADDR'], $user_id, $snapshot, $source_url, $user_email));		 	
+				$quiz->id, $points, @$result->id, $_SERVER['REMOTE_ADDR'], $user_id, $email_output, $source_url, $user_email));		 	
 			$taking_id = $wpdb->insert_id;		
 		}
 		

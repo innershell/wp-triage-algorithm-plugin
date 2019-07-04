@@ -70,6 +70,9 @@ None yet.
 4. The submissions dashboard to capture feedback for machine learning.
 
 # Changelog
+## 3.0 (Algorithm Billing Codes)
+- Each algorithm can be given a billing code by free text to the email output portion of the algorithm setup.
+
 ## 2.0.2 (Bug Fix)
 - Emails to Admin when submissions received not working.
 - Text fields not required allowing patients to submit blank answers.

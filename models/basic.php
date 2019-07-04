@@ -178,7 +178,7 @@ class ChainedQuiz {
 		}
 
 		// Set the current plugin version number.
-		update_option('chained_version', "2.2");
+		update_option('chained_version', "3.0");
 		// exit;
 	}
    
@@ -210,7 +210,7 @@ class ChainedQuiz {
 				'chained-common',
 				CHAINED_URL.'js/common.js',
 				false,
-				'2.2',
+				'3.0',
 				false
 		);
 		wp_enqueue_script("chained-common");

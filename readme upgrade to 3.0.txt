@@ -1,4 +1,4 @@
-// These are the changes that need to be done when upgrading the plugin from 2.0.0 to 2.0.1.
+// These are the changes that need to be done when upgrading the plugin from 2.2 to 3.0.
 
 Backup the chained_quiz plugin tables.
 
