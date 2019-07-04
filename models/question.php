@@ -83,12 +83,12 @@ class ChainedQuizQuestion {
 			}
 
 			$_POST['goto'.$choice->id] = sanitize_text_field($_POST['goto'.$choice->id]);
-			if(!is_numeric($_POST['points'.$choice->id])) $_POST['points'.$choice->id] = 0;
+			//if(!is_numeric($_POST['points'.$choice->id])) $_POST['points'.$choice->id] = 0;  // Points deprecated from questions.
 			
 			// else update
 			$wpdb->query($wpdb->prepare("UPDATE ".CHAINED_CHOICES." SET
-				choice=%s, provider_note=%s, assessment=%s, plan=%s, points=%s, is_correct=%d, goto=%s WHERE id=%d", 
-				$_POST['answer'.$choice->id], $_POST['provider_note'.$choice->id], $_POST['assessment'.$choice->id], $_POST['plan'.$choice->id], $_POST['points'.$choice->id], 
+				choice=%s, provider_note=%s, assessment=%s, plan=%s, is_correct=%d, goto=%s WHERE id=%d", 
+				$_POST['answer'.$choice->id], $_POST['provider_note'.$choice->id], $_POST['assessment'.$choice->id], $_POST['plan'.$choice->id], 
 				intval(@$_POST['is_correct'.$choice->id]), $_POST['goto'.$choice->id], $choice->id));
 		}	
 		

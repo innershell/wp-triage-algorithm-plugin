@@ -241,6 +241,26 @@ class ChainedQuizCompleted {
 			
 		include(CHAINED_PATH."/views/completed.html.php");
 	} // end manage
+
+	// Generate the triage algorithm responses dashboard/table.
+	static function view_responses() {
+		global $wpdb;
+
+		$results = $wpdb->get_results(
+			"SELECT tCOM.id as completion_id, tCOM.datetime as response_date, tQUIZ.title as algorithm_name, tUA.answer_text as study_id, tCOM.snapshot as soap_note
+			FROM ".CHAINED_QUIZZES." tQUIZ
+			JOIN ".CHAINED_COMPLETED." tCOM
+			JOIN ".CHAINED_QUESTIONS." tQUES
+			JOIN ".CHAINED_USER_ANSWERS." tUA
+			WHERE tQUIZ.id = tCOM.quiz_id 
+			AND tQUIZ.id = tQUES.quiz_id
+			AND tQUES.id = tUA.question_id
+			AND tCOM.id = tUA.completion_id
+			AND tQUES.sort_order = 1
+			ORDER BY tCOM.datetime DESC");
+
+		include(CHAINED_PATH."/views/responses.html.php");
+	}
 	
 	// defines whether to sort by ASC or DESC
 	static function define_dir($col, $ob, $dir) {		
@@ -249,5 +269,19 @@ class ChainedQuizCompleted {
 		// else reverse
 		if($dir == 'asc') return 'desc';
 		else return 'asc'; 
+	}
+
+	// Captures feedback for a triage algorithm post-submission.
+	static function feedback($comment) {
+		$user_email = 'melvin@windwake.io';
+		$subject = 'Triage Algorithm Feedback';
+		$message = $comment;
+		$headers  = 'MIME-Version: 1.0' . "\r\n";
+		$headers .= 'Content-type: text/html; charset=utf-8' . "\r\n";
+		$headers .= 'From: ' . $user_email . "\r\n";
+		$attachments = null;
+
+		wp_mail($user_email, $subject, $message, $headers, $attachments);
+		echo json_encode(array("abc"=>'Email succesful.'));
 	}
 }

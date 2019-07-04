@@ -66,5 +66,8 @@ None yet.
 3. And of course you can define different results depending on the results collected in the quiz 
 
 # Changelog
+## Version 2.0
+- Added Dashboard functionality.
+
 ## Version 1.0
-- First public release of a triage algorithm
+- First public release of a triage algorithm.

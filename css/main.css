@@ -1,3 +1,9 @@
+/*
+	Selectors with a period (.) is for a class.
+	Selectors with a hash (#) is for an id.
+	Selectors with just an element name is for an HTML element.
+*/
+
 .chained-quiz-action {
 	padding-top: 20px;
 	padding-bottom: 20px;
@@ -33,4 +39,19 @@ textarea.chained-quiz-frontend {
 
 .one-line {
 	display: inline-block;
+}
+
+.alternate:nth-child(even) {
+	background-color: #F2F2F2;
+}
+
+/* .soap-note td {
+	background-color: #FFFFFF;
+} */
+
+div.soap-note {
+	border: 1px solid;
+	border-color: #B3B3B3;
+	padding: 10px;
+	box-shadow: 5px 5px 10px #888888;
 }

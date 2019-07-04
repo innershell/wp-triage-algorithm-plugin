@@ -2,17 +2,20 @@
 if( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 // handle all ajax
 function chainedquiz_ajax() {
-	$action = empty($_POST['chainedquiz_action']) ? 'answer' : $_POST['chainedquiz_action'];
 	
-	// currently just "answer" but the code will handle future versions
-	if(!in_array($action, array('answer'))) exit; 
+	// If there is no action specified for this AJAX call, then ABORT.
+	$action = empty($_POST['chainedquiz_action']) ? 'ABORT' : $_POST['chainedquiz_action'];
+	if(in_array($action, array('ABORT'))) exit; 
 	
 	switch($action) {
 		// answer a question or quiz
 		case 'answer':
-		default:
 			echo ChainedQuizQuizzes :: answer_question();
-		break;
+			break;
+		case 'feedback':
+			$comment = $_POST['comment'];
+			echo ChainedQuizCompleted :: feedback($comment);
+			break;
 	}
 
 	exit;

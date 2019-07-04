@@ -1,7 +1,7 @@
 <div id="chained-related" class="chained-sidebox">
 	<h3><?php _e('ABOUT', 'chained')?></h3>
 		
-	<p><?php _e('Version: 1.0.0 (Diabetes)', 'chained');?> </p>
+	<p><?php _e('Version: 2.0.0', 'chained');?> </p>
 </div>
 
 

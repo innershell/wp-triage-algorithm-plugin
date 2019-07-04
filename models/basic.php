@@ -190,7 +190,7 @@ class ChainedQuiz {
 				'chained-common',
 				CHAINED_URL.'js/common.js',
 				false,
-				'1.0.0',
+				'2.0.0',
 				false
 		);
 		wp_enqueue_script("chained-common");
@@ -216,7 +216,8 @@ class ChainedQuiz {
 		define( 'CHAINED_VERSION', get_option('chained_version'));
 				
 		// shortcodes
-		add_shortcode('chained-quiz', array("ChainedQuizShortcodes", "quiz"));
+		add_shortcode('triage-algorithm', array("TriageShortcodes", "algorithmShortcodeHandler"));
+		add_shortcode('triage-responses', array("TriageShortcodes", "responsesShortcodeHandler"));
 		add_shortcode('chained-share', array("ChainedSharing", "display"));		
 		
 		// once daily delete empty records older than 1 day

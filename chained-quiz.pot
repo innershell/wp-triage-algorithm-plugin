@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Chained Quiz package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Chained Quiz 1.0.0\n"
+"Project-Id-Version: Chained Quiz 1.0.9.2\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/chained-quiz\n"
 "POT-Creation-Date: 2018-08-13 12:54:20+00:00\n"
 "MIME-Version: 1.0\n"

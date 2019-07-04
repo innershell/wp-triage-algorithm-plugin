@@ -13,7 +13,7 @@
 			<p><label><?php _e('Question contents', 'chained')?></label> <?php echo wp_editor(stripslashes(@$question->question), 'question')?></p>
 			
 			<h3><?php _e('SOAP Note Type', 'chained')?></h3>
-				<input type="radio" name="soap_type" value="" <?php if(!empty($question->id) and $question->soap_type == '') echo 'checked'?>>None<br>
+				<input type="radio" name="soap_type" value="n" <?php if(!empty($question->id) and $question->soap_type == 'n') echo 'checked'?>>None<br>
 				<input type="radio" name="soap_type" value="s" <?php if(!empty($question->id) and $question->soap_type == 's') echo 'checked'?>>Subjective<br>
 				<input type="radio" name="soap_type" value="o" <?php if(!empty($question->id) and $question->soap_type == 'o') echo 'checked'?>>Objective<br>				
 

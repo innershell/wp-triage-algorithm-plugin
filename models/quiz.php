@@ -127,7 +127,7 @@ class ChainedQuizQuiz {
 
 		if ($email_content_method == 'attach') {
 			// Write to file.
-			$file = plugin_dir_path( __FILE__ ) . '/'.$completion_id.'.html'; 
+			$file = plugin_dir_path( __DIR__ ) . '/output_files/'.$completion_id.'.html'; 
 			$open = fopen( $file, "a" ); // Open the file for writing (a) only.
 			$write = fputs( $open, $email_output ); 
 			fclose( $open );
@@ -223,7 +223,7 @@ class ChainedQuizQuiz {
 				</head>
 				<html><body>'.wpautop($admin_output).'</body></html>';	
 						
-				wp_mail($admin_email, $subject, $message, $headers);
+				wp_mail($admin_email, $subject, $message, $headers, $attachments);
 		}
 		
 		if(!empty($quiz->email_user)) {
@@ -364,9 +364,52 @@ class ChainedQuizQuiz {
 		LEFT JOIN ".CHAINED_CHOICES." tC ON tC.id = tUA.answer
 		WHERE tUA.completion_id=%d ORDER BY tUA.ID", $completion_id));
 		
+		// Setup the basic table header.
+		$output .= '<table border="1" cellspacing="0" cellpadding="10">';
+
+		// NONE
+		$output .= '<tr><th colspan="2">Orchestra Response</th></tr>
+					<tr><td colspan="2"><ul>';
+
+		for ($i = 0; $i < count($answers); $i++) {
+			$user_answer = '';
+
+			// Display the provider note.
+			if ($answers[$i]->soap_type == 'n') {
+				if (!empty($answers[$i]->answer)) {
+					$user_answer .= '<li>';
+
+					// For text questions, the note is a prepared answer using text substitution from the user's input.
+					// For non-text questions, the note uses the provider note value setup by admin in the config.
+					//    ** If the admin didn't setup a provider note, then it just shows the user's raw answers.
+					if ($answers[$i]->qtype == 'text') {
+						$current_question_id = $answers[$i]->question_id;
+						while($answers[$i]->question_id == $current_question_id) {
+							if (strlen($user_answer) > 0) $user_answer .= ' ';
+							$user_answer .= stripslashes($answers[$i]->provider_note) . '<strong> ' . stripslashes($answers[$i]->answer_text) . '</strong>';
+							$i++;
+						}
+						$user_answer .= ".";
+						$i--;
+					} 
+					// Warning that no a provider note was not setup by the admin for this radio/checkbox answer.
+					elseif (empty($answers[$i]->provider_note)) {
+						$user_answer .= 'ALERT: PROVIDER_NOTE not setup for the following question/answer: ' . stripslashes($answers[$i]->question) . '/' . stripslashes($answers[$i]->choice);
+					} 
+					// The user's answer is displayed using the provider note for the answer.
+					else {
+						$user_answer .= $answers[$i]->provider_note;
+					}
+					
+					$user_answer .= '</li>';
+				}
+			}
+			$output .= $user_answer;
+		}
+		$output .= '</ul>';
+
 		// SUBJECTIVE
-		$output .= '<table border="1" cellspacing="0" cellpadding="10">
-					<tr><th colspan="2">S (Subjective)</th></tr>
+		$output .= '<tr><th colspan="2">S (Subjective)</th></tr>
 					<tr><td colspan="2"><ul>';
 		
 		for ($i = 0; $i < count($answers); $i++) {
@@ -448,11 +491,11 @@ class ChainedQuizQuiz {
 		$output .= '</ul></td></tr>';
 
 
-		// ASSESSMENT and Plan Side-by-Side
+		// ASSESSMENT and PLAN Side-by-Side
 		$output .= '<tr><th>A (Assessment)</th><th>P (Plan)</th></tr>';
 		foreach ($answers as $answer) {
 			if (!empty($answer->assessment) && !empty($answer->plan)) {
-				$output .= '<tr><td>'.$answer->assessment.'</td><td>'.$answer->plan.'</td></tr>';
+				$output .= '<tr><td width="50%">'.$answer->assessment.'</td><td width="50%">'.$answer->plan.'</td></tr>';
 			}
 		}
 

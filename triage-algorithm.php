@@ -2,9 +2,9 @@
 /*
 Plugin Name: Triage Algorithm
 Plugin URI: http://windwake.io
-Description: Create a chained quiz where the upcoming questions can depend on the previous answer
+Description: Create a triage algorithm where questions are asked and answers translated into clinical decision support information.
 Author: WindWake Healthcare Technologies LLC
-Version: 1.0.0
+Version: 2.0.0
 Author URI: http://windwake.io
 License: GPLv2 or later
 Text domain: chained
