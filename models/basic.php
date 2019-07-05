@@ -211,8 +211,18 @@ class ChainedQuiz {
 		if (get_option('chained_csv_delim') == '') {
 			update_option('chained_csv_delim', ',');
 			update_option('chained_csv_quotes', '1');
+		}		
+		
+		// default debug mode
+		if (get_option('chained_debug_mode') == '') {
+			update_option('chained_debug_mode', 'off');
 		}
-				
+
+		// default delete data
+		if (get_option('chained_delete_data') == '') {
+			update_option('chained_delete_data', 'no');
+		}
+
 		// Go ahead and activate the plugin now by running the install script.
 		self::install(true);
 	}
