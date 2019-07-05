@@ -13,6 +13,8 @@
 		<?php foreach($results as $result):?>
 			<form method="post" onsubmit="return validateChainedResult(this);">
 				<p><label><?php _e('Result Title', 'chained')?></label> <input type="text" name="title" size="60" value="<?php echo $result->title?>"></p>
+				<p><?php _e('Min. Points:', 'chained')?> <input type="text" size="4" name="points_bottom" value="<?php echo $result->points_bottom?>">&nbsp;&nbsp;&nbsp;
+				<?php _e('Max. Points:', 'chained')?> <input type="text" size="4" name="points_top" value="<?php echo $result->points_top?>"></p>
 				<p><label><?php _e('Result Description', 'chained')?></label> <?php echo wp_editor(stripslashes($result->description), 'description'.$result->id, array("textarea_rows" => 3))?></p>
 				<div>
 					<div class="one-line">
@@ -34,8 +36,6 @@
 						<textarea rows="3" cols="40" name="plan<?php echo $result->id?>"><?php echo stripslashes($result->plan);?></textarea>
 					</div>
 				</div>
-				<p><?php _e('Min. Points:', 'chained')?> <input type="text" size="4" name="points_bottom" value="<?php echo $result->points_bottom?>"> 
-				<?php _e('Max. Points:', 'chained')?> <input type="text" size="4" name="points_top" value="<?php echo $result->points_top?>"></p>
 				<p><label><?php _e('Optional redirect URL', 'chained')?></label> <input type="text" name="redirect_url" size="60" value="<?php echo $result->redirect_url?>"><br />
 				<i><?php _e('If you enter this, the quiz will redirect to the URL instead of showing the "Final Output".', 'chained');?></i></p>
 				<p><input type="submit" name="save" value="<?php _e('Save Result', 'chained')?>" class="button-primary">
@@ -50,6 +50,8 @@
 		<!-- Add a new result. -->
 		<form method="post" onsubmit="return validateChainedResult(this);">
 			<p><label><?php _e('Result Title', 'chained')?></label> <input type="text" name="title" size="60"></p>
+			<p><?php _e('Min. Points:', 'chained')?> <input type="text" size="4" name="points_bottom">&nbsp;&nbsp;&nbsp;
+			<?php _e('Max. Points:', 'chained')?> <input type="text" size="4" name="points_top"></p>
 			<p><label><?php _e('Result Description', 'chained')?></label> <?php echo wp_editor('', 'description', array("textarea_rows" => 3))?></p>
 			<div>
 				<div class="one-line">
@@ -71,8 +73,6 @@
 					<textarea rows="3" cols="40" name="plan"></textarea>
 				</div>
 			</div>
-			<p><?php _e('Min. Points:', 'chained')?> <input type="text" size="4" name="points_bottom"> 
-			<?php _e('Max. Points:', 'chained')?> <input type="text" size="4" name="points_top"></p>
 			<p><label><?php _e('Optional redirect URL', 'chained')?></label> <input type="text" name="redirect_url" size="60"><br />
 			<i><?php _e('The Algorithm will redirect to the URL instead of showing the "Final Output".', 'chained');?></i></p>
 			<p><input type="submit" name="add" value="<?php _e('Add Result', 'chained')?>" class="button-primary"></p>
