@@ -75,6 +75,10 @@ class ChainedQuiz {
 					`points_top` DECIMAL(8,2) NOT NULL DEFAULT '0.00',
 					`title` VARCHAR(255) NOT NULL DEFAULT '',
 					`description` TEXT,
+					`subjective` TEXT,
+					`objective` TEXT,
+					`assessment` TEXT,
+					`plan` TEXT,
 					`redirect_url` VARCHAR(255) NOT NULL DEFAULT ''
 				) DEFAULT CHARSET=utf8;";
 			
