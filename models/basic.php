@@ -265,7 +265,7 @@ class ChainedQuiz {
 			$delim = get_option('chained_csv_delim');
 				
 			// Uninstall settings
-			/** PLACEHOLDER FOR FUTURE CODE */
+			update_option('chained_delete_data', sanitize_text_field($_POST['delete_data']));
 
 			// Debug Mode
 			update_option('chained_debug_mode', sanitize_text_field($_POST['debug_mode']));
