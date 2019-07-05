@@ -160,7 +160,7 @@ class ChainedQuizQuiz {
 
 		if ($email_content_method == 'attach') {
 			// Write to file.
-			$file = plugin_dir_path( __DIR__ ) . '/output_files/'.$completion_id.'.html'; 
+			$file = plugin_dir_path( __DIR__ ) . 'output_files/'.$completion_id.'.html'; 
 			$open = fopen( $file, "a" ); // Open the file for writing (a) only.
 			$write = fputs( $open, $email_output ); 
 			fclose( $open );
@@ -396,8 +396,9 @@ class ChainedQuizQuiz {
 	/**************************************************************************
 	 * FUNCTION: Builds a SOAP note using the user's answers and question config.
 	 **************************************************************************/
-	function soap_note($completion_id, $result) {
-		global $wpdb;		
+	function soap_note($completion_id, $_result) {
+		global $wpdb;
+		$result = $_result;
 		$_question = new ChainedQuizQuestion();
 		$debug_mode = get_option('chained_debug_mode');
 		$output = '';

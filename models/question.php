@@ -23,10 +23,10 @@ class ChainedQuizQuestion {
 		$sort_order++;	 
 		
 		$result = $wpdb->query($wpdb->prepare("INSERT INTO ".CHAINED_QUESTIONS." SET
-			quiz_id=%d, question=%s, qtype=%s, soap_type=%s, rank=%d, title=%s, autocontinue=%d, sort_order=%d, 
+			quiz_id=%d, question=%s, qtype=%s, soap_type=%s, rank=%d, points_abort_min=%f, points_abort_max=%f, title=%s, autocontinue=%d, sort_order=%d, 
 			accept_comments=%d, accept_comments_label=%s", 
-			intval($vars['quiz_id']), $vars['question'], $vars['qtype'], $vars['soap_type'], intval(@$vars['rank']), $vars['title'], 
-			intval(@$vars['autocontinue']), $sort_order, $accept_comments, $accept_comments_label));
+			intval($vars['quiz_id']), $vars['question'], $vars['qtype'], $vars['soap_type'], intval(@$vars['rank']), $vars['points_abort_min'], $vars['points_abort_max'], 
+			$vars['title'], intval(@$vars['autocontinue']), $sort_order, $accept_comments, $accept_comments_label));
 			
 		if($result === false) throw new Exception(__('DB Error', 'chained'));
 		return $wpdb->insert_id;	
@@ -49,8 +49,8 @@ class ChainedQuizQuestion {
 		$accept_comments_label = sanitize_text_field($vars['accept_comments_label']);
 		
 		$result = $wpdb->query($wpdb->prepare("UPDATE ".CHAINED_QUESTIONS." SET
-			question=%s, qtype=%s, soap_type=%s, title=%s, autocontinue=%d, accept_comments=%d, accept_comments_label=%s WHERE id=%d", 
-			$vars['question'], $vars['qtype'], $vars['soap_type'], $vars['title'], intval(@$vars['autocontinue']), 
+			question=%s, qtype=%s, soap_type=%s, title=%s, points_abort_min=%f, points_abort_max=%f, autocontinue=%d, accept_comments=%d, accept_comments_label=%s WHERE id=%d", 
+			$vars['question'], $vars['qtype'], $vars['soap_type'], $vars['title'], $vars['points_abort_min'], $vars['points_abort_max'], intval(@$vars['autocontinue']), 
 			$accept_comments, $accept_comments_label, $id));
 			
 			
@@ -269,13 +269,7 @@ class ChainedQuizQuestion {
 		else {
 			if(!empty($answer)) $answer_ids[] = $answer;
 		} 
-		
-		// Remove any answers that are non numeric.
-		/* SHOULD NOT BE NEEDED ANYMORE BECAUSE TEXT ANSWERS ARE NUMERIC TOO. */
-		// $answer_ids = chained_int_array($answer_ids);  /* THIS WAS A BUG BEFORE WITH CHECKBOXES */
-		// if(empty($answer_ids)) $answer_ids = array(0);
-
-		
+				
 		/** Build a questions queue to follow-up until all questions have been asked.
 		 *  1. Find follow-up questions and sort by order to be asked.
 		 *  2. Ask the first follow-up question in the list.

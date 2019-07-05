@@ -27,13 +27,16 @@
 				<option value="text" <?php if(!empty($question->id) and $question->qtype == 'text') echo 'selected'?>><?php _e('Text Box (multiple lines of text)','chained')?></option>
 				<option value="date" <?php if(!empty($question->id) and $question->qtype == 'date') echo 'selected'?>><?php _e('Date (calendar to pick date)','chained')?></option>
 			</select>
-			
-			<span id="chainedAutoContinue" style="display:<?php echo (empty($question->id) or $question->qtype == 'radio') ? 'inline' : 'none';?>"><input type="checkbox" name="autocontinue" value="1" <?php if(!empty($question->autocontinue)) echo 'checked'?>> <?php _e('Automatically continue to the next question when a choice is selected', 'chained')?></span> </p>
-			
+
+			<h3><?php _e('Question Behavior', 'chained')?></h3>
+			<p><?php _e('Abort and Finish the Algorithm if the points sum up to this Question is in the following range.' , 'chained')?></p>
+			<p><?php _e('Abort Min. Points:', 'chained')?> <input type="text" size="4" name="points_abort_min" value="<?php echo $question->points_abort_min?>">&nbsp;&nbsp;&nbsp;
+			<?php _e('Abort Max. Points:', 'chained')?> <input type="text" size="4" name="points_abort_max" value="<?php echo $question->points_abort_max?>"></p>			
+			<span id="chainedAutoContinue" style="display:<?php echo (empty($question->id) or $question->qtype == 'radio') ? 'inline' : 'none';?>"><input type="checkbox" name="autocontinue" value="1" <?php if(!empty($question->autocontinue)) echo 'checked'?>> <?php _e('Automatically continue to the next Question when a choice is selected.', 'chained')?></span> </p>
 			<p><input type="checkbox" name="accept_comments" value="1" <?php if(!empty($question->accept_comments)) echo 'checked'?>> <?php _e('Accept comments along with the answer.', 'chained');?> &nbsp;
 			<?php _e('Label before the comments field:', 'chained');?> <input type="text" name="accept_comments_label" size="30" value="<?php echo empty($question->accept_comments_label) ? __('Your comments:', 'chained') : stripslashes(@$question->accept_comments_label);?>"></p>
 			
-			<h3><?php _e('Answers and Settings', 'chained')?></h3>
+			<h3><?php _e('Answers', 'chained')?></h3>
 			
 			
 			<div id="answerRows">

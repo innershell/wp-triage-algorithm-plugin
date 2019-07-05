@@ -130,7 +130,9 @@ class ChainedQuizQuizzes {
 		 include(CHAINED_PATH."/views/display-quiz.html.php");
 	}
 
-	// answer a question or complete the quiz
+	/**************************************************************************
+	 * FUNCTION: Answer the question or complete the quiz.
+	 **************************************************************************/
 	static function answer_question() {
 		global $wpdb, $user_ID;
 		$_quiz = new ChainedQuizQuiz();
@@ -165,32 +167,26 @@ class ChainedQuizQuizzes {
 					break;
 		}
 
-
-
-/* 		if ($question->qtype == 'text') {
-			$answer = @$_POST['answers'];
-			$answer_text = @$_POST['answer_texts'];
-		} elseif ($question->qtype == 'checkbox') {
-			$answer = @$_POST['answers'];
-		} else {
-			$answer = @$_POST['answer'];
-		} */
-
 		// Check to make sure answer is provided.
 		if(empty($answer)) $answer = 0;
 		$answer = esc_sql($answer);
 
 		// Convert multiple answers into an array. Text and checkbox answers will arrive as an array.
-		/** Might be able to avoid this code if radio buttons are named as an array in the form input. */
 		if(!is_array($answer)) $answer = array($answer);
 		if (!is_array($answer_text)) $answer_text = array($answer_text);
 						
 		// calculate points
 		$points = $_question->calculate_points($question, $answer);
-		echo $points."|CHAINEDQUIZ|";
+		echo $points."|CHAINEDQUIZ|";		
 		
 		// figure out next question
-		$next_question = $_question->next($question, $answer);
+		$abort_enabled = $question->points_abort_min == null && $question->points_abort_max == null ? false : true;
+		error_log("Abort Enabled = " . $abort_enabled . " and Points = " . $points);
+		if ($abort_enabled && $points >= $question->points_abort_min && $points <= $question->points_abort_max) {
+			$next_question = null; // Abort criteria met. Let's abort the Algorithm.
+		} else {
+			$next_question = $_question->next($question, $answer);
+		}
 
 		// Store the answer
 		if(!empty($_SESSION['chained_completion_id'])) {

@@ -74,7 +74,6 @@ class ChainedQuizResult {
 			if(floatval($result->points_bottom) <= $points and $points <= floatval($result->points_top)) return $result;
     	}	
     
-		error_log("result.php:calculate() - Returning NULL.");
 		return null; // in case of nothing found
 		
 	}
