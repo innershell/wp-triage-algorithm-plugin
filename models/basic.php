@@ -39,6 +39,9 @@ class ChainedQuiz {
 					`qtype` VARCHAR(20) NOT NULL DEFAULT '',
 					`soap_type` VARCHAR(1) DEFAULT '',
 					`rank` INT UNSIGNED NOT NULL DEFAULT 0,
+					`abort_enabled` TINYINT UNSIGNED NOT NULL DEFAULT 0,
+					`points_abort_min` DECIMAL(8,2) NOT NULL DEFAULT '0.00',
+					`points_abort_max` DECIMAL(8,2) NOT NULL DEFAULT '0.00',
 					`autocontinue` TINYINT UNSIGNED NOT NULL DEFAULT 0,
 					`sort_order` INT UNSIGNED NOT NULL DEFAULT 0,
 					`accept_comments` TINYINT UNSIGNED NOT NULL DEFAULT 0,
@@ -129,10 +132,13 @@ class ChainedQuiz {
 		}
 
 		$current_version = get_option('chained_version');
-		error_log("Current 'chained_version' = ".$current_version);
 
 		/** PERFORM VERSION-SPECIFIC UPGRADES HERE **/
-		if ($current_version < '2.2') {
+		if ($current_version == '') {
+			// If we did not perform this check, all the version checks below are valid (for some reason).
+			return;
+		}
+		elseif ($current_version < '2.2') {
 			update_option('chained_delete_data', 'no');
 		} elseif ($current_version < '4.0') {
 			update_option('chained_debug_mode', 'off');
@@ -141,11 +147,14 @@ class ChainedQuiz {
 			$wpdb->query("ALTER TABLE ".CHAINED_RESULTS." ADD COLUMN objective TEXT AFTER subjective;");
 			$wpdb->query("ALTER TABLE ".CHAINED_RESULTS." ADD COLUMN assessment TEXT AFTER objective;");
 			$wpdb->query("ALTER TABLE ".CHAINED_RESULTS." ADD COLUMN plan TEXT AFTER assessment;");
+		} elseif ($current_version < '6.0') {
+			$wpdb->query("ALTER TABLE ".CHAINED_QUESTIONS." ADD COLUMN abort_enabled TINYINT NOT NULL DEFAULT 0 AFTER rank;");
+			$wpdb->query("ALTER TABLE ".CHAINED_QUESTIONS." ADD COLUMN points_abort_min DECIMAL(8,2) NOT NULL DEFAULT '0.00' AFTER abort_enabled;");
+			$wpdb->query("ALTER TABLE ".CHAINED_QUESTIONS." ADD COLUMN points_abort_max DECIMAL(8,2) NOT NULL DEFAULT '0.00' AFTER points_abort_min;");
 		}
 
 		// Set the current plugin version number.
-		update_option('chained_version', '5.1');
-		// exit;
+		update_option('chained_version', '6.0');
 	}
    
 	// main menu
@@ -176,7 +185,7 @@ class ChainedQuiz {
 				'chained-common',
 				CHAINED_URL.'js/common.js',
 				false,
-				'5.1',
+				'6.0',
 				false
 		);
 		wp_enqueue_script("chained-common");

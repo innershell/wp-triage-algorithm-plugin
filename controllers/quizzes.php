@@ -130,7 +130,9 @@ class ChainedQuizQuizzes {
 		 include(CHAINED_PATH."/views/display-quiz.html.php");
 	}
 
-	// answer a question or complete the quiz
+	/**************************************************************************
+	 * FUNCTION: Answer the question or complete the quiz.
+	 **************************************************************************/
 	static function answer_question() {
 		global $wpdb, $user_ID;
 		$_quiz = new ChainedQuizQuiz();
@@ -165,32 +167,26 @@ class ChainedQuizQuizzes {
 					break;
 		}
 
-
-
-/* 		if ($question->qtype == 'text') {
-			$answer = @$_POST['answers'];
-			$answer_text = @$_POST['answer_texts'];
-		} elseif ($question->qtype == 'checkbox') {
-			$answer = @$_POST['answers'];
-		} else {
-			$answer = @$_POST['answer'];
-		} */
-
 		// Check to make sure answer is provided.
 		if(empty($answer)) $answer = 0;
 		$answer = esc_sql($answer);
 
 		// Convert multiple answers into an array. Text and checkbox answers will arrive as an array.
-		/** Might be able to avoid this code if radio buttons are named as an array in the form input. */
 		if(!is_array($answer)) $answer = array($answer);
 		if (!is_array($answer_text)) $answer_text = array($answer_text);
 						
 		// calculate points
 		$points = $_question->calculate_points($question, $answer);
 		echo $points."|CHAINEDQUIZ|";
+		$total_points = $points + floatval($_POST['points']); // Points for the whole algorithm.
 		
 		// figure out next question
-		$next_question = $_question->next($question, $answer);
+		if ($question->abort_enabled && $total_points >= $question->points_abort_min && $total_points <= $question->points_abort_max) {
+			// Abort criteria met. Let's abort the Algorithm and finish it.
+			$next_question = null;
+		} else {
+			$next_question = $_question->next($question, $answer);
+		}
 
 		// Store the answer
 		if(!empty($_SESSION['chained_completion_id'])) {
@@ -229,9 +225,8 @@ class ChainedQuizQuizzes {
 			include(CHAINED_PATH."/views/display-quiz.html.php");
 		}
 		else {
-			 // add to points
-			 $points += floatval($_POST['points']);
-			 echo $_quiz->finalize($quiz, $points); // if none, submit the quiz
+			// if none, submit the quiz
+			 echo $_quiz->finalize($quiz, $total_points); 
 		}	 		
 	}
 }

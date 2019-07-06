@@ -2,7 +2,7 @@
     Contributors: innershell
     Tags: triage, form, forms, custom form, form builder, survey, survey builder, questionnaire, questionnaire builder, quiz, quiz builder, exam, exam builder, test, test builder, planner, planning, screening
     Requires at least: 5.0
-    Tested up to: 5.1.1
+    Tested up to: 5.2.2
     Requires PHP: 7.2
     Stable tag: trunk
     License: GPL2 or later
@@ -70,6 +70,9 @@ None yet.
 4. The submissions dashboard to capture feedback for machine learning.
 
 # Changelog
+## 6.0 (Abort Algorithm)
+- Bug fixes.
+
 ## 5.1 (Show Answers on Questions Page)
 - Show/hide answers in the questions listing page (admin only).
 - Hyperlink from the answer to the next question to ask.
