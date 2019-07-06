@@ -71,8 +71,8 @@ class ChainedQuizResult {
 			WHERE quiz_id = %d ORDER BY points_bottom DESC", $quiz->id));
 
 		foreach($results as $result) {
-			if(floatval($result->points_bottom) <= $points and $points <= floatval($result->points_top)) return $result;
-    	}	
+			if($points >= floatval($result->points_bottom) && $points <= floatval($result->points_top)) return $result;
+    	}
     
 		return null; // in case of nothing found
 		

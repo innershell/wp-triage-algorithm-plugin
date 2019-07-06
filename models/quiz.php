@@ -396,9 +396,8 @@ class ChainedQuizQuiz {
 	/**************************************************************************
 	 * FUNCTION: Builds a SOAP note using the user's answers and question config.
 	 **************************************************************************/
-	function soap_note($completion_id, $_result) {
+	function soap_note($completion_id, $result) {
 		global $wpdb;
-		$result = $_result;
 		$_question = new ChainedQuizQuestion();
 		$debug_mode = get_option('chained_debug_mode');
 		$output = '';
@@ -455,7 +454,7 @@ class ChainedQuizQuiz {
 		}
 
 		// Add the description for the Algorithm Result.
-		if ($result->description) {
+		if (isset($result) && $result->description) {
 			$output .= '<li>' . $result->description . '</li>';
 			$count++;
 		}
@@ -503,7 +502,7 @@ class ChainedQuizQuiz {
 		}
 
 		// Add the subjective note for the Algorithm Result.
-		if ($result->subjective) {
+		if (isset($result) && $result->subjective) {
 			$output .= '<li>' . $result->subjective . '</li>';
 			$count++;
 		}
@@ -552,7 +551,7 @@ class ChainedQuizQuiz {
 		}
 
 		// Add the objective note for the Algorithm Result.
-		if ($result->objective) {
+		if (isset($result) && $result->objective) {
 			$output .= '<li>' . $result->objective . '</li>';
 			$count++;
 		}
@@ -572,9 +571,11 @@ class ChainedQuizQuiz {
 		}
 
 		// Add the assessment and plan for the Algorithm Result.
-		if ($result->assessment || $result->plan) {
-			$user_answer .= '<tr><td width="50%">'.$result->assessment.'</td><td width="50%">'.$result->plan.'</td></tr>';
-			$count++;
+		if (isset($result)) {
+			if ($result->assessment || $result->plan) {
+				$user_answer .= '<tr><td width="50%">'.$result->assessment.'</td><td width="50%">'.$result->plan.'</td></tr>';
+				$count++;
+			}
 		}
 
 		$output .= $count == 0 ? '<tr><td width="50%">None (N/A)</td><td width="50%">None (N/A)</td></tr>' : $user_answer;
