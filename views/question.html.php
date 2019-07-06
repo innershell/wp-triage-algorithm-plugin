@@ -9,16 +9,17 @@
 		</p>
 		
 		<form method="post" onsubmit="return chainedQuizValidate(this);">
-			<p><label><?php _e('Question Title', 'chained')?></label> <input type="text" name="title" size="40" value="<?php echo @$question->title?>"></p>
-			<p><label><?php _e('Question Contents', 'chained')?></label> <?php echo wp_editor(stripslashes(@$question->question), 'question', array('textarea_rows' => 3))?></p>
+			<p><label><?php _e('Question Title:', 'chained')?></label> <input type="text" name="title" size="40" value="<?php echo @$question->title?>"></p>
+			<p><label><?php _e('Question Contents:', 'chained')?></label> <?php echo wp_editor(stripslashes(@$question->question), 'question', array('textarea_rows' => 3))?></p>
 			
+			<!-- SOAP NOTE TYPE -->
 			<h3><?php _e('SOAP Note Type', 'chained')?></h3>
 				<input type="radio" name="soap_type" value="n" <?php if(!empty($question->id) and $question->soap_type == 'n') echo 'checked'?>>None<br>
 				<input type="radio" name="soap_type" value="s" <?php if(!empty($question->id) and $question->soap_type == 's') echo 'checked'?>>Subjective<br>
 				<input type="radio" name="soap_type" value="o" <?php if(!empty($question->id) and $question->soap_type == 'o') echo 'checked'?>>Objective<br>				
 
+			<!-- QUESTION TYPE -->
 			<h3><?php _e('Question Type', 'chained')?></h3>
-
 			<p><label><select name="qtype" onchange="this.value == 'radio' ? jQuery('#chainedAutoContinue').show() : jQuery('#chainedAutoContinue').hide();">
 				<option value="none" <?php if(!empty($question->id) and $question->qtype == 'none') echo 'selected'?>><?php _e('None (no answer required)','chained')?></option>
 				<option value="radio" <?php if(!empty($question->id) and $question->qtype == 'radio') echo 'selected'?>><?php _e('Radio Buttons (choose one answer)','chained')?></option>
@@ -28,17 +29,28 @@
 				<option value="date" <?php if(!empty($question->id) and $question->qtype == 'date') echo 'selected'?>><?php _e('Date (calendar to pick date)','chained')?></option>
 			</select>
 
+			<!-- QUESTION BEHAVIOUR -->
 			<h3><?php _e('Question Behavior', 'chained')?></h3>
-			<p><?php _e('Abort and Finish the Algorithm if the points sum up to this Question is in the following range.' , 'chained')?></p>
+			<!-- Abort -->
+			<h4><?php _e('Abort', 'chained')?></h4>
+			<p><?php _e('Stops and finishes the Algorithm if points (so far) are within the Abort Min/Max. range.', 'chained');?></p>
+			<p><input type="checkbox" name="abort_enabled" value="1" <?php if(!empty($question->abort_enabled)) echo 'checked'?>> <?php _e('Enable abort?', 'chained');?></p>
 			<p><?php _e('Abort Min. Points:', 'chained')?> <input type="text" size="4" name="points_abort_min" value="<?php echo $question->points_abort_min?>">&nbsp;&nbsp;&nbsp;
 			<?php _e('Abort Max. Points:', 'chained')?> <input type="text" size="4" name="points_abort_max" value="<?php echo $question->points_abort_max?>"></p>			
-			<span id="chainedAutoContinue" style="display:<?php echo (empty($question->id) or $question->qtype == 'radio') ? 'inline' : 'none';?>"><input type="checkbox" name="autocontinue" value="1" <?php if(!empty($question->autocontinue)) echo 'checked'?>> <?php _e('Automatically continue to the next Question when a choice is selected.', 'chained')?></span> </p>
-			<p><input type="checkbox" name="accept_comments" value="1" <?php if(!empty($question->accept_comments)) echo 'checked'?>> <?php _e('Accept comments along with the answer.', 'chained');?> &nbsp;
-			<?php _e('Label before the comments field:', 'chained');?> <input type="text" name="accept_comments_label" size="30" value="<?php echo empty($question->accept_comments_label) ? __('Your comments:', 'chained') : stripslashes(@$question->accept_comments_label);?>"></p>
+			<!-- Autocontinue -->
+			<span id="chainedAutoContinue" style="display:<?php echo (empty($question->id) or $question->qtype == 'radio') ? 'inline' : 'none';?>">
+			<h4><?php _e('Autocontinue', 'chained')?></h4>
+			<p><?php _e('Automatically continue to the next Question when a choice is selected.', 'chained')?></p>
+			<p><input type="checkbox" name="autocontinue" value="1" <?php if(!empty($question->autocontinue)) echo 'checked'?>> <?php _e('Autocontinue?', 'chained')?></p>
+			</span>			
+			<!-- Comments -->
+			<h4><?php _e('Comments', 'chained')?></h4>
+				<p><?php _e('Displays a field to enter additional comments with the answer.', 'chained');?></p>
+				<p><input type="checkbox" name="accept_comments" value="1" <?php if(!empty($question->accept_comments)) echo 'checked'?>> <?php _e('Accept comments?	', 'chained');?></p>
+				<p><?php _e('Comment Field Label:', 'chained');?><input type="text" name="accept_comments_label" size="30" value="<?php echo empty($question->accept_comments_label) ? __('Your comments:', 'chained') : stripslashes(@$question->accept_comments_label);?>"></p>
 			
-			<h3><?php _e('Answers', 'chained')?></h3>
-			
-			
+			<!-- POSSIBLE ANSWERS -->
+			<h3><?php _e('Answers', 'chained')?></h3>		
 			<div id="answerRows">
 				<?php if(!empty($choices) and sizeof($choices)):
 					foreach($choices as $choice):

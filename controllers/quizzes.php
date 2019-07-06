@@ -177,13 +177,13 @@ class ChainedQuizQuizzes {
 						
 		// calculate points
 		$points = $_question->calculate_points($question, $answer);
-		echo $points."|CHAINEDQUIZ|";		
+		echo $points."|CHAINEDQUIZ|";
+		$total_points = $points + floatval($_POST['points']); // Points for the whole algorithm.
 		
 		// figure out next question
-		$abort_enabled = $question->points_abort_min == null && $question->points_abort_max == null ? false : true;
-		error_log("Abort Enabled = " . $abort_enabled . " and Points = " . $points);
-		if ($abort_enabled && $points >= $question->points_abort_min && $points <= $question->points_abort_max) {
-			$next_question = null; // Abort criteria met. Let's abort the Algorithm.
+		if ($question->abort_enabled && $total_points >= $question->points_abort_min && $total_points <= $question->points_abort_max) {
+			// Abort criteria met. Let's abort the Algorithm and finish it.
+			$next_question = null;
 		} else {
 			$next_question = $_question->next($question, $answer);
 		}
@@ -225,9 +225,8 @@ class ChainedQuizQuizzes {
 			include(CHAINED_PATH."/views/display-quiz.html.php");
 		}
 		else {
-			 // add to points
-			 $points += floatval($_POST['points']);
-			 echo $_quiz->finalize($quiz, $points); // if none, submit the quiz
+			// if none, submit the quiz
+			 echo $_quiz->finalize($quiz, $total_points); 
 		}	 		
 	}
 }

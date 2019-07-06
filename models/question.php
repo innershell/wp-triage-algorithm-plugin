@@ -23,9 +23,11 @@ class ChainedQuizQuestion {
 		$sort_order++;	 
 		
 		$result = $wpdb->query($wpdb->prepare("INSERT INTO ".CHAINED_QUESTIONS." SET
-			quiz_id=%d, question=%s, qtype=%s, soap_type=%s, rank=%d, points_abort_min=%f, points_abort_max=%f, title=%s, autocontinue=%d, sort_order=%d, 
-			accept_comments=%d, accept_comments_label=%s", 
-			intval($vars['quiz_id']), $vars['question'], $vars['qtype'], $vars['soap_type'], intval(@$vars['rank']), $vars['points_abort_min'], $vars['points_abort_max'], 
+			quiz_id=%d, question=%s, qtype=%s, soap_type=%s, rank=%d, 
+			abort_enabled=%d, points_abort_min=%f, points_abort_max=%f, 
+			title=%s, autocontinue=%d, sort_order=%d, accept_comments=%d, accept_comments_label=%s", 
+			intval($vars['quiz_id']), $vars['question'], $vars['qtype'], $vars['soap_type'], intval(@$vars['rank']), 
+			$vars['abort_enabled'], $vars['points_abort_min'], $vars['points_abort_max'], 
 			$vars['title'], intval(@$vars['autocontinue']), $sort_order, $accept_comments, $accept_comments_label));
 			
 		if($result === false) throw new Exception(__('DB Error', 'chained'));
@@ -49,9 +51,12 @@ class ChainedQuizQuestion {
 		$accept_comments_label = sanitize_text_field($vars['accept_comments_label']);
 		
 		$result = $wpdb->query($wpdb->prepare("UPDATE ".CHAINED_QUESTIONS." SET
-			question=%s, qtype=%s, soap_type=%s, title=%s, points_abort_min=%f, points_abort_max=%f, autocontinue=%d, accept_comments=%d, accept_comments_label=%s WHERE id=%d", 
-			$vars['question'], $vars['qtype'], $vars['soap_type'], $vars['title'], $vars['points_abort_min'], $vars['points_abort_max'], intval(@$vars['autocontinue']), 
-			$accept_comments, $accept_comments_label, $id));
+			question=%s, qtype=%s, soap_type=%s, title=%s, 
+			abort_enabled=%d, points_abort_min=%f, points_abort_max=%f, 
+			autocontinue=%d, accept_comments=%d, accept_comments_label=%s WHERE id=%d", 
+			$vars['question'], $vars['qtype'], $vars['soap_type'], $vars['title'], 
+			$vars['abort_enabled'], $vars['points_abort_min'], $vars['points_abort_max'], 
+			intval(@$vars['autocontinue']), $accept_comments, $accept_comments_label, $id));
 			
 			
 		if($result === false) throw new Exception(__('DB Error', 'chained'));
@@ -313,7 +318,6 @@ class ChainedQuizQuestion {
 		// Now sort queue to figure out what's the next question and put the remaining questions into the session queue.
 		asort($goto);											// Sort the array values from smallest to largest sort_order.
 		$goto = array_flip($goto);								// [goto, sort_order] > [sort_order, goto].
-		error_log("Queue=[" . implode(",", $goto) . "]");		// Convert the array into CSV.
 		$key = array_shift($goto);								// Pop the first goto value.
 		$_SESSION['chained_goto_queue'] = array_flip($goto);	// [sort_order, goto] > [goto, sort_order].
 		

@@ -39,6 +39,7 @@ class ChainedQuiz {
 					`qtype` VARCHAR(20) NOT NULL DEFAULT '',
 					`soap_type` VARCHAR(1) DEFAULT '',
 					`rank` INT UNSIGNED NOT NULL DEFAULT 0,
+					`abort_enabled` TINYINT UNSIGNED NOT NULL DEFAULT 0,
 					`points_abort_min` DECIMAL(8,2) NOT NULL DEFAULT '0.00',
 					`points_abort_max` DECIMAL(8,2) NOT NULL DEFAULT '0.00',
 					`autocontinue` TINYINT UNSIGNED NOT NULL DEFAULT 0,
@@ -147,8 +148,9 @@ class ChainedQuiz {
 			$wpdb->query("ALTER TABLE ".CHAINED_RESULTS." ADD COLUMN assessment TEXT AFTER objective;");
 			$wpdb->query("ALTER TABLE ".CHAINED_RESULTS." ADD COLUMN plan TEXT AFTER assessment;");
 		} elseif ($current_version < '6.0') {
-			$wpdb->query("ALTER TABLE ".CHAINED_QUESTIONS." ADD COLUMN points_abort_min DECIMAL(8,2) NOT NULL DEFAULT 0.00 AFTER rank;");
-			$wpdb->query("ALTER TABLE ".CHAINED_QUESTIONS." ADD COLUMN points_abort_max DECIMAL(8,2) NOT NULL DEFAULT 0.00 AFTER points_abort_min;");
+			$wpdb->query("ALTER TABLE ".CHAINED_QUESTIONS." ADD COLUMN abort_enabled TINYINT NOT NULL DEFAULT 0 AFTER rank;");
+			$wpdb->query("ALTER TABLE ".CHAINED_QUESTIONS." ADD COLUMN points_abort_min DECIMAL(8,2) NOT NULL DEFAULT '0.00' AFTER abort_enabled;");
+			$wpdb->query("ALTER TABLE ".CHAINED_QUESTIONS." ADD COLUMN points_abort_max DECIMAL(8,2) NOT NULL DEFAULT '0.00' AFTER points_abort_min;");
 		}
 
 		// Set the current plugin version number.
