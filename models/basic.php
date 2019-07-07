@@ -58,6 +58,7 @@ class ChainedQuiz {
 					`quiz_id` INT UNSIGNED NOT NULL DEFAULT 0,
 					`question_id` INT UNSIGNED NOT NULL DEFAULT 0,
 					`choice` TEXT,
+					`patient_note` TEXT,
 					`provider_note` TEXT,
 					`assessment` TEXT,
 					`plan` TEXT,
@@ -151,6 +152,7 @@ class ChainedQuiz {
 			$wpdb->query("ALTER TABLE ".CHAINED_QUESTIONS." ADD COLUMN abort_enabled TINYINT NOT NULL DEFAULT 0 AFTER rank;");
 			$wpdb->query("ALTER TABLE ".CHAINED_QUESTIONS." ADD COLUMN points_abort_min DECIMAL(8,2) NOT NULL DEFAULT '0.00' AFTER abort_enabled;");
 			$wpdb->query("ALTER TABLE ".CHAINED_QUESTIONS." ADD COLUMN points_abort_max DECIMAL(8,2) NOT NULL DEFAULT '0.00' AFTER points_abort_min;");
+			$wpdb->query("ALTER TABLE ".CHAINED_CHOICES." ADD COLUMN patient_note TEXT AFTER choice;");
 		}
 
 		// Set the current plugin version number.
