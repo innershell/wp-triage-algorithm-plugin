@@ -44,7 +44,8 @@
 			<p><?php _e('Screen displayed to the patient upon completion of the Topic. The following ', 'chained')?>
 			<strong><?php _e('Injection Codes', 'chained')?></strong><?php _e(' will dynamically insert text from the Topic for the user to see.', 'chained')?></p>
 			<ul>
-				<li>{{soap-note}}</li>				
+				<li>{{patient-note}} <?php _e('- Notes about the Topic Answers for the patient.', 'chained')?></li>
+				<li>{{soap-note}} <?php _e('- The SOAP note for providers.', 'chained')?></li>
 				<li>{{questions}} <?php _e('- Total # of questions answered.', 'chained')?></li>
 				<li>{{points}} <?php _e('- Points for all the answers.', 'chained')?></li>
 				<li>{{result-title}} <?php _e('- The result (grade) title', 'chained')?></li>
@@ -58,7 +59,8 @@
 			<p><?php _e('Screen displayed to a clinician (e.g., provider) upon completion of the Topic. The following ', 'chained')?>
 			<strong><?php _e('Injection Codes', 'chained')?></strong><?php _e(' will dynamically insert text from the Topic for the user to see.', 'chained')?></p>
 			<ul>
-				<li>{{soap-note}}</li>				
+				<li>{{patient-note}} <?php _e('- Notes about the Topic Answers for the patient.', 'chained')?></li>
+				<li>{{soap-note}} <?php _e('- The SOAP note for providers.', 'chained')?></li>				
 				<li>{{questions}} <?php _e('- Total # of questions answered.', 'chained')?></li>
 				<li>{{points}} <?php _e('- Points for all the answers.', 'chained')?></li>
 				<li>{{result-title}} <?php _e('- The result (grade) title', 'chained')?></li>

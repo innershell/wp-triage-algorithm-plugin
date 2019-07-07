@@ -108,13 +108,19 @@ class ChainedQuizQuiz {
 		
 		// get final screen and replace vars
 		$snapshot = ''; // The SOAP note data to be saved in the submission record snapshot.
-		$output = stripslashes($quiz->output);
-		$email_output = $quiz->set_email_output ? stripslashes($quiz->email_output) : $output;
-		
+		$patient_output = stripslashes($quiz->output);
+		$provider_output = $quiz->set_email_output ? stripslashes($quiz->email_output) : $patient_output;
+
+		/** PATIENT OUTPUT **/
+		// Find the first occurrence of the shortcode and replace with the patient notes.
+		if(strstr($patient_output, '{{patient-note}}')) {
+			$patient_output = str_replace('{{patient-note}}', $this->patient_note($completion_id), $patient_output);
+		}
+
 		// Find the first occurrence of the shortcode and replace with the HTML answers table.
-		if(strstr($output, '{{answers-table}}')) {
+		if(strstr($patient_output, '{{answers-table}}')) {
 			$snapshot = $this->answers_table($completion_id);
-			$output = str_replace('{{answers-table}}', $snapshot, $output);
+			$patient_output = str_replace('{{answers-table}}', $snapshot, $patient_output);
 		}
 
 		// If there is no HTML answers table, then substitute it for the soap note instead.
@@ -123,19 +129,24 @@ class ChainedQuizQuiz {
 		}
 
 		// Find the first occurrence of the shortcode and replace with the SOAP note.
-		if(strstr($output, '{{soap-note}}')) {
-			$output = str_replace('{{soap-note}}', $snapshot, $output);
+		if(strstr($patient_output, '{{soap-note}}')) {
+			$patient_output = str_replace('{{soap-note}}', $snapshot, $patient_output);
 		}
 
-		$output = str_replace('{{result-title}}', @$result->title, $output);
-		$output = str_replace('{{result-text}}', stripslashes(@$result->description), $output);
-		$output = str_replace('{{points}}', $points, $output);
-		$output = str_replace('{{questions}}', $_POST['total_questions'], $output);
+		$patient_output = str_replace('{{result-title}}', @$result->title, $patient_output);
+		$patient_output = str_replace('{{result-text}}', stripslashes(@$result->description), $patient_output);
+		$patient_output = str_replace('{{points}}', $points, $patient_output);
+		$patient_output = str_replace('{{questions}}', $_POST['total_questions'], $patient_output);
 
-		
+		/** PROVIDER OUTPUT **/
+		// Find the first occurrence of the shortcode and replace with the patient notes.
+		if(strstr($provider_output, '{{patient-note}}')) {
+			$provider_output = str_replace('{{patient-note}}', $this->patient_note($completion_id), $provider_output);
+		}
+
 		// Find the first occurrence of the shortcode and replace with the HTML answers table.
-		if(strstr($email_output, '{{answers-table}}')) {
-			$email_output = str_replace('{{answers-table}}', $this->answers_table($completion_id), $email_output);
+		if(strstr($provider_output, '{{answers-table}}')) {
+			$provider_output = str_replace('{{answers-table}}', $this->answers_table($completion_id), $provider_output);
 		}
 		
 		// If there is no HTML answers table, then substitute it for the SOAP note instead.
@@ -144,14 +155,14 @@ class ChainedQuizQuiz {
 		}
 
 		// Find the first occurrence of the shortcode and replace with the SOAP note.
-		if(strstr($email_output, '{{soap-note}}')) {
-			$email_output = str_replace('{{soap-note}}', $this->soap_note($completion_id, $result), $email_output);
+		if(strstr($provider_output, '{{soap-note}}')) {
+			$provider_output = str_replace('{{soap-note}}', $this->soap_note($completion_id, $result), $provider_output);
 		}
 
-		$email_output = str_replace('{{result-title}}', @$result->title, $email_output);
-		$email_output = str_replace('{{result-text}}', stripslashes(@$result->description), $email_output);
-		$email_output = str_replace('{{points}}', $points, $email_output);
-		$email_output = str_replace('{{questions}}', $_POST['total_questions'], $email_output);
+		$provider_output = str_replace('{{result-title}}', @$result->title, $provider_output);
+		$provider_output = str_replace('{{result-text}}', stripslashes(@$result->description), $provider_output);
+		$provider_output = str_replace('{{points}}', $points, $provider_output);
+		$provider_output = str_replace('{{questions}}', $_POST['total_questions'], $provider_output);
 		
 		// Email attachment
 		/** TODO: Fetch the email method from config. */
@@ -162,19 +173,19 @@ class ChainedQuizQuiz {
 			// Write to file.
 			$file = plugin_dir_path( __DIR__ ) . 'output_files/'.$completion_id.'.html'; 
 			$open = fopen( $file, "a" ); // Open the file for writing (a) only.
-			$write = fputs( $open, $email_output ); 
+			$write = fputs( $open, $provider_output ); 
 			fclose( $open );
 
 			// Send email with result in attachment.
 			$this->send_emails($quiz, "SOAP note for diabetes triage.", $file); // Sends email to either the performing USER or ADMIN.
 		} else {
-			$this->send_emails($quiz, $email_output, null); // Sends email to either the performing USER or ADMIN.
+			$this->send_emails($quiz, $provider_output, null); // Sends email to either the performing USER or ADMIN.
 		}		
 		
 		$GLOBALS['chained_completion_id'] = $completion_id;
 		$GLOBALS['chained_result_id'] = @$result->id;
-		$output = do_shortcode($output);
-		$output = wpautop($output);
+		$patient_output = do_shortcode($patient_output);
+		$patient_output = wpautop($patient_output);
 		
 		// only if the quiz is published on more than one page, store info about source url
 		$source_url = '';
@@ -195,7 +206,7 @@ class ChainedQuizQuiz {
 			$wpdb->query( $wpdb->prepare("UPDATE ".CHAINED_COMPLETED." SET
 				quiz_id = %d, points = %f, result_id = %d, datetime = NOW(), ip = %s, user_id = %d, 
 				snapshot = %s, source_url=%s, email=%s WHERE id=%d",
-				$quiz->id, $points, @$result->id, $_SERVER['REMOTE_ADDR'], $user_id, $email_output, 
+				$quiz->id, $points, @$result->id, $_SERVER['REMOTE_ADDR'], $user_id, $provider_output, 
 				$source_url, $user_email, intval($_SESSION['chained_completion_id'])));
 			$taking_id = $_SESSION['chained_completion_id'];	
 			unset($_SESSION['chained_completion_id']);	
@@ -205,7 +216,7 @@ class ChainedQuizQuiz {
 			$wpdb->query( $wpdb->prepare("INSERT INTO ".CHAINED_COMPLETED." SET
 				quiz_id = %d, points = %f, result_id = %d, datetime = NOW(), ip = %s, user_id = %d, snapshot = %s, 
 				source_url=%s, email=%s",
-				$quiz->id, $points, @$result->id, $_SERVER['REMOTE_ADDR'], $user_id, $email_output, $source_url, $user_email));		 	
+				$quiz->id, $points, @$result->id, $_SERVER['REMOTE_ADDR'], $user_id, $provider_output, $source_url, $user_email));		 	
 			$taking_id = $wpdb->insert_id;		
 		}
 		
@@ -213,9 +224,9 @@ class ChainedQuizQuiz {
 		do_action('chained_quiz_completed', $taking_id);
 		
 		// if the result needs to redirect, replace the output with the redirect URL
-		if(!empty($result->redirect_url)) $output = "[CHAINED_REDIRECT]".$result->redirect_url;
+		if(!empty($result->redirect_url)) $patient_output = "[CHAINED_REDIRECT]".$result->redirect_url;
 		
-		return $output;
+		return $patient_output;
    	}
 
 
@@ -584,6 +595,32 @@ class ChainedQuizQuiz {
 		return $output;	
 	}
 
+
+	/**************************************************************************
+	 * FUNCTION: Builds a patient note using the user's answers and question config.
+	 **************************************************************************/
+	function patient_note($completion_id) {
+		global $wpdb;
+		$_question = new ChainedQuizQuestion();
+		$output = '';
+
+		$answers = $wpdb->get_results($wpdb->prepare("SELECT tC.patient_note as patient_note
+		FROM ".CHAINED_USER_ANSWERS." tUA
+		JOIN ".CHAINED_QUESTIONS." tQ ON tQ.id = tUA.question_id
+		JOIN ".CHAINED_CHOICES." tC ON tC.id = tUA.answer
+		WHERE tUA.completion_id=%d 
+		AND tC.patient_note IS NOT NULL 
+		ORDER BY tUA.ID", $completion_id));
+		
+		if (isset($answers)) {
+			$output .= '<ul>';
+			foreach ($answers as $answer) {
+				$output .= '<li>' . $answer->patient_note . '</li>';
+			}
+			$output .= '</ul>';
+		}
+		return $output;
+	}
 	
 	/**************************************************************************
 	 * FUNCTION: Copy/duplicate an entire quis.
