@@ -1,11 +1,11 @@
 <div class="wrap">
-	<h1><?php printf(__('Manage Questions for the %s Algorithm', 'chained'), $quiz->title);?> </h1>
+	<h1><?php printf(__('Manage Questions for the %s Topic', 'chained'), $quiz->title);?> </h1>
 	
 	<div class="postbox-container" style="width:73%;margin-right:2%;">
 	
-		<p><a href="admin.php?page=chained_quizzes"><?php _e('Back to Algorithms', 'chained')?></a>
+		<p><a href="admin.php?page=chained_quizzes"><?php _e('Back to Topics', 'chained')?></a>
 			| <a href="admin.php?page=chainedquiz_results&quiz_id=<?php echo $quiz->id?>"><?php _e('Manage Results', 'chained')?></a>
-			| <a href="admin.php?page=chained_quizzes&action=edit&id=<?php echo $quiz->id?>"><?php _e('Edit This Algorithm', 'chained')?></a>
+			| <a href="admin.php?page=chained_quizzes&action=edit&id=<?php echo $quiz->id?>"><?php _e('Edit This Topic', 'chained')?></a>
 		</p>
 		<p><a href="admin.php?page=chainedquiz_questions&action=add&quiz_id=<?php echo $quiz->id?>"><?php _e('New Question', 'chained')?></a> 
 		| <a href="#" onclick="jQuery('#hide_answers').toggle();jQuery('#show_answers').toggle();return false;"><?php _e('SHOW/HIDE Answers', 'chained')?></a></p>
@@ -70,7 +70,7 @@
 			</table>
 			
 			<h3>Did you know?</h3>
-			<p>You can easily clone any Algorithm by creating a copy of the Algorithm.</p>
+			<p>You can easily clone any Topic by creating a copy of the Topic.</p>
 		<?php endif;?>
 	
 	</div>

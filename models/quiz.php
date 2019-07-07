@@ -292,14 +292,14 @@ class ChainedQuizQuiz {
 	function auto_publish($quiz_id, $vars) {
 		global $wpdb;
 	
-		$post = array('post_content' => '[triage-algorithm '.$quiz_id.']', 'post_name'=> sanitize_text_field($vars['title']), 
+		$post = array('post_content' => '[triage-topic '.$quiz_id.']', 'post_name'=> sanitize_text_field($vars['title']), 
 			'post_title'=>sanitize_text_field($vars['title']), 'post_status'=>'publish');
 		wp_insert_post($post);
 	}
 	
 
 	/**************************************************************************
-	 * FUNCTION: Create a table of questions and answers along with correct/wrong answer and points.
+	 * FUNCTION: Create a table of Questions and Answers along with correct/wrong Answer and Points.
 	 **************************************************************************/
 	function answers_table($completion_id) {
 		global $wpdb;
@@ -453,7 +453,7 @@ class ChainedQuizQuiz {
 			$output .= $user_answer;
 		}
 
-		// Add the description for the Algorithm Result.
+		// Add the description for the Topic Result.
 		if (isset($result) && $result->description) {
 			$output .= '<li>' . $result->description . '</li>';
 			$count++;
@@ -501,7 +501,7 @@ class ChainedQuizQuiz {
 			$output .= $user_answer;
 		}
 
-		// Add the subjective note for the Algorithm Result.
+		// Add the subjective note for the Topic Result.
 		if (isset($result) && $result->subjective) {
 			$output .= '<li>' . $result->subjective . '</li>';
 			$count++;
@@ -550,7 +550,7 @@ class ChainedQuizQuiz {
 			$output .= $user_answer;
 		}
 
-		// Add the objective note for the Algorithm Result.
+		// Add the objective note for the Topic Result.
 		if (isset($result) && $result->objective) {
 			$output .= '<li>' . $result->objective . '</li>';
 			$count++;
@@ -570,7 +570,7 @@ class ChainedQuizQuiz {
 			}
 		}
 
-		// Add the assessment and plan for the Algorithm Result.
+		// Add the assessment and plan for the Topic Result.
 		if (isset($result)) {
 			if ($result->assessment || $result->plan) {
 				$user_answer .= '<tr><td width="50%">'.$result->assessment.'</td><td width="50%">'.$result->plan.'</td></tr>';

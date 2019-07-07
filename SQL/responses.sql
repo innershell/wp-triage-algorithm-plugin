@@ -1,6 +1,6 @@
 SELECT 
     tCOM.id as completed_id, 
-    tQUIZ.title as algorithm_name, 
+    tQUIZ.title as topic_name, 
     tCOM.datetime as response_date, 
     tUA.answer_text as study_id, 
     tCOM.snapshot as soap_note

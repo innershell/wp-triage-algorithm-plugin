@@ -1,10 +1,10 @@
 <div class="wrap">
-	<h1><?php printf(__('Submissions for Algorithm: "%s"', 'chained'), $quiz->title)?></h1>
+	<h1><?php printf(__('Submissions for Topic: "%s"', 'chained'), $quiz->title)?></h1>
 	
 	<div class="postbox-container" style="width:73%;margin-right:2%;">	
-	<p><a href="admin.php?page=chained_quizzes"><?php _e('Back to Algorithms', 'chained')?></a> | <a href="admin.php?page=chainedquiz_questions&quiz_id=<?php echo $quiz->id?>"><?php _e('Manage Questions', 'chained')?></a>
+	<p><a href="admin.php?page=chained_quizzes"><?php _e('Back to Topics', 'chained')?></a> | <a href="admin.php?page=chainedquiz_questions&quiz_id=<?php echo $quiz->id?>"><?php _e('Manage Questions', 'chained')?></a>
 		| <a href="admin.php?page=chainedquiz_results&quiz_id=<?php echo $quiz->id?>"><?php _e('Manage Results', 'chained')?></a>
-		| <a href="admin.php?page=chained_quizzes&action=edit&id=<?php echo $quiz->id?>"><?php _e('Edit This Algorithm', 'chained')?></a>
+		| <a href="admin.php?page=chained_quizzes&action=edit&id=<?php echo $quiz->id?>"><?php _e('Edit This Topic', 'chained')?></a>
 	</p>
 		
 	<?php if(count($records) or $display_filters):?>
@@ -12,7 +12,7 @@
 			<a href="#" onclick="jQuery('#filterForm').toggle('slow');return false;"><?php _e('Search Filter', 'chained')?></a> |		
 			<a href="admin.php?page=chainedquiz_list&quiz_id=<?php echo $quiz->id?>&chained_export=1&noheader=1&<?php echo $filters_url;?>"><?php _e('Export CSV', 'chained')?></a> | 
 			<a href="admin.php?page=chainedquiz_list&quiz_id=<?php echo $quiz->id?>&chained_export=1&noheader=1&details=1&<?php echo $filters_url;?>"><?php _e('Export with Details', 'chained')?></a>
-			<p><?php printf(__('Export files are currently delimited by "%s" as configured in the <a href="%s">Triage Algorithm Settings</a> page.', 'chained'), get_option('chained_csv_delim'), 'admin.php?page=chainedquiz_options');?></p>
+			<p><?php printf(__('Export files are currently delimited by "%s" as configured in the <a href="%s">Triage Topic Settings</a> page.', 'chained'), get_option('chained_csv_delim'), 'admin.php?page=chainedquiz_options');?></p>
 		</p>
 		
 			
@@ -102,7 +102,7 @@
 			<a href="admin.php?page=chainedquiz_list&quiz_id=<?php echo $quiz->id?>&offset=<?php echo ($offset + 25)?>&ob=<?php echo $ob?>&dir=<?php echo $dir?>&<?php echo $filters_url;?>"><?php _e('next page', 'chained')?></a> <?php endif;?></p>
 			
 			<form method="post">
-				<p><input type="checkbox" onclick="this.checked ? jQuery('#chainedCleanupButton').show() : jQuery('#chainedCleanupButton').hide();"> <?php _e('Show button to cleanup all submitted data on this Algorithm.', 'chained')?></p>
+				<p><input type="checkbox" onclick="this.checked ? jQuery('#chainedCleanupButton').show() : jQuery('#chainedCleanupButton').hide();"> <?php _e('Show button to cleanup all submitted data on this Topic.', 'chained')?></p>
 				
 				<div id="chainedCleanupButton" style="display:none;">
 					<p style="color:red;"><b><?php _e('These operations cannot be undone!', 'chained')?></b></p>
@@ -114,7 +114,7 @@
 			<h3>Did you know?</h3>
 			<p>Future text.</p>
 	<?php else:?>
-		<p><?php _e('No one has taken this Algorithm yet.', 'chained')?></p>
+		<p><?php _e('No one has taken this Topic yet.', 'chained')?></p>
 		
 	<?php endif;?>
 	

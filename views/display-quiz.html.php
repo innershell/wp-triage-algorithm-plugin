@@ -1,6 +1,6 @@
 <?php // requires login?
 if(!empty($quiz->require_login) and !is_user_logged_in()) {
-	 echo "<p><b>".__('ACCESS DENIED: Please login for access to this Algorithm.', 'chained') . 
+	 echo "<p><b>".__('ACCESS DENIED: Please login for access to this Topic.', 'chained') . 
 		      	"<p><a href='".wp_login_url($_SERVER["REQUEST_URI"])."'>".__('Click Here to Login', 'chained')."</a></p>";
 		      if(get_option("users_can_register")) {
 						echo " ".__('or', 'chained')." <a href='".site_url("/wp-login.php?watu_register=1&action=register&redirect_to=".urlencode(get_permalink( $post->ID )))."'>".__('Register', 'chained')."</a></b>";        

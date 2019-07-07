@@ -254,7 +254,7 @@ class ChainedQuizQuestion {
 
 
 	/**************************************************************************
-	 * FUNCTION: Get the next configured question in the Algorithm.
+	 * FUNCTION: Get the next configured question in the Topic.
 	 * 
 	 * NOTES:
 	 * $question = SELECT * FROM CHAINED_QUESTIONS WHERE id=%d
@@ -324,7 +324,7 @@ class ChainedQuizQuestion {
 		/** 
 		 * THIS IS WHERE WE HANDLE WHAT TO GIVE AS THE NEXT QUESTION. 
 		 * */
-		// #1 - No more questions to ask or current the current answer ends the Algorithm.
+		// #1 - No more questions to ask or current the current answer ends the Topic.
 		if(empty($key) || $key == 'finalize') {
 			return false;
 		}

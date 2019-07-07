@@ -31,7 +31,7 @@
 				<p><label><?php _e('Sender E-Mail:', 'chained');?></label> <input type="text" name="sender_email" value="<?php echo get_option('chained_sender_email')?>"></p>
 				
 				<h4><?php _e('Subject Line', 'chained')?></h4>
-				<p><label><?php _e('Subject of E-Mail to Algorithm User:', 'chained');?></label> <input type="text" name="user_subject" size="60" value="<?php echo stripslashes(get_option('chained_user_subject'));?>"></p>
+				<p><label><?php _e('Subject of E-Mail to Topic User:', 'chained');?></label> <input type="text" name="user_subject" size="60" value="<?php echo stripslashes(get_option('chained_user_subject'));?>"></p>
 				<p><label><?php _e('Subject of E-Mail to Admininistrator:', 'chained');?></label> <input type="text" name="admin_subject" size="60" value="<?php echo stripslashes(get_option('chained_admin_subject'));?>"></p>
 
 				<h4><?php _e('Administrator E-Mails', 'chained')?></h4>
@@ -63,7 +63,7 @@
 			
 			<h3 class="hndle"><span><?php _e('Debug Mode', 'chained') ?></span></h3>
 			<div class="inside">		
-				<p><?php _e('Debug mode adds extra warnings to the algorithms and outputs to detect problem areas.', 'chained')?></p>
+				<p><?php _e('Debug mode adds extra warnings to the Topics and outputs to detect problem areas.', 'chained')?></p>
 				<input type="radio" name="debug_mode" value="on" <?php if(get_option('chained_debug_mode') == "on") echo 'checked'?>>On<br>
 				<input type="radio" name="debug_mode" value="off" <?php if(get_option('chained_debug_mode') == "off") echo 'checked'?>>Off
 			</div>

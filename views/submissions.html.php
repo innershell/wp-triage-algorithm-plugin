@@ -1,13 +1,13 @@
 <div class="wrap">
 	<table class="widefat">
-		<th>Response Date</th>
-		<th>Algorithm Name</th>
-		<th>Study ID</th>
+		<th><?php _e('Response Date', 'chained')?></th>
+		<th><?php _e('Topic Name', 'chained')?></th>
+		<th><?php _e('Study ID', 'chained')?></th>
 		<?php foreach ($results as $result):
 			$class = ('alternate' == @$class) ? '' : 'alternate';?>
 			<tr class="<?php echo $class?>">
 				<td><?php echo $result->response_date?></td>
-				<td><?php echo $result->algorithm_name?></td>
+				<td><?php echo $result->topic_name?></td>
 				<td><a href="#" onclick="jQuery('#soapNote<?php echo $result->completion_id?>').toggle();return false;"><?php echo $result->study_id==null?'NOT PROVIDED':$result->study_id?></a></td>
 			</tr>
 			<tr>

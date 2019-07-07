@@ -3,9 +3,9 @@
 	
 	<div class="postbox-container" style="width:73%;margin-right:2%;">
 	
-		<p><a href="admin.php?page=chained_quizzes"><?php _e('Back to Algorithms', 'chained')?></a> | <a href="admin.php?page=chainedquiz_questions&quiz_id=<?php echo $quiz->id?>"><?php _e('Back to Questions', 'chained')?></a>
+		<p><a href="admin.php?page=chained_quizzes"><?php _e('Back to Topics', 'chained')?></a> | <a href="admin.php?page=chainedquiz_questions&quiz_id=<?php echo $quiz->id?>"><?php _e('Back to Questions', 'chained')?></a>
 			| <a href="admin.php?page=chainedquiz_results&quiz_id=<?php echo $quiz->id?>"><?php _e('Manage Results', 'chained')?></a>
-			| <a href="admin.php?page=chained_quizzes&action=edit&id=<?php echo $quiz->id?>"><?php _e('Edit This Algorithm', 'chained')?></a>
+			| <a href="admin.php?page=chained_quizzes&action=edit&id=<?php echo $quiz->id?>"><?php _e('Edit This Topic', 'chained')?></a>
 		</p>
 		
 		<form method="post" onsubmit="return chainedQuizValidate(this);">
@@ -33,7 +33,7 @@
 			<h3><?php _e('Question Behavior', 'chained')?></h3>
 			<!-- Abort -->
 			<h4><?php _e('Abort', 'chained')?></h4>
-			<p><?php _e('Stops and finishes the Algorithm if points (so far) are within the Abort Min/Max. range.', 'chained');?></p>
+			<p><?php _e('Stops and finishes the Topic if points (so far) are within the Abort Min/Max. range.', 'chained');?></p>
 			<p><input type="checkbox" name="abort_enabled" value="1" <?php if(!empty($question->abort_enabled)) echo 'checked'?>> <?php _e('Enable abort?', 'chained');?></p>
 			<p><?php _e('Abort Min. Points:', 'chained')?> <input type="text" size="4" name="points_abort_min" value="<?php echo $question->points_abort_min?>">&nbsp;&nbsp;&nbsp;
 			<?php _e('Abort Max. Points:', 'chained')?> <input type="text" size="4" name="points_abort_max" value="<?php echo $question->points_abort_max?>"></p>			
