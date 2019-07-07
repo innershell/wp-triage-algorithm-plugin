@@ -58,6 +58,7 @@ class ChainedQuiz {
 					`quiz_id` INT UNSIGNED NOT NULL DEFAULT 0,
 					`question_id` INT UNSIGNED NOT NULL DEFAULT 0,
 					`choice` TEXT,
+					`patient_note` TEXT,
 					`provider_note` TEXT,
 					`assessment` TEXT,
 					`plan` TEXT,
@@ -151,6 +152,7 @@ class ChainedQuiz {
 			$wpdb->query("ALTER TABLE ".CHAINED_QUESTIONS." ADD COLUMN abort_enabled TINYINT NOT NULL DEFAULT 0 AFTER rank;");
 			$wpdb->query("ALTER TABLE ".CHAINED_QUESTIONS." ADD COLUMN points_abort_min DECIMAL(8,2) NOT NULL DEFAULT '0.00' AFTER abort_enabled;");
 			$wpdb->query("ALTER TABLE ".CHAINED_QUESTIONS." ADD COLUMN points_abort_max DECIMAL(8,2) NOT NULL DEFAULT '0.00' AFTER points_abort_min;");
+			$wpdb->query("ALTER TABLE ".CHAINED_CHOICES."   ADD COLUMN patient_note TEXT AFTER choice;");
 		}
 
 		// Set the current plugin version number.
@@ -161,9 +163,9 @@ class ChainedQuiz {
 	static function menu() {
 		$chained_caps = current_user_can('manage_options') ? 'manage_options' : 'chained_manage';
 		
-		add_menu_page(__('Triage Algorithm', 'chained'), __('Triage Algorithm', 'chained'), $chained_caps, "chained_quizzes", array('ChainedQuizQuizzes', "manage"));
-		add_submenu_page('chained_quizzes', __('Algorithms', 'chained'), __('Algorithms', 'chained'), $chained_caps, 'chained_quizzes', array('ChainedQuizQuizzes', "manage"));					
-		add_submenu_page('chained_quizzes', __('Settings', 'chained'), __('Settings', 'chained'), 'manage_options', 'chainedquiz_options', array('ChainedQuiz','options'));
+		add_menu_page(__('Orchestra', 'chained'), __('Orchestra', 'chained'), $chained_caps, "chained_quizzes", array('ChainedQuizQuizzes', "manage"));
+		add_submenu_page('chained_quizzes', __('Configure Topics', 'chained'), __('Configure Topics', 'chained'), $chained_caps, 'chained_quizzes', array('ChainedQuizQuizzes', "manage"));					
+		add_submenu_page('chained_quizzes', __('Options', 'chained'), __('Options', 'chained'), 'manage_options', 'chainedquiz_options', array('ChainedQuiz','options'));
 		add_submenu_page('chained_quizzes', __('Social Sharing', 'chained'), __('Social Sharing', 'chained'), $chained_caps, 'chainedquiz_social_sharing', array('ChainedSharing','options'));				
 		add_submenu_page('chained_quizzes', __('Help', 'chained'), __('Help', 'chained'), $chained_caps, 'chainedquiz_help', array('ChainedQuiz','help'));
 			
@@ -210,7 +212,7 @@ class ChainedQuiz {
 		//define( 'CHAINED_VERSION', get_option('chained_version'));
 				
 		// Register shortcodes offered by this plugin.
-		add_shortcode('triage-algorithm', array("TriageShortcodes", "algorithmShortcodeHandler"));
+		add_shortcode('triage-topic', array("TriageShortcodes", "topicShortcodeHandler"));
 		add_shortcode('triage-submissions', array("TriageShortcodes", "responsesShortcodeHandler"));
 		add_shortcode('chained-share', array("ChainedSharing", "display"));		
 		

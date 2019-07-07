@@ -98,6 +98,7 @@ class ChainedQuizQuestion {
 			
 			if(!current_user_can('unfiltered_html')) {
 				$_POST['answer'.$choice->id] = strip_tags($_POST['answer'.$choice->id]);
+				$_POST['patient_note'.$choice->id] = strip_tags($_POST['patient_note'.$choice->id]);
 				$_POST['provider_note'.$choice->id] = strip_tags($_POST['provider_note'.$choice->id]);
 				$_POST['assessment'.$choice->id] = strip_tags($_POST['assessment'.$choice->id]);
 				$_POST['plan'.$choice->id] = strip_tags($_POST['plan'.$choice->id]);
@@ -108,9 +109,10 @@ class ChainedQuizQuestion {
 			
 			// else update
 			$wpdb->query($wpdb->prepare("UPDATE ".CHAINED_CHOICES." SET
-				choice=%s, points=%s, provider_note=%s, assessment=%s, plan=%s, is_correct=%d, goto=%s WHERE id=%d", 
-				$_POST['answer'.$choice->id], $_POST['points'.$choice->id], $_POST['provider_note'.$choice->id], $_POST['assessment'.$choice->id], $_POST['plan'.$choice->id], 
-				intval(@$_POST['is_correct'.$choice->id]), $_POST['goto'.$choice->id], $choice->id));
+				choice=%s, points=%s, patient_note=%s, provider_note=%s, 
+				assessment=%s, plan=%s, is_correct=%d, goto=%s WHERE id=%d", 
+				$_POST['answer'.$choice->id], $_POST['points'.$choice->id], $_POST['patient_note'.$choice->id], $_POST['provider_note'.$choice->id], 
+				$_POST['assessment'.$choice->id], $_POST['plan'.$choice->id], intval(@$_POST['is_correct'.$choice->id]), $_POST['goto'.$choice->id], $choice->id));
 		}	
 		
 		// add new choices
@@ -254,7 +256,7 @@ class ChainedQuizQuestion {
 
 
 	/**************************************************************************
-	 * FUNCTION: Get the next configured question in the Algorithm.
+	 * FUNCTION: Get the next configured question in the Topic.
 	 * 
 	 * NOTES:
 	 * $question = SELECT * FROM CHAINED_QUESTIONS WHERE id=%d
@@ -324,7 +326,7 @@ class ChainedQuizQuestion {
 		/** 
 		 * THIS IS WHERE WE HANDLE WHAT TO GIVE AS THE NEXT QUESTION. 
 		 * */
-		// #1 - No more questions to ask or current the current answer ends the Algorithm.
+		// #1 - No more questions to ask or current the current answer ends the Topic.
 		if(empty($key) || $key == 'finalize') {
 			return false;
 		}

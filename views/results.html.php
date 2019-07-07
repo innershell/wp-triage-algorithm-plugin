@@ -1,12 +1,12 @@
 <div class="wrap">
-	<h1><?php _e('Manage Algorithm Results/Outcomes', 'chained')?></h1>
+	<h1><?php _e('Manage Topic Results/Outcomes', 'chained')?></h1>
 	
 	<div class="postbox-container" style="width:73%;margin-right:2%;">	
 	
 		<!-- The menu area. -->
-		<p><a href="admin.php?page=chained_quizzes"><?php _e('Back to Algorithms', 'chained')?></a>
+		<p><a href="admin.php?page=chained_quizzes"><?php _e('Back to Topics', 'chained')?></a>
 			| <a href="admin.php?page=chainedquiz_questions&quiz_id=<?php echo $quiz->id?>"><?php _e('Manage Questions', 'chained')?></a>
-			| <a href="admin.php?page=chained_quizzes&action=edit&id=<?php echo $quiz->id?>"><?php _e('Edit This Algorithm', 'chained')?></a>
+			| <a href="admin.php?page=chained_quizzes&action=edit&id=<?php echo $quiz->id?>"><?php _e('Edit This Topic', 'chained')?></a>
 		</p>
 		
 		<!-- Existing saved results. -->
@@ -74,7 +74,7 @@
 				</div>
 			</div>
 			<p><label><?php _e('Optional redirect URL', 'chained')?></label> <input type="text" name="redirect_url" size="60"><br />
-			<i><?php _e('The Algorithm will redirect to the URL instead of showing the "Final Output".', 'chained');?></i></p>
+			<i><?php _e('The Topic will redirect to the URL instead of showing the "Final Output".', 'chained');?></i></p>
 			<p><input type="submit" name="add" value="<?php _e('Add Result', 'chained')?>" class="button-primary"></p>
 			<?php wp_nonce_field('chained_result');?>
 		</form>

@@ -1,8 +1,8 @@
 <?php 
 if( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 class TriageShortcodes {
-	// Shortcode handler/receiver for [triage-algorithm].
-	static function algorithmShortcodeHandler($atts) {
+	// Shortcode handler/receiver for [triage-topic].
+	static function topicShortcodeHandler($atts) {
 		global $wpdb;
 		$quiz_id = @$atts[0];
 		if(empty($quiz_id) or !is_numeric($quiz_id)) return __('No quiz to load', 'chained');
@@ -10,18 +10,18 @@ class TriageShortcodes {
 		ChainedQuizQuizzes :: display($quiz_id);
 		$content = ob_get_clean();
 		return $content;
-	} // end algorithm()
+	} // end topic()
 
 	// Shortcode handler/receiver for [triage-submissions].
 	static function responsesShortcodeHandler($atts) {
 
 		$args = shortcode_atts( array(
-			'algorithm' => '0'
+			'topic' => '0'
 		), $atts );
 
-		$algorithm_id = @$atts[0];
+		$topic_id = @$atts[0];
 		ob_start();
-		ChainedQuizCompleted :: view_submissions($args['algorithm']);
+		ChainedQuizCompleted :: view_submissions($args['topic']);
 		$content = ob_get_clean();
 		return $content;
 	} // end dashboard()

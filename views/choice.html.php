@@ -3,11 +3,17 @@
 	<div>
 		<div class="one-line">
 			<?php _e('Patient Answer:', 'chained')?><br>
-			<textarea rows="3" cols="40" name="<?php echo empty($choice->id)?'answers[]':'answer'.$choice->id?>"><?php echo stripslashes(@$choice->choice)?></textarea>
+			<textarea rows="1" cols="89" name="<?php echo empty($choice->id)?'answers[]':'answer'.$choice->id?>"><?php echo stripslashes(@$choice->choice)?></textarea>
+		</div>
+	</div>
+	<div>
+	<div class="one-line">
+			<?php _e('Patient Note:', 'chained')?><br>
+			<textarea rows="2" cols="40" name="<?php echo empty($choice->id)?'patient_notes[]':'patient_note'.$choice->id?>"><?php echo stripslashes(@$choice->patient_note)?></textarea>
 		</div>
 		<div class="one-line">
-			<?php _e('Provider SOAP Note:', 'chained')?><br>
-			<textarea rows="3" cols="40" name="<?php echo empty($choice->id)?'provider_notes[]':'provider_note'.$choice->id?>"><?php echo stripslashes(@$choice->provider_note)?></textarea>
+			<?php _e('Provider Subject/Objective Note:', 'chained')?><br>
+			<textarea rows="2" cols="40" name="<?php echo empty($choice->id)?'provider_notes[]':'provider_note'.$choice->id?>"><?php echo stripslashes(@$choice->provider_note)?></textarea>
 		</div>
 	</div>
 	<div>

@@ -242,17 +242,19 @@ class ChainedQuizCompleted {
 		include(CHAINED_PATH."/views/completed.html.php");
 	} // end manage
 
-	// Generate the triage algorithm submitted responses as a dashboard/table.
-	static function view_submissions($algorithm_ids) {
+	/**************************************************************************
+	 * FUNCTION: Generate submitted Topics as a dashboard table.
+	 **************************************************************************/
+	static function view_submissions($topic_ids) {
 		global $wpdb;
 
 		$results = $wpdb->get_results(
-			"SELECT tCOM.id as completion_id, tCOM.datetime as response_date, tQUIZ.title as algorithm_name, tUA.answer_text as study_id, tCOM.snapshot as soap_note
+			"SELECT tCOM.id as completion_id, tCOM.datetime as response_date, tQUIZ.title as topic_name, tUA.answer_text as study_id, tCOM.snapshot as soap_note
 			FROM ".CHAINED_QUIZZES." tQUIZ
 			JOIN ".CHAINED_COMPLETED." tCOM
 			JOIN ".CHAINED_QUESTIONS." tQUES
 			JOIN ".CHAINED_USER_ANSWERS." tUA
-			WHERE tQUIZ.id IN  ($algorithm_ids)
+			WHERE tQUIZ.id IN  ($topic_ids)
 			AND tQUIZ.id = tCOM.quiz_id 
 			AND tQUIZ.id = tQUES.quiz_id
 			AND tQUES.id = tUA.question_id
@@ -272,11 +274,11 @@ class ChainedQuizCompleted {
 		else return 'asc'; 
 	}
 
-	// Captures feedback for a triage algorithm post-submission.
+	// Captures feedback for a submitted Topic.
 	static function feedback($comment) {
 		$admin_email = chained_admin_email();
 		$sender_email = chained_sender_email();
-		$subject = 'Triage Algorithm Feedback';
+		$subject = 'Submitted Topic Feedback';
 		$message = $comment;
 		$headers  = 'MIME-Version: 1.0' . "\r\n";
 		$headers .= 'Content-type: text/html; charset=utf-8' . "\r\n";

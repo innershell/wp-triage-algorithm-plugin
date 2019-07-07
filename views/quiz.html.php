@@ -1,17 +1,17 @@
 <div class="wrap">
-	<h1><?php _e('Add/Edit Algorithm', 'chained')?></h1>
+	<h1><?php _e('Add/Edit Topic', 'chained')?></h1>
 	
 	<div class="postbox-container" style="width:73%;margin-right:2%;">
 	
-		<p><a href="admin.php?page=chained_quizzes"><?php _e('Back to Algorithms', 'chained')?></a>
+		<p><a href="admin.php?page=chained_quizzes"><?php _e('Back to Topics', 'chained')?></a>
 		<?php if(!empty($quiz->id)):?>
 			| <a href="admin.php?page=chainedquiz_questions&quiz_id=<?php echo $quiz->id?>"><?php _e('Manage Questions', 'chained')?></a>
 			| <a href="admin.php?page=chainedquiz_results&quiz_id=<?php echo $quiz->id?>"><?php _e('Manage Results/Outcomes', 'chained')?></a>
 		<?php endif;?></p>
 		
 		<form method="post" onsubmit="return validateChainedQuiz(this);">
-			<p><label><?php _e('Algorithm Name', 'chained')?></label> <input type="text" name="title" size="60" value="<?php echo stripslashes(@$quiz->title)?>"></p>
-			<h2><?php _e('Algorithm Settings', 'chained')?></h2>
+			<p><label><?php _e('Topic Name', 'chained')?></label> <input type="text" name="title" size="60" value="<?php echo stripslashes(@$quiz->title)?>"></p>
+			<h2><?php _e('Topic Settings', 'chained')?></h2>
 				
 				<p> <!-- User Login -->
 					<input type="checkbox" name="require_login" value="1" <?php if(!empty($quiz->require_login)) echo 'checked'?> onclick="this.checked ? jQuery('#timesToTake').show() : jQuery('#timesToTake').hide(); ">
@@ -33,7 +33,7 @@
 				<!-- Other Options -->
 				<p>
 					<input type="checkbox" name="save_source_url" value="1" <?php if(!empty($quiz->save_source_url)) echo 'checked'?>>
-					<?php _e('Store Algorithm URL.', 'chained');?>
+					<?php _e('Store Topic URL.', 'chained');?>
 				</p>				
 				<?php if(!$is_published):?>
 					<p><input type="checkbox" name="auto_publish" value="1"> <?php _e('Post results to the blog.', 'chained')?></p>
@@ -41,10 +41,11 @@
 
 
 			<h2><?php _e('Patient Output', 'chained')?></h2>
-			<p><?php _e('Screen displayed to the patient upon completion of the algorithm. The following ', 'chained')?>
-			<strong><?php _e('Injection Codes', 'chained')?></strong><?php _e(' will dynamically insert text from the algorithm for the user to see.', 'chained')?></p>
+			<p><?php _e('Screen displayed to the patient upon completion of the Topic. The following ', 'chained')?>
+			<strong><?php _e('Injection Codes', 'chained')?></strong><?php _e(' will dynamically insert text from the Topic for the user to see.', 'chained')?></p>
 			<ul>
-				<li>{{soap-note}}</li>				
+				<li>{{patient-note}} <?php _e('- Notes about the Topic Answers for the patient.', 'chained')?></li>
+				<li>{{soap-note}} <?php _e('- The SOAP note for providers.', 'chained')?></li>
 				<li>{{questions}} <?php _e('- Total # of questions answered.', 'chained')?></li>
 				<li>{{points}} <?php _e('- Points for all the answers.', 'chained')?></li>
 				<li>{{result-title}} <?php _e('- The result (grade) title', 'chained')?></li>
@@ -55,10 +56,11 @@
 			<p><?php echo wp_editor(stripslashes($output), 'output', ["textarea_rows" => 10])?></p>		
 
 			<h2><?php _e('Provider Output', 'chained')?></h2>
-			<p><?php _e('Screen displayed to a clinical (e.g., provider) upon completion of the algorithm. The following ', 'chained')?>
-			<strong><?php _e('Injection Codes', 'chained')?></strong><?php _e(' will dynamically insert text from the algorithm for the user to see.', 'chained')?></p>
+			<p><?php _e('Screen displayed to a clinician (e.g., provider) upon completion of the Topic. The following ', 'chained')?>
+			<strong><?php _e('Injection Codes', 'chained')?></strong><?php _e(' will dynamically insert text from the Topic for the user to see.', 'chained')?></p>
 			<ul>
-				<li>{{soap-note}}</li>				
+				<li>{{patient-note}} <?php _e('- Notes about the Topic Answers for the patient.', 'chained')?></li>
+				<li>{{soap-note}} <?php _e('- The SOAP note for providers.', 'chained')?></li>				
 				<li>{{questions}} <?php _e('- Total # of questions answered.', 'chained')?></li>
 				<li>{{points}} <?php _e('- Points for all the answers.', 'chained')?></li>
 				<li>{{result-title}} <?php _e('- The result (grade) title', 'chained')?></li>
