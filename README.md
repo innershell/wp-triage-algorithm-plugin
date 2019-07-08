@@ -71,7 +71,13 @@ None yet.
 
 # Changelog
 ## 6.0 (Abort Algorithm)
-- Bug fixes.
+- Renamed 'Algorithms' to 'Topics' as algorithms sounded more technical and complex than necessary.
+- Questions can prematurely *abort* a topic when accumulated points are within the abort range. Multiple abort points per topic can be setup.
+- New *Patient Note* field to setup personalized notes for a patient for each answer selected.
+- New `{{patient-note}}` injection code to insert patient notes in the patient output or provider output.
+- Ability to delete all plugin data when uninstalling the plugin.  
+- User interface improvements.
+- Fixed various backend errors that did not affect frontend user functionality.
 
 ## 5.1 (Show Answers on Questions Page)
 - Show/hide answers in the questions listing page (admin only).
