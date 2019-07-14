@@ -3,7 +3,11 @@
 	
 	<div class="postbox-container" style="width:73%;margin-right:2%;">	
 	
-	<p><a href="admin.php?page=chained_quizzes&action=add"><?php _e('New Topic', 'chained')?></a></p>
+	<p>	<a href="admin.php?page=chained_quizzes&action=add"><?php _e('New Topic', 'chained')?></a></p>
+	<p> <a href="admin.php?page=chained_quizzes&export=sql&noheader=1"><?php _e('Export SQL', 'chained')?></a> | 
+		<a href="admin.php?page=chained_quizzes&export=csv&noheader=1"><?php _e('Export CSV', 'chained')?></a> | 
+		<a href="admin.php?page=chained_quizzes&import=csv&noheader=1"><?php _e('Import CSV', 'chained')?></a></p>
+
 	
 	<?php if(sizeof($quizzes)):?>
 	<table class="widefat">

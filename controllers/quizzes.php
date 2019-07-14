@@ -22,7 +22,7 @@ class ChainedQuizQuizzes {
 		
 		if(!empty($_POST['ok']) and check_admin_referer('chained_quiz')) {
 			try {
-				$qid = $_quiz->add($_POST);			
+				$qid = $_quiz->add($_POST);   
 				chained_redirect("admin.php?page=chainedquiz_results&quiz_id=".$qid);
 			}
 			catch(Exception $e) {
@@ -74,6 +74,48 @@ class ChainedQuizQuizzes {
 		   $_quiz->copy($_GET['id']);
 		   chained_redirect("admin.php?page=chained_quizzes");
 		}
+
+		if(!empty($_GET['export'])) {			
+			$now = gmdate('D, d M Y H:i:s') . ' GMT';	
+			$filename = 'quiz-results.sql';	
+			header('Content-Type: ' . kiboko_get_mime_type());
+			header('Expires: ' . $now);
+			header('Content-Disposition: attachment; filename="'.$filename.'"');
+			header('Pragma: no-cache');
+
+			$crlf = kiboko_define_newline();
+			//$prefix = "wp_";
+			$prefix = empty($_GET['prefix']) ? "wp_" : $_GET['prefix'];
+			
+			// Generate SQL for WP_CHAINED_QUIZZES table.
+			$quizzes = $wpdb->get_results('SELECT * FROM ' . CHAINED_QUIZZES);
+			echo "-- $crlf";
+			echo "-- Generated Time: $now $crlf";
+			echo "-- $crlf";
+			echo 'SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";' . $crlf;
+			echo "   $crlf";
+			echo "-- $crlf";
+			echo '-- Truncate and insert CHAINED_QUIZZES.' . $crlf;
+			echo "-- $crlf";
+			echo "TRUNCATE TABLE " . $prefix . "chained_quizzes; $crlf";
+			echo "INSERT INTO " . $prefix . "chained_quizzes (id, title, output, email_admin, email_user, require_login, times_to_take, save_source_url, set_email_output, email_output) VALUES $crlf";
+			$i = count($quizzes);
+			foreach ($quizzes as $quiz) {
+				$i--;
+				echo "($quiz->id, '$quiz->title', '" . str_replace("\r\n", "\\r\\n", $quiz->output) . "', $quiz->email_admin, $quiz->email_user, $quiz->require_login, $quiz->times_to_take, $quiz->save_source_url, $quiz->set_email_output, '" . str_replace("\r\n", "\\r\\n", $quiz->email_output) . "')";
+				echo $i > 0 ? ",$crlf" : ";$crlf";
+			}
+
+			// Generate SQL for CHAINED_QUESTIONS data.
+
+			// Generate SQL for CHAINED_CHOICES data.
+
+			// Generate SQL for CHAINED_RESULTS data.
+
+
+
+			exit;
+		 }
 		
 		// select quizzes
 		$quizzes = $wpdb->get_results("SELECT tQ.*, COUNT(tC.id) as submissions 
