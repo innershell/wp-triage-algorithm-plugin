@@ -1,12 +1,19 @@
 <?php
 if( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-// safe redirect
+
+
+/**************************************************************************
+ * FUNCTION: Safe redirect to another page.
+ **************************************************************************/
 function chained_redirect($url) {
 	echo "<meta http-equiv='refresh' content='0;url=$url' />"; 
 	exit;
 }
 
-// function to conditionally add DB fields
+
+/**************************************************************************
+ * FUNCTION: Conditionally add new database fields.
+ **************************************************************************/
 function chainedquiz_add_db_fields($fields, $table) {
 		global $wpdb;
 		
@@ -35,7 +42,10 @@ function chainedquiz_add_db_fields($fields, $table) {
 		}
 }
 
-// define new line for CSVs
+
+/**************************************************************************
+ * FUNCTION: Define new line for CSVs
+ **************************************************************************/
 if(!function_exists('kiboko_define_newline')) {
 	function kiboko_define_newline() {
 		// credit to http://yoast.com/wordpress/users-to-csv/
@@ -51,6 +61,10 @@ if(!function_exists('kiboko_define_newline')) {
 	}
 }
 
+
+/**************************************************************************
+ * FUNCTION: Get header mime-type based on browser.
+ **************************************************************************/
 if(!function_exists('kiboko_get_mime_type')) {
 	function kiboko_get_mime_type()  {
 		// credit to http://yoast.com/wordpress/users-to-csv/
@@ -77,7 +91,10 @@ if(!function_exists('kiboko_get_mime_type')) {
 	}
 }
 
-// Get admin email. If not setup, use WordPress admin email.
+
+/**************************************************************************
+ * FUNCTION: Get admin email. If not setup, use WordPress admin email.
+ **************************************************************************/
 function chained_admin_email() {
 	$admin_email = stripslashes(get_option('chained_admin_emails'));
 	if ($admin_email == '') {
@@ -86,12 +103,19 @@ function chained_admin_email() {
 	return $admin_email;
 }
 
-// Get sender email. If not setup, use WordPress admin email.
+
+/**************************************************************************
+ * FUNCTION: Get sender email. If not setup, use WordPress admin email.
+ **************************************************************************/
 function chained_sender_email() {
 	$sender_email = stripslashes(get_option('chained_sender_name')) . ' <' . get_option('chained_sender_email') . '>';
 	return $sender_email;
 }
 
+
+/**************************************************************************
+ * FUNCTION: Strips html tags.
+ **************************************************************************/
 function chained_strip_tags($content) {
    if(!current_user_can('unfiltered_html') and WATUPRO_UNFILTERED_HTML != 1) {
 		$content = strip_tags($content, '<b><i><em><u><a><p><br><div><span><hr><font><img><strong>');
@@ -100,9 +124,23 @@ function chained_strip_tags($content) {
 	return $content;
 }
 
-// makes sure all values in array are ints. Typically used to sanitize POST data from multiple checkboxes
+
+/**************************************************************************
+ * FUNCTION: Converts all values in an array to INTs.
+ **************************************************************************/
 function chained_int_array($value) {
   if(empty($value) or !is_array($value)) return array();
    $value = array_filter($value, 'is_numeric');
    return $value;
+}
+
+
+/**************************************************************************
+ * FUNCTION: Escapes all special characters in a string.
+ **************************************************************************/
+function chained_escape_str($string) {
+	$string = addslashes($string);					// Escape single and doublequote characters.
+	$string = str_replace("\r", "\\r", $string);	// Escape carriage returns.
+	$string = str_replace("\n", "\\n", $string);	// Escape line feeds.
+	return $string;
 }
