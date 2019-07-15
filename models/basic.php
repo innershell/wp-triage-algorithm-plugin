@@ -171,7 +171,7 @@ class ChainedQuiz {
 			
 		add_submenu_page(NULL, __('Chained Quiz Results', 'chained'), __('Chained Quiz Results', 'chained'), $chained_caps, 'chainedquiz_results', array('ChainedQuizResults','manage'));	
 		add_submenu_page(NULL, __('Chained Quiz Questions', 'chained'), __('Chained Quiz Questions', 'chained'), $chained_caps, 'chainedquiz_questions', array('ChainedQuizQuestions','manage'));	
-		add_submenu_page(NULL, __('Users Completed Quiz', 'chained'), __('Users Completed Quiz', 'chained'), $chained_caps, 'chainedquiz_list', array('ChainedQuizCompleted','manage'));		
+		add_submenu_page(NULL, __('Users Completed Quiz', 'chained'), __('Users Completed Quiz', 'chained'), $chained_caps, 'chainedquiz_list', array('ChainedQuizCompleted','manage'));
 	}
 	
 	// CSS and JS

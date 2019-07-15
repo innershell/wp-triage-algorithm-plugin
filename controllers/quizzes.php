@@ -1,5 +1,6 @@
 <?php
 if( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 class ChainedQuizQuizzes {
 	static function manage() {
  		$action = empty($_GET['action']) ? 'list' : $_GET['action']; 
@@ -22,7 +23,7 @@ class ChainedQuizQuizzes {
 		
 		if(!empty($_POST['ok']) and check_admin_referer('chained_quiz')) {
 			try {
-				$qid = $_quiz->add($_POST);			
+				$qid = $_quiz->add($_POST);   
 				chained_redirect("admin.php?page=chainedquiz_results&quiz_id=".$qid);
 			}
 			catch(Exception $e) {
@@ -74,6 +75,19 @@ class ChainedQuizQuizzes {
 		   $_quiz->copy($_GET['id']);
 		   chained_redirect("admin.php?page=chained_quizzes");
 		}
+
+		if(!empty($_GET['export'])) {		
+			switch ($_GET['export']) {
+				case 'sql':
+					self::export_sql(empty($_GET['prefix']) ? "wp_" : $_GET['prefix']);
+					exit;
+				case 'csv':
+					self::export_csv();
+					exit;
+				default:
+					echo 'Something went wrong here';
+			}
+		 }
 		
 		// select quizzes
 		$quizzes = $wpdb->get_results("SELECT tQ.*, COUNT(tC.id) as submissions 
@@ -228,5 +242,109 @@ class ChainedQuizQuizzes {
 			// if none, submit the quiz
 			 echo $_quiz->finalize($quiz, $total_points); 
 		}	 		
+	}
+
+	static function export_sql($prefix) {
+		global $wpdb;
+		$now = gmdate('D, d M Y H:i:s') . ' GMT';	
+		$filename = 'orchestra-data-export.sql';	
+		header('Content-Type: ' . kiboko_get_mime_type());
+		header('Expires: ' . $now);
+		header('Content-Disposition: attachment; filename="'.$filename.'"');
+		header('Pragma: no-cache');
+		$newline = kiboko_define_newline();
+		
+		// Generate SQL for WP_CHAINED_QUIZZES table.
+		$quizzes = $wpdb->get_results('SELECT * FROM ' . CHAINED_QUIZZES);
+		$i = count($quizzes);
+
+		if ($i > 0) {
+			echo '--' . $newline;
+			echo '-- Generated Time: ' . $now . $newline;
+			echo '--' . $newline;
+			echo 'SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";' . $newline;
+			echo $newline;
+			echo '--' . $newline;
+			echo '-- Truncate and insert CHAINED_QUIZZES.' . $newline;
+			echo '--' . $newline;
+			echo 'TRUNCATE TABLE ' . $prefix . 'chained_quizzes;' .  $newline;
+			echo 'INSERT INTO ' . $prefix . 'chained_quizzes (id, title, output, email_admin, email_user, require_login, times_to_take, save_source_url, set_email_output, email_output) VALUES ' . $newline;
+			foreach ($quizzes as $quiz) {
+				$i--;
+				echo "($quiz->id, '" . chained_escape_str($quiz->title) . "', '" . chained_escape_str($quiz->output) . "', $quiz->email_admin, $quiz->email_user, $quiz->require_login, $quiz->times_to_take, $quiz->save_source_url, $quiz->set_email_output, '" . chained_escape_str($quiz->email_output) . "')";
+				echo $i > 0 ? ',' : ';';
+				echo $newline;
+			}
+		}
+
+		// Generate SQL for CHAINED_QUESTIONS data.
+		$questions = $wpdb->get_results('SELECT * FROM ' . CHAINED_QUESTIONS);
+		$i = count($questions);
+
+		if ($i > 0) {
+			echo $newline;
+			echo '--' . $newline;
+			echo '-- Truncate and insert CHAINED_QUESTIONS.' . $newline;
+			echo '--' . $newline;
+			echo 'TRUNCATE TABLE ' . $prefix . 'chained_questions;' .  $newline;
+			echo 'INSERT INTO ' . $prefix . 'chained_questions (id, quiz_id, title, question, qtype, soap_type, rank, abort_enabled, points_abort_min, points_abort_max, autocontinue, sort_order, accept_comments, accept_comments_label) VALUES ' . $newline;
+			foreach ($questions as $question) {
+				$i--;
+				echo "($question->id, $question->quiz_id, '" . chained_escape_str($question->title) . "', '" . chained_escape_str($question->question) . "', '$question->qtype', '$question->soap_type', $question->rank, $question->abort_enabled, $question->points_abort_min, $question->points_abort_max, $question->autocontinue, $question->sort_order, $question->accept_comments, '$question->accept_comments_label')";
+				echo $i > 0 ? ',' : ';';
+				echo $newline;
+			}
+		}
+
+		// Generate SQL for CHAINED_CHOICES data.
+		$choices = $wpdb->get_results('SELECT * FROM ' . CHAINED_CHOICES);
+		$i = count($choices);
+
+		if ($i > 0) {
+			echo $newline;
+			echo '--' . $newline;
+			echo '-- Truncate and insert CHAINED_CHOICES.' . $newline;
+			echo '--' . $newline;
+			echo 'TRUNCATE TABLE ' . $prefix . 'chained_choices;' .  $newline;
+			echo 'INSERT INTO ' . $prefix . 'chained_choices (id, quiz_id, question_id, choice, provider_note, assessment, plan, points, is_correct, goto) VALUES ' . $newline;
+			foreach ($choices as $choice) {
+				$i--;
+				echo "($choice->id, $choice->quiz_id, $choice->question_id, '" . chained_escape_str($choice->choice) . "', '" . chained_escape_str($choice->provider_note) . "', '" . chained_escape_str($choice->assessment) . "', '" . chained_escape_str($choice->plan) . "', '$choice->points', '$choice->is_correct', '$choice->goto')";
+				echo $i > 0 ? ',' : ';';
+				echo $newline;
+			}
+		}
+
+		// Generate SQL for CHAINED_RESULTS data.
+		$results = $wpdb->get_results('SELECT * FROM ' . CHAINED_RESULTS);
+		$i = count($results);
+
+		if ($i > 0) {
+			echo $newline;
+			echo '--' . $newline;
+			echo '-- Truncate and insert CHAINED_RESULTS.' . $newline;
+			echo '--' . $newline;
+			echo 'TRUNCATE TABLE ' . $prefix . 'chained_results;' .  $newline;
+			echo 'INSERT INTO ' . $prefix . 'chained_results (id, quiz_id, points_bottom, points_top, title, description, subjective, objective, assessment, plan, redirect_url) VALUES ' . $newline;
+
+			foreach ($results as $result) {
+				$i--;
+				echo "($result->id, $result->quiz_id, $result->points_bottom, $result->points_top, '" . chained_escape_str($result->title) . "', '" . chained_escape_str($result->description) . "', '" . chained_escape_str($result->subjective) . "', '" . chained_escape_str($result->objective) . "', '" . chained_escape_str($result->assessment) . "', '" . chained_escape_str($result->plan) . "', '$result->redirect_url')";
+				echo $i > 0 ? ',' : ';';
+				echo $newline;
+			}
+		}
+
+		echo $newline;
+		echo '--' . $newline;
+		echo '-- End of File' . $newline;
+		echo '--' . $newline;
+
+		return;
+	}
+
+	static function export_csv() {
+		echo "Feature not available. Coming soon!";
+		return;
 	}
 }

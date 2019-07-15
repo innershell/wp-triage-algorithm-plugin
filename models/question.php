@@ -47,6 +47,7 @@ class ChainedQuizQuestion {
 			$vars['question'] = strip_tags($vars['question']);
 		}
 		
+		$abort_enabled = empty($vars['abort_enabled']) ? 0 : 1;
 		$accept_comments = empty($vars['accept_comments']) ? 0 : 1;
 		$accept_comments_label = sanitize_text_field($vars['accept_comments_label']);
 		
@@ -55,9 +56,8 @@ class ChainedQuizQuestion {
 			abort_enabled=%d, points_abort_min=%f, points_abort_max=%f, 
 			autocontinue=%d, accept_comments=%d, accept_comments_label=%s WHERE id=%d", 
 			$vars['question'], $vars['qtype'], $vars['soap_type'], $vars['title'], 
-			$vars['abort_enabled'], $vars['points_abort_min'], $vars['points_abort_max'], 
+			$abort_enabled, $vars['points_abort_min'], $vars['points_abort_max'], 
 			intval(@$vars['autocontinue']), $accept_comments, $accept_comments_label, $id));
-			
 			
 		if($result === false) throw new Exception(__('DB Error', 'chained'));
 		return true;	
