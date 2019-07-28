@@ -156,7 +156,7 @@ class ChainedQuiz {
 		}
 
 		// Set the current plugin version number.
-		update_option('chained_version', '6.0');
+		update_option('chained_version', '7.0');
 	}
    
 	// main menu
@@ -187,7 +187,7 @@ class ChainedQuiz {
 				'chained-common',
 				CHAINED_URL.'js/common.js',
 				false,
-				'6.0',
+				'7.0',
 				false
 		);
 		wp_enqueue_script("chained-common");
@@ -232,6 +232,11 @@ class ChainedQuiz {
 		// default delete data
 		if (get_option('chained_delete_data') == '') {
 			update_option('chained_delete_data', 'no');
+		}
+
+		// default version
+		if (get_option('chained_version') == '') {
+			update_option('chained_version', '7.0');
 		}
 
 		// Go ahead and activate the plugin now by running the install script.
