@@ -35,8 +35,8 @@
 			<h4><?php _e('Abort', 'chained')?></h4>
 			<p><?php _e('Stops and finishes the Topic if points (so far) are within the Abort Min/Max. range.', 'chained');?></p>
 			<p><input type="checkbox" name="abort_enabled" value="1" <?php if(!empty($question->abort_enabled)) echo 'checked'?>> <?php _e('Enable abort?', 'chained');?></p>
-			<p><?php _e('Abort Min. Points:', 'chained')?> <input type="text" size="4" name="points_abort_min" value="<?php echo $question->points_abort_min?>">&nbsp;&nbsp;&nbsp;
-			<?php _e('Abort Max. Points:', 'chained')?> <input type="text" size="4" name="points_abort_max" value="<?php echo $question->points_abort_max?>"></p>			
+			<p><?php _e('Abort Min. Points:', 'chained')?> <input type="text" size="4" name="points_abort_min" value="<?php echo empty($question->points_abort_min) ? '0.00' : $question->points_abort_min; ?>">&nbsp;&nbsp;&nbsp;
+			<?php _e('Abort Max. Points:', 'chained')?> <input type="text" size="4" name="points_abort_max" value="<?php echo empty($question->points_abort_max) ? '0.00' : $question->points_abort_max; ?>"></p>			
 			<!-- Autocontinue -->
 			<span id="chainedAutoContinue" style="display:<?php echo (empty($question->id) or $question->qtype == 'radio') ? 'inline' : 'none';?>">
 			<h4><?php _e('Autocontinue', 'chained')?></h4>
