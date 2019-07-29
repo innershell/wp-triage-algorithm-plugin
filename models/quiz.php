@@ -615,7 +615,9 @@ class ChainedQuizQuiz {
 		if (isset($answers)) {
 			$output .= '<ul>';
 			foreach ($answers as $answer) {
-				$output .= '<li>' . $answer->patient_note . '</li>';
+				if ($answer->patient_note) {
+					$output .= '<li>' . $answer->patient_note . '</li>';
+				}
 			}
 			$output .= '</ul>';
 		}

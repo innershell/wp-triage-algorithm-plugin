@@ -41,7 +41,7 @@
 
 
 			<h2><?php _e('Patient Output', 'chained')?></h2>
-			<p><?php _e('Screen displayed to the patient upon completion of the Topic. The following ', 'chained')?>
+			<p><?php _e('Content displayed to the patient upon completion of the Topic. The following ', 'chained')?>
 			<strong><?php _e('Injection Codes', 'chained')?></strong><?php _e(' will dynamically insert text from the Topic for the user to see.', 'chained')?></p>
 			<ul>
 				<li>{{patient-note}} <?php _e('- Notes about the Topic Answers for the patient.', 'chained')?></li>
@@ -53,10 +53,10 @@
 				<!-- (deprecating this injection code) <li>{{answers-table}} <?php _e('- A table with the questions, answers given by the user, correct / wrong info and points collected.', 'chained')?></li> -->				
 				<!-- (let's leave this for the next version) li>{{correct}} <?php _e('- The number of correctly answered questions', 'chained')?></li> -->
 			</ul>
-			<p><?php echo wp_editor(stripslashes($output), 'output', ["textarea_rows" => 10])?></p>		
+			<p><?php echo wp_editor(stripslashes(empty($patient_output) ? '' : $patient_output), 'output', ["textarea_rows" => 10])?></p>
 
-			<h2><?php _e('Provider Output', 'chained')?></h2>
-			<p><?php _e('Screen displayed to a clinician (e.g., provider) upon completion of the Topic. The following ', 'chained')?>
+			<h2><?php _e('Doctor Output', 'chained')?></h2>
+			<p><?php _e('Content displayed to a doctor upon completion of the Topic. The following ', 'chained')?>
 			<strong><?php _e('Injection Codes', 'chained')?></strong><?php _e(' will dynamically insert text from the Topic for the user to see.', 'chained')?></p>
 			<ul>
 				<li>{{patient-note}} <?php _e('- Notes about the Topic Answers for the patient.', 'chained')?></li>
@@ -71,14 +71,12 @@
 
 			<div id="chainedEmailSettings" style="display:block">
 				<div id="chainedEmailOutputs" style="display:email">
-					<?php echo wp_editor(stripslashes($quiz->email_output), 'email_output', ["textarea_rows" => 10])?><br />
+					<?php echo wp_editor(stripslashes(empty($doctor_output) ? '' : $doctor_output), 'email_output', ["textarea_rows" => 10])?><br />
 					<p><input type="checkbox" name="set_email_output" value="1" <?php if(!empty($quiz->set_email_output)) echo 'checked'?>> 
-					<?php _e('Uncheck to use Finish Screen output instead.', 'chained');?></p>
+					<?php _e('Check to use this output for the doctor. Otherwise, the patient output will be used.', 'chained');?></p>
 					<p><?php _e('Use the {{{split}}} tag to make the email contents different for Admins and Users. The content before the {{{split}}} tag will be sent to the user and the content after the {{{split}}} tag - to the admin.','chained');?></p>
 				</div>
 			</div>
-			
-			
 			
 			<p><input type="submit" value="<?php _e('SAVE', 'chained')?>" class="button-primary"></p>
 			<input type="hidden" name="ok" value="1">
@@ -87,7 +85,7 @@
 		
 	</div>
 	<div id="chained-sidebar">
-			<?php include(CHAINED_PATH."/views/sidebar.html.php");?>
+		<?php include(CHAINED_PATH."/views/sidebar.html.php");?>
 	</div>	
 </div>
 

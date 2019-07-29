@@ -1,6 +1,6 @@
 <div id="chained-related" class="chained-sidebox">
 	<h3><?php _e('ABOUT', 'chained')?></h3>
-	<p><?php _e('Nothing related.', 'chained');?></p>
+	<p><?php _e('Version ', 'chained');?><?php echo get_option('chained_version');?></p>
 </div>
 
 

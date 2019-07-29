@@ -1,5 +1,5 @@
 <div class="wrap">
-	<h1><?php printf(__('Manage Questions for the %s Topic', 'chained'), $quiz->title);?> </h1>
+	<h1><?php printf(__('Manage Questions for %s Topic', 'chained'), stripslashes($quiz->title));?> </h1>
 	
 	<div class="postbox-container" style="width:73%;margin-right:2%;">
 	
