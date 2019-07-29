@@ -9,15 +9,17 @@ class ChainedQuizQuestion {
 	function add($vars) {
 		global $wpdb;
 		
+		// Validate inputs.
 		$vars['title'] = sanitize_text_field($vars['title']);		
 		if(!in_array($vars['qtype'], array('radio', 'checkbox', 'field', 'text'))) $vars['qtype'] = 'none';
 		if(!current_user_can('unfiltered_html')) {
 			$vars['question'] = strip_tags($vars['question']);
 		}
+		$abort_enabled = empty($vars['abort_enabled']) ? 0 : 1;
 		$accept_comments = empty($vars['accept_comments']) ? 0 : 1;
 		$accept_comments_label = sanitize_text_field($vars['accept_comments_label']);
 		
-		// sort order
+		// Sort order.
 		$sort_order = $wpdb->get_var($wpdb->prepare("SELECT MAX(sort_order) FROM ".CHAINED_QUESTIONS."
 			WHERE quiz_id=%d", $vars['quiz_id']));
 		$sort_order++;	 
@@ -27,7 +29,7 @@ class ChainedQuizQuestion {
 			abort_enabled=%d, points_abort_min=%f, points_abort_max=%f, 
 			title=%s, autocontinue=%d, sort_order=%d, accept_comments=%d, accept_comments_label=%s", 
 			intval($vars['quiz_id']), $vars['question'], $vars['qtype'], $vars['soap_type'], intval(@$vars['rank']), 
-			$vars['abort_enabled'], $vars['points_abort_min'], $vars['points_abort_max'], 
+			$abort_enabled, $vars['points_abort_min'], $vars['points_abort_max'], 
 			$vars['title'], intval(@$vars['autocontinue']), $sort_order, $accept_comments, $accept_comments_label));
 			
 		if($result === false) throw new Exception(__('DB Error', 'chained'));
