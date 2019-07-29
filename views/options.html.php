@@ -48,9 +48,9 @@
 			<h3 class="hndle"><span><?php _e('CSV Exports', 'chained') ?></span></h3>
 			<div class="inside">
 				<p><label><?php _e('Field separator:','chained')?></label> <select name="csv_delim">
-					<option value="," <?php if($delim == ',') echo 'selected'?>><?php _e('Comma', 'chained');?></option>
-					<option value=";" <?php if($delim == ';') echo 'selected'?>><?php _e('Semicolon', 'chained');?></option>
-					<option value="tab" <?php if($delim == 'tab') echo 'selected'?>><?php _e('TAB', 'chained');?></option>
+					<option value="," <?php if(get_option('chained_csv_delim') == ',') echo 'selected'; ?>><?php _e('Comma', 'chained');?></option>
+					<option value=";" <?php if(get_option('chained_csv_delim') == ';') echo 'selected'; ?>><?php _e('Semicolon', 'chained');?></option>
+					<option value="tab" <?php if(get_option('chained_csv_delim') == 'tab') echo 'selected'; ?>><?php _e('TAB', 'chained');?></option>
 				</select></p>
 				<input type="checkbox" name="csv_quotes" value="1" <?php if(get_option('chained_csv_quotes')) echo 'checked'?>> <?php _e('Add quotes around text fields (recommended)', 'chained')?>	
 			</div>

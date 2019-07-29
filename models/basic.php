@@ -246,7 +246,7 @@ class ChainedQuiz {
 	// manage general options
 	static function options() {
 		global $wpdb, $wp_roles;
-		$roles = $wp_roles->roles;		
+		$roles = $wp_roles->roles;	
 		
 		if(!empty($_POST['ok']) and check_admin_referer('chained_options')) {
 			// Roles
@@ -264,7 +264,7 @@ class ChainedQuiz {
 			// Email Options
 			update_option('chained_sender_name', sanitize_text_field($_POST['sender_name']));
 			update_option('chained_sender_email', sanitize_email($_POST['sender_email']));
-			update_option('chained_user_subject', sanitize_text_field($_POST['user_subject']));						
+			update_option('ch ained_user_subject', sanitize_text_field($_POST['user_subject']));						
 			update_option('chained_admin_subject', sanitize_text_field($_POST['admin_subject']));
 			update_option('chained_admin_emails', sanitize_text_field($_POST['admin_emails']));
 			update_option('chained_csv_delim', sanitize_text_field($_POST['csv_delim']));
@@ -275,10 +275,6 @@ class ChainedQuiz {
 			$hide_go_ahead = empty($_POST['hide_go_ahead']) ? 0 : 1;
 			$ui = array('hide_go_ahead' => $hide_go_ahead);			
 			update_option('chained_ui', $ui);
-
-			//CSV Exports
-			$ui = get_option('chained_ui');
-			$delim = get_option('chained_csv_delim');
 				
 			// Uninstall settings
 			update_option('chained_delete_data', sanitize_text_field($_POST['delete_data']));
