@@ -339,6 +339,30 @@ class ChainedQuizQuizzes {
 				}
 			}
 			
+			// Generate SQL for WP_POSTS table.
+			$posts = $wpdb->get_results('SELECT * FROM ' . POSTS . ' WHERE post_type != \'revision\'');
+			$i = count($posts);
+			
+			if ($i > 0) {
+				echo '--' . $newline;
+				echo '-- Generated Time: ' . $now . $newline;
+				echo '--' . $newline;
+				echo 'SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";' . $newline;
+				echo $newline;
+				echo '--' . $newline;
+				echo '-- Truncate and insert POSTS.' . $newline;
+				echo '-- Note: Post revisions are not dropped.' . $newline;
+				echo '--' . $newline;
+				echo 'TRUNCATE TABLE ' . $prefix . 'posts;' .  $newline;
+				echo 'INSERT INTO ' . $prefix . 'posts (ID, post_author, post_date, post_date_gmt, post_content, post_title, post_excerpt, post_status, comment_status, ping_status, post_password, post_name, to_ping, pinged, post_modified, post_modified_gmt, post_content_filtered, post_parent, guid, menu_order, post_type, post_mime_type, comment_count) VALUES ' . $newline;
+				foreach ($posts as $post) {
+					$i--;
+					echo "($post->ID, $post->post_author, '$post->post_date', '$post->post_date_gmt', '" . chained_escape_str($post->post_content) . "', '" . chained_escape_str($post->post_title) . "', '" . chained_escape_str($post->post_excerpt) . "', '$post->post_status', '$post->comment_status', '$post->ping_status', '$post->post_password', '$post->post_name', '$post->to_ping', '$post->pinged', '$post->post_modified', '$post->post_modified_gmt', '" . chained_escape_str($post->post_content_filtered) . "', $post->post_parent, '$post->guid', $post->menu_order, '$post->post_type', '$post->post_mime_type', $post->comment_count)";
+					echo $i > 0 ? ',' : ';';
+					echo $newline;
+				}
+			}
+			
 			echo $newline;
 			echo '--' . $newline;
 			echo '-- End of File' . $newline;

@@ -209,8 +209,8 @@ class ChainedQuiz {
 		define( 'CHAINED_RESULTS', $wpdb->prefix. "chained_results");
 		define( 'CHAINED_COMPLETED', $wpdb->prefix. "chained_completed");
 		define( 'CHAINED_USER_ANSWERS', $wpdb->prefix. "chained_user_answers");
-		//define( 'CHAINED_VERSION', get_option('chained_version'));
-				
+		define( 'POSTS', $wpdb->prefix. "posts");
+		
 		// Register shortcodes offered by this plugin.
 		add_shortcode('triage-topic', array("TriageShortcodes", "topicShortcodeHandler"));
 		add_shortcode('triage-submissions', array("TriageShortcodes", "responsesShortcodeHandler"));
